@@ -1,0 +1,250 @@
+@import "tailwindcss";
+
+/* ============================================================
+   SOC console design tokens
+   Deep navy ground, cyan accent, semantic status colors only.
+   ============================================================ */
+@theme {
+  /* surfaces */
+  --color-bg: #0b1220;
+  --color-panel: #131c2e;
+  --color-panel-2: #0f1727;
+  --color-panel-3: #16203400;
+  --color-line: #1e2b44;
+  --color-line-soft: #182338;
+
+  /* accent */
+  --color-accent: #22d3ee;
+  --color-accent-deep: #0e7490;
+  --color-accent-soft: #9fe8f5;
+
+  /* semantic status — never used decoratively */
+  --color-ok: #34d399;
+  --color-warn: #f59e0b;
+  --color-crit: #ef4444;
+  --color-info: #60a5fa;
+
+  /* type */
+  --color-text: #e2e8f0;
+  --color-muted: #8ca0bf;
+  --color-dim: #5c7093;
+
+  --font-sans: var(--font-plex-sans), "Segoe UI", system-ui, sans-serif;
+  --font-cond: var(--font-plex-cond), var(--font-plex-sans), system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), "Cascadia Mono", Consolas, monospace;
+
+  --radius-panel: 4px;
+
+  --animate-packet: packet 3s linear infinite;
+  --animate-blink: blink 1.15s steps(2, start) infinite;
+  --animate-sweep: sweep 2.4s ease-in-out infinite;
+}
+
+@keyframes packet {
+  from { offset-distance: 0%; }
+  to   { offset-distance: 100%; }
+}
+@keyframes blink {
+  to { opacity: 0; }
+}
+@keyframes sweep {
+  0%, 100% { opacity: 0.25; }
+  50%      { opacity: 1; }
+}
+
+/* ============================================================
+   Base
+   ============================================================ */
+html {
+  background: var(--color-bg);
+  color-scheme: dark;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-accent) 28%, transparent);
+  color: #f2f6fb;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* thin console scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-line) transparent;
+}
+*::-webkit-scrollbar { width: 9px; height: 9px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+  background: var(--color-line);
+  border-radius: 99px;
+  border: 2px solid var(--color-bg);
+}
+*::-webkit-scrollbar-thumb:hover { background: var(--color-accent-deep); }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================================
+   Utilities
+   ============================================================ */
+@utility label {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-dim);
+}
+
+@utility grid-bg {
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--color-line) 45%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--color-line) 45%, transparent) 1px, transparent 1px);
+  background-size: 34px 34px;
+}
+
+@utility balance {
+  text-wrap: balance;
+}
+
+/* ============================================================
+   React Flow theme overrides
+   ============================================================ */
+.react-flow {
+  --xy-background-color: transparent;
+  --xy-edge-stroke-default: var(--color-line);
+  --xy-edge-stroke-selected-default: var(--color-accent);
+  --xy-node-border-radius-default: 4px;
+}
+.react-flow__attribution { display: none; }
+.react-flow__handle {
+  opacity: 0;
+  pointer-events: none;
+  width: 1px;
+  height: 1px;
+  min-width: 1px;
+  min-height: 1px;
+  border: 0;
+}
+.react-flow__edge-path { stroke-width: 1.25; }
+.react-flow__controls-button {
+  background: var(--color-panel);
+  border-bottom: 1px solid var(--color-line);
+  fill: var(--color-muted);
+}
+.react-flow__controls-button:hover { background: var(--color-panel-2); fill: var(--color-accent); }
+
+/* ============================================================
+   MDX prose — writeups
+   ============================================================ */
+.prose-console {
+  color: var(--color-text);
+  line-height: 1.75;
+  max-width: 72ch;
+}
+.prose-console > * + * { margin-top: 1.15rem; }
+.prose-console h2 {
+  font-family: var(--font-cond);
+  font-size: 1.55rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-top: 2.75rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--color-line-soft);
+  text-wrap: balance;
+}
+.prose-console h3 {
+  font-family: var(--font-cond);
+  font-size: 1.16rem;
+  font-weight: 600;
+  margin-top: 2rem;
+  color: #f2f6fb;
+}
+.prose-console a {
+  color: var(--color-accent);
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-accent) 32%, transparent);
+}
+.prose-console a:hover { border-bottom-color: var(--color-accent); }
+.prose-console strong { color: #f2f6fb; font-weight: 600; }
+.prose-console ul, .prose-console ol { padding-left: 1.3rem; }
+.prose-console li { margin-bottom: 0.4rem; }
+.prose-console li::marker { color: var(--color-accent-deep); }
+.prose-console blockquote {
+  border-left: 2px solid var(--color-warn);
+  background: var(--color-panel);
+  padding: 0.9rem 1.15rem;
+  color: var(--color-muted);
+  border-radius: 0 4px 4px 0;
+}
+.prose-console :not(pre) > code {
+  font-family: var(--font-mono);
+  font-size: 0.855em;
+  background: var(--color-panel-2);
+  border: 1px solid var(--color-line);
+  padding: 0.1em 0.38em;
+  border-radius: 3px;
+  color: var(--color-accent-soft);
+}
+.prose-console pre {
+  background: var(--color-panel-2) !important;
+  border: 1px solid var(--color-line);
+  border-radius: 4px;
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+.prose-console pre code { font-family: var(--font-mono); }
+.prose-console figure[data-rehype-pretty-code-figure] { margin-top: 1.4rem; }
+.prose-console [data-rehype-pretty-code-title] {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-dim);
+  background: var(--color-panel);
+  border: 1px solid var(--color-line);
+  border-bottom: 0;
+  border-radius: 4px 4px 0 0;
+  padding: 0.5rem 1.15rem;
+}
+.prose-console [data-rehype-pretty-code-title] + pre { border-radius: 0 0 4px 4px; }
+.prose-console table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  display: block;
+  overflow-x: auto;
+}
+.prose-console th, .prose-console td {
+  text-align: left;
+  padding: 0.65rem 0.9rem;
+  border-bottom: 1px solid var(--color-line-soft);
+}
+.prose-console th {
+  font-family: var(--font-mono);
+  font-size: 0.63rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-dim);
+  background: var(--color-panel-2);
+}
