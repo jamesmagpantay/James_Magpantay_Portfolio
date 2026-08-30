@@ -5,9 +5,12 @@
   var KEY = 'sfx-on';
   var btns = [].slice.call(document.querySelectorAll('.sfx-btn'));
   if(!btns.length) return;
-  /* touch devices and reduced-motion visitors get silence, and no control */
-  if(matchMedia('(hover: none)').matches ||
-     matchMedia('(prefers-reduced-motion: reduce)').matches){
+  /* Reduced-motion visitors still get silence and no control. Touch devices
+     no longer do: the hover sounds cannot fire without a pointer, but every
+     click, view flip, row and modal in the set is wired to a real gesture,
+     which is most of it. The first tap on the toggle is also the gesture
+     that unlocks the AudioContext, so it works from the very first press. */
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){
     btns.forEach(function(b){ b.hidden = true; }); return;
   }
 

@@ -306,10 +306,22 @@
        states, so there is nothing to protect against - and holding one line
        only means "Department of Science and Technology" arrives as
        "Department of Scienc...". Let both lines wrap. */
-    .xp-co h3,.xp-co .span{
+    /* the name may wrap - it is the long one */
+    .xp-co h3{
       white-space:normal;overflow:visible;text-overflow:clip;
+      line-height:1.08;text-wrap:balance;
     }
-    .xp-co h3{line-height:1.08;text-wrap:balance}
+    /* the date must not. Expanding the row grows the logo from 42px to 64px,
+       which takes 22px off the text column - just enough to push the longest
+       of these ("Manila - Jul 2026 - Aug 2026 - 2 mos", 36 characters) onto a
+       second line. Down here the row is already full width, so the logo has
+       nothing to gain by growing: hold it, and trim the type a touch, and the
+       line fits in both states with room to spare. */
+    .xp-co .span{font-size:clamp(11.5px,.85vw,14px)}
+    .xp-row[aria-expanded="true"] .xp-co .span{font-size:clamp(11.5px,.85vw,14px)}
+    .xp-row[aria-expanded="true"] .olg{
+      width:clamp(42px,3.3vw,58px);height:clamp(42px,3.3vw,58px);border-radius:12px;
+    }
   }
 
   /* the section heading opens every project at once */
