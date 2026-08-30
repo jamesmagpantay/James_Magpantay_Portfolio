@@ -29,12 +29,14 @@
     transition:border-color .18s ease-out,background .18s ease-out,color .18s ease-out;
   }
   .bar-flip:hover,.vbadge:hover{border-color:var(--orange);background:var(--orange);color:#fff}
+  /* --cream is whichever of white/near-black reads against the bar in the
+     palette you are in: #EFE9DC on the dark security bar, #15171A on the
+     light one. So one value gives a white dot here and still holds up if the
+     theme is flipped, where a literal #fff would disappear. */
   .bar-flip .dot,.vbadge .dot{
-    width:8px;height:8px;border-radius:50%;background:var(--orange);flex:none;
+    width:8px;height:8px;border-radius:50%;background:var(--cream);flex:none;
     transition:background .18s ease-out;
   }
-  /* the bar is light on this side - a white dot would vanish into it */
-  body.offline .bar-flip .dot,body.offline .vbadge .dot{background:var(--cream)}
   .bar-flip:hover .dot,.vbadge:hover .dot{background:#fff}
   body.offline .bar-flip:hover .dot,body.offline .vbadge:hover .dot{background:var(--ink)}
   .bar-flip .swap{color:var(--cream-dim);border-left:1px solid var(--pill-line);padding-left:9px}
