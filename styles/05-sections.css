@@ -284,6 +284,20 @@
   .xp-pts li::before{
     content:"";position:absolute;left:2px;top:.62em;width:9px;height:2px;background:var(--orange);
   }
+  /* An earlier role gets its own note, stepped back the same way its title is
+     in the list above: smaller, quieter, a shorter measure, and a grey rule
+     instead of the orange one - so the lead description stays the thing you
+     read first and these read as history under it. */
+  .xp-pts li.past{
+    font-size:clamp(12px,.92vw,14.5px);line-height:1.66;
+    color:#5A564E;max-width:70ch;
+  }
+  .xp-pts li.past::before{background:#C4BEB1;width:7px}
+  .pt-role{
+    display:block;margin-bottom:5px;
+    font-family:var(--mono);font-size:clamp(10px,.75vw,11.5px);
+    letter-spacing:.12em;text-transform:uppercase;color:var(--meta);
+  }
   /* no bullets to show - the row still opens, it just grows */
   .xp-row.no-detail .xp-cue{display:none}
   .xp-row[aria-expanded="true"]{background:#fff;border-color:#BFB9AC;grid-template-columns:.95fr 1.95fr}
