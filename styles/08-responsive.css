@@ -98,8 +98,22 @@
   /* ============ below 860px: the bar carries the navigation ============ */
   @media (max-width:860px){
     /* it can no longer wait for the hero to leave - it is the only way out */
-    .bar{translate:0 0;gap:12px}
-    .bar-right{display:none}
+    .bar{translate:0 0;gap:10px}
+    /* Sound, music and theme live here at this width. The bar is pinned, so
+       they are one tap away at any scroll depth rather than only at the top
+       of the page. The flip pill is the one thing that will not fit beside
+       them - the corner badge and the menu sheet both carry that. */
+    .bar-right{display:flex;gap:8px}
+    .bar-flip{display:none}
+    .bar-right .sfx-btn,
+    .bar-right .mus-btn,
+    .bar-right .thm-btn{
+      min-height:44px;min-width:44px;justify-content:center;padding:10px;
+    }
+    /* the mark alone identifies the bar here - the wordmark is on the hero
+       directly below it, at four times the size */
+    .bar-brand{font-size:0;gap:0}
+    .bar-brand .mark{width:26px;height:26px}
     html.js .menu-btn{display:flex}
     /* without JS the menu button does nothing - fall back to the plain links */
     html:not(.js) .bar-nav{display:flex;flex-wrap:wrap;gap:8px 14px}
