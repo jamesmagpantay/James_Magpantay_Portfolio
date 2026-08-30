@@ -374,11 +374,58 @@
 
   var el = {}, on = false, cur = null, ducked = 0, dead = false;
 
+  /* iOS makes HTMLMediaElement.volume read-only. Assignment is dropped in
+     silence and it always reads back 1, so every level, fade and duck in this
+     module has been a no-op on an iPhone - which is exactly why the music sat
+     at full blast next to sound effects that DO have working level control,
+     since those run through Web Audio gain rather than this property.
+
+     Detect it rather than sniffing for iOS, then route the element through a
+     GainNode where the property is missing. Gain is honoured everywhere. */
+  var CAN_SET_VOL = (function(){
+    try{
+      var t = document.createElement('audio');
+      t.volume = 0.42;
+      return Math.abs(t.volume - 0.42) < 0.01;
+    }catch(e){ return false; }
+  })();
+
+  var actx = null, gain = {};
+  function node(a){
+    if(CAN_SET_VOL || !a._k) return null;
+    if(gain[a._k]) return gain[a._k];
+    try{
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if(!AC) return null;
+      actx = actx || new AC();
+      var g = actx.createGain();
+      g.gain.value = 0;
+      /* one source per element, once only - a second call would throw */
+      actx.createMediaElementSource(a).connect(g);
+      g.connect(actx.destination);
+      gain[a._k] = g;
+      return g;
+    }catch(e){ return null; }
+  }
+  function level(a){ var g = node(a); return g ? g.gain.value : a.volume; }
+  function setLevel(a, v){
+    var g = node(a);
+    if(g) g.gain.value = v;
+    else a.volume = v;
+  }
+  /* audio routed through a suspended context is silent even though play()
+     resolved, so the context has to come up with the track */
+  function wake(){
+    if(actx && actx.state === 'suspended') actx.resume();
+  }
+
   function view(){ return document.body.classList.contains('offline') ? 'off' : 'pro'; }
   function make(k){
     if(el[k]) return el[k];
     var a = new Audio();
-    a.loop = true; a.preload = 'auto'; a.volume = 0;
+    a.loop = true; a.preload = 'auto';
+    a._k = k;
+    setLevel(a, 0);
     a.addEventListener('error', function(){
       /* a missing or unplayable file should not leave the toggle lying */
       dead = true; on = false; paint();
@@ -391,11 +438,11 @@
 
   function fade(a, to, ms, done){
     if(a._f){ cancelAnimationFrame(a._f); a._f = null; }
-    var from = a.volume, t0 = performance.now();
+    var from = level(a), t0 = performance.now();
     (function step(t){
-      var k = ms > 0 ? Math.min(1, (t - t0) / ms) : 1;
-      a.volume = Math.max(0, Math.min(1, from + (to - from) * k));
-      if(k < 1) a._f = requestAnimationFrame(step);
+      var q = ms > 0 ? Math.min(1, (t - t0) / ms) : 1;
+      setLevel(a, Math.max(0, Math.min(1, from + (to - from) * q)));
+      if(q < 1) a._f = requestAnimationFrame(step);
       else { a._f = null; if(done) done(); }
     })(t0);
   }
@@ -403,6 +450,7 @@
   function start(){
     cur = view();
     var a = make(cur);
+    wake();
     var p = a.play();
     if(p && p.catch) p.catch(function(){});
     fade(a, target(), FADE_IN);
@@ -493,6 +541,7 @@
     var EVS = ['pointerdown', 'keydown', 'touchend'];
     var kick = function(){
       EVS.forEach(function(e){ removeEventListener(e, kick, true); });
+      wake();
       /* nothing to do if autoplay was allowed and it is already running */
       if(on && (!el[cur] || el[cur].paused)) start();
     };
