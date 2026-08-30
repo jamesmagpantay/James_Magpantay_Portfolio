@@ -139,6 +139,21 @@
     shape-rendering:crispEdges;rotate:3deg;
   }
   /* the name responds to the cursor, so the chip reads as an affordance */
+  /* On a phone the chip is the one thing in the hero that stops scaling: its
+     font floors at 14px while the headline floors at 60px, so at 393px the
+     pill renders ~235px wide - as wide as the name it is labelling. Give it
+     the same vw-driven shrink everything around it already has. */
+  @media (max-width:760px){
+    .flip-chip{
+      top:-38px;
+      font-size:clamp(10px,2.9vw,13px);
+      letter-spacing:.07em;
+      padding:clamp(9px,2.4vw,12px) clamp(12px,4vw,20px);
+      box-shadow:0 8px 20px rgba(0,0,0,.4);
+    }
+    .flip-cur{right:-18px;bottom:-22px;width:clamp(18px,5vw,24px)}
+  }
+
   .h-wrap:hover .flip-chip{background:var(--orange);color:#fff;scale:1.06}
   .h-wrap:hover .h-line .ol{-webkit-text-stroke-color:var(--orange)}
   .h-line .ol{transition:-webkit-text-stroke-color .2s ease-out}
