@@ -102,6 +102,16 @@
     transition:border-color .18s ease-out,color .18s ease-out;
   }
   .thm-btn:hover{border-color:var(--orange);color:var(--cream)}
+  /* "off" is one character wider than "on", so these pills used to shrink as
+     you switched them on. Hold each label at the width of its longer state.
+     The type is monospaced, so that width is exactly
+     characters x (0.6em advance + 0.12em letter-spacing) - 9 x .72 = 6.48em
+     for "Sound off" and "Music off", 5 x .72 = 3.6em for "Light" - with a
+     little over the top for a fallback mono with a wider advance. Left
+     aligned, so the text does not shuffle inside the reserved box. */
+  .sfx-lab,.mus-lab{display:inline-block;min-width:6.7em;text-align:left}
+  .thm-lab{display:inline-block;min-width:3.8em;text-align:left}
+
   .thm-ico{width:15px;height:15px;flex:none;overflow:visible}
   .thm-ico circle,.thm-ico path{
     fill:none;stroke:currentColor;stroke-width:1.7;

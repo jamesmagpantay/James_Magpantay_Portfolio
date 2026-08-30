@@ -63,7 +63,7 @@
     flex:1 1 auto;justify-content:center;min-height:48px;font-size:10.5px;padding:12px 14px;
   }
   /* the labels are the point in here - keep them past the 600px cut-off */
-  .msheet-ctl .thm-lab,.msheet-ctl .mus-lab,.msheet-ctl .sfx-lab{display:inline!important}
+  .msheet-ctl .thm-lab,.msheet-ctl .mus-lab,.msheet-ctl .sfx-lab{display:inline-block!important}
   .msheet-cta{
     display:block;text-align:center;text-decoration:none;
     font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
