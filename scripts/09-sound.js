@@ -353,7 +353,15 @@
     }
     return list[list.length - 1];
   }
-  var VOL = 0.11, FADE_IN = 1500, FADE_OUT = 1000, XFADE = 800;
+  var FADE_IN = 1500, FADE_OUT = 1000, XFADE = 800;
+  /* The music sits much closer to the interface sounds on a phone than it
+     does on a desktop: the speaker has less range, and on touch the hover
+     half of the sound set never fires at all - so the music ends up carrying
+     the mix on its own. Halve it where the site is in its mobile layout.
+     Matched to the same 860px the layout uses, and live, so rotating the
+     phone or resizing a window re-levels rather than waiting for a reload. */
+  var MOBILE = matchMedia('(max-width:860px)');
+  function vol(){ return MOBILE.matches ? 0.05 : 0.11; }
 
   var el = {}, on = false, cur = null, ducked = 0, dead = false;
 
@@ -370,7 +378,7 @@
     el[k] = a;
     return a;
   }
-  function target(){ return VOL * (ducked > 0 ? .4 : 1); }
+  function target(){ return vol() * (ducked > 0 ? .4 : 1); }
 
   function fade(a, to, ms, done){
     if(a._f){ cancelAnimationFrame(a._f); a._f = null; }
@@ -428,6 +436,12 @@
       if(on) start(); else stop();
     });
   });
+
+  (function(){
+    function relevel(){ if(on && cur && el[cur]) fade(el[cur], target(), 300); }
+    if(MOBILE.addEventListener) MOBILE.addEventListener('change', relevel);
+    else if(MOBILE.addListener) MOBILE.addListener(relevel);   /* older Safari */
+  })();
 
   document.addEventListener('viewflip', swap);
   /* the climax should still land - pull the music down under it, briefly */
