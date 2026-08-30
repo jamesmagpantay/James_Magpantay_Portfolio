@@ -390,9 +390,14 @@
     }catch(e){ return false; }
   })();
 
+  /* The readback test above is kept only as a diagnostic. It is not trusted
+     to choose the path any more: a browser can store the property faithfully
+     while its audio session still ignores it, which reads as "volume works"
+     and leaves the track at full blast. Gain is honoured everywhere, so
+     everything goes through gain. */
   var actx = null, gain = {};
   function node(a){
-    if(CAN_SET_VOL || !a._k) return null;
+    if(!a._k) return null;
     if(gain[a._k]) return gain[a._k];
     try{
       var AC = window.AudioContext || window.webkitAudioContext;
@@ -417,6 +422,26 @@
      resolved, so the context has to come up with the track */
   function wake(){
     if(actx && actx.state === 'suspended') actx.resume();
+  }
+  /* a single unlock can be missed; while the music is on, every gesture is
+     another chance for the context to come up */
+  ['pointerdown','keydown','touchend'].forEach(function(e){
+    addEventListener(e, function(){ if(on) wake(); }, true);
+  });
+
+  /* ---- diagnostics, off unless ?audiodebug is in the URL ---- */
+  var DEBUG = /[?&]audiodebug/.test(location.search);
+  function report(where){
+    if(!DEBUG || !window.toast) return;
+    var a = cur && el[cur], g = a && gain[a._k];
+    window.toast('info', 'audio: ' + where,
+      'narrow=' + MOBILE.matches +
+      ' | vol()=' + vol().toFixed(3) +
+      ' | gain=' + (g ? g.gain.value.toFixed(3) : 'NO NODE') +
+      ' | el.volume=' + (a ? a.volume : '-') +
+      ' | ctx=' + (actx ? actx.state : 'none') +
+      ' | readbackSaysVolWorks=' + CAN_SET_VOL +
+      ' | w=' + innerWidth);
   }
 
   function view(){ return document.body.classList.contains('offline') ? 'off' : 'pro'; }
@@ -454,6 +479,8 @@
     var p = a.play();
     if(p && p.catch) p.catch(function(){});
     fade(a, target(), FADE_IN);
+    report('start');
+    setTimeout(function(){ report('after fade'); }, FADE_IN + 300);
   }
   function stop(){
     Object.keys(el).forEach(function(k){
