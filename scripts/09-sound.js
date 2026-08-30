@@ -491,6 +491,14 @@
       on = !on;
       try{ localStorage.setItem(KEY, on ? '1' : '0'); }catch(err){}
       paint();
+      /* The same key the theme and sound pills answer with. This is a
+         separate IIFE from the sound module, so its play() is not in scope
+         here - window.sfx is the only way across, and it is absent entirely
+         when that module bails for reduced motion. It plays in both
+         directions, unlike the sound toggle, which cannot make a noise on
+         the press that switches it off; and sfx.play is itself a no-op when
+         interface sound is off, so this never adds a click nobody asked for. */
+      if(window.sfx) window.sfx.play('click');
       if(on) start(); else stop();
     });
   });
