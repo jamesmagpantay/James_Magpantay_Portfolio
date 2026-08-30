@@ -141,6 +141,27 @@
   }
   @media (max-width:760px){.hero-top .sfx-btn{font-size:12px;padding:10px 15px}}
   @media (max-width:600px){.sfx-btn .sfx-lab{display:none}.sfx-btn{padding:9px 11px}}
+  /* Now that the hero controls have a row to themselves there is room to say
+     what they are. Wrapping is allowed on that row, so if the three labelled
+     pills ever exceed the width they drop to a second line instead of being
+     clipped again. Below 420px there is genuinely no room: icon only, at a
+     44px target, with the names still carried by the menu sheet. */
+  @media (max-width:760px){
+    .hero-top .sfx-btn,.hero-top .mus-btn,.hero-top .thm-btn{
+      min-height:44px;justify-content:center;padding:10px 13px;
+    }
+  }
+  @media (min-width:421px) and (max-width:600px){
+    .hero-top .sfx-btn .sfx-lab,
+    .hero-top .mus-btn .mus-lab,
+    .hero-top .thm-btn .thm-lab{display:inline}
+    .hero-top .sfx-btn,.hero-top .mus-btn,.hero-top .thm-btn{
+      font-size:11px;letter-spacing:.07em;gap:7px;padding:11px 10px;
+    }
+  }
+  @media (max-width:420px){
+    .hero-top .sfx-btn,.hero-top .mus-btn,.hero-top .thm-btn{min-width:46px;padding:10px}
+  }
   .bar-flip:hover .swap{color:#fff;border-color:rgba(255,255,255,.5)}
   /* nav swap: links drop in one after another, the bar sweeps behind them */
   .bar-nav a,.bar-flip span:not(.swap),.vbadge span:not(.dot){

@@ -25,6 +25,20 @@
   nav a{font-size:clamp(17px,1.5vw,22px);font-weight:500;text-decoration:none;color:var(--cream-dim);transition:color .18s ease-out}
   nav a:hover{color:var(--cream)}
   @media (max-width:760px){nav{display:none}}
+  /* The brand and the three controls were sharing one row. At 393px the brand
+     alone is ~286px of a 353px row - the mark plus "James Magpantay" at its
+     29px floor - so the controls sat ~128px past the edge and the sheet's
+     overflow:hidden cut them off. They were rendering, just off-screen.
+     Two rows: the name, then the controls under it. */
+  @media (max-width:760px){
+    .hero-top{flex-wrap:wrap;row-gap:14px;margin-bottom:clamp(26px,5vh,52px)}
+    .hero-top-left{flex:1 1 100%;flex-wrap:wrap;gap:10px}
+    .brand{flex:1 1 100%;gap:12px;font-size:clamp(23px,6.4vw,34px)}
+    .brand .mark{width:clamp(32px,7.6vw,44px);height:clamp(32px,7.6vw,44px)}
+    /* it holds only the section nav, which is already hidden at this width -
+       left in the flow it would claim a third row of empty space */
+    .hero-top-right{display:none}
+  }
 
   /* school + scholarship marks - centred on the headline, out of flow so the
      portrait stays put; the right edge lands on the "G" of Gokongwei below,
