@@ -69,25 +69,24 @@
   .mus-btn:hover{border-color:var(--orange);color:var(--cream)}
   .mus-btn[aria-pressed="true"]{color:var(--cream);border-color:#5A554C}
   .mus-btn[disabled]{opacity:.45;cursor:not-allowed}
-  .mus-btn .disc{
-    position:relative;width:13px;height:13px;flex:none;
-    border:2px solid currentColor;border-radius:50%;
+  /* a beamed pair of quavers - at 15px a single note with a flag turns to
+     mush, while two noteheads under a beam stay legible. It matters more
+     than it used to: below 600px these buttons lose their labels and the
+     icon is the only thing naming them. */
+  .mus-ico{width:15px;height:15px;flex:none;overflow:visible}
+  .mus-ico path{
+    fill:none;stroke:currentColor;stroke-width:2;
+    stroke-linecap:round;stroke-linejoin:round;
   }
-  .mus-btn .disc::before{
-    content:"";position:absolute;left:50%;top:1px;width:1.5px;height:4px;
-    background:currentColor;translate:-50% 0;
-  }
-  .mus-btn .disc::after{
-    content:"";position:absolute;left:50%;top:50%;width:3px;height:3px;
-    border-radius:50%;background:currentColor;translate:-50% -50%;
-  }
-  .mus-btn[aria-pressed="true"] .disc{animation:mus-spin 2.4s linear infinite}
-  @keyframes mus-spin{to{rotate:360deg}}
+  .mus-ico circle{fill:currentColor;stroke:none}
+  /* a note does not spin the way a record did - let it keep time instead */
+  .mus-btn[aria-pressed="true"] .mus-ico{animation:mus-bob 1.5s ease-in-out infinite}
+  @keyframes mus-bob{0%,100%{translate:0 0}50%{translate:0 -2.5px}}
   .hero-top .mus-btn{
     font-size:clamp(13px,1.15vw,17px);padding:12px 21px;gap:12px;
     border:2px solid var(--orange);color:var(--cream);
   }
-  .hero-top .mus-btn .disc{width:16px;height:16px}
+  .hero-top .mus-ico{width:19px;height:19px}
   .hero-top .mus-btn:hover,
   .hero-top .mus-btn[aria-pressed="true"]{background:var(--orange);color:#fff;border-color:var(--orange)}
   @media (max-width:760px){.hero-top .mus-btn{font-size:12px;padding:10px 15px}}
