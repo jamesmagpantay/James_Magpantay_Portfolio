@@ -374,27 +374,17 @@
 
   var el = {}, on = false, cur = null, ducked = 0, dead = false;
 
-  /* iOS makes HTMLMediaElement.volume read-only. Assignment is dropped in
-     silence and it always reads back 1, so every level, fade and duck in this
-     module has been a no-op on an iPhone - which is exactly why the music sat
-     at full blast next to sound effects that DO have working level control,
-     since those run through Web Audio gain rather than this property.
+  /* Every level, fade and duck here runs through a Web Audio GainNode rather
+     than HTMLMediaElement.volume, because on iOS that property does nothing:
+     the audio session ignores it, and the track plays at full level whatever
+     you assign. It is also why the music used to tower over the sound
+     effects, which had working level control all along - they were already
+     going through gain.
 
-     Detect it rather than sniffing for iOS, then route the element through a
-     GainNode where the property is missing. Gain is honoured everywhere. */
-  var CAN_SET_VOL = (function(){
-    try{
-      var t = document.createElement('audio');
-      t.volume = 0.42;
-      return Math.abs(t.volume - 0.42) < 0.01;
-    }catch(e){ return false; }
-  })();
-
-  /* The readback test above is kept only as a diagnostic. It is not trusted
-     to choose the path any more: a browser can store the property faithfully
-     while its audio session still ignores it, which reads as "volume works"
-     and leaves the track at full blast. Gain is honoured everywhere, so
-     everything goes through gain. */
+     Feature-detecting it does not work. Setting volume and reading it back
+     returns the value you just wrote, so the probe reports success while the
+     output stays loud. There is no reliable test, so there is no branch:
+     everything goes through gain, on every platform. */
   var actx = null, gain = {};
   function node(a){
     if(!a._k) return null;
@@ -429,20 +419,6 @@
     addEventListener(e, function(){ if(on) wake(); }, true);
   });
 
-  /* ---- diagnostics, off unless ?audiodebug is in the URL ---- */
-  var DEBUG = /[?&]audiodebug/.test(location.search);
-  function report(where){
-    if(!DEBUG || !window.toast) return;
-    var a = cur && el[cur], g = a && gain[a._k];
-    window.toast('info', 'audio: ' + where,
-      'narrow=' + MOBILE.matches +
-      ' | vol()=' + vol().toFixed(3) +
-      ' | gain=' + (g ? g.gain.value.toFixed(3) : 'NO NODE') +
-      ' | el.volume=' + (a ? a.volume : '-') +
-      ' | ctx=' + (actx ? actx.state : 'none') +
-      ' | readbackSaysVolWorks=' + CAN_SET_VOL +
-      ' | w=' + innerWidth);
-  }
 
   function view(){ return document.body.classList.contains('offline') ? 'off' : 'pro'; }
   function make(k){
@@ -479,8 +455,6 @@
     var p = a.play();
     if(p && p.catch) p.catch(function(){});
     fade(a, target(), FADE_IN);
-    report('start');
-    setTimeout(function(){ report('after fade'); }, FADE_IN + 300);
   }
   function stop(){
     Object.keys(el).forEach(function(k){
