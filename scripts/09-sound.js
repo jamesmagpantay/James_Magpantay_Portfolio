@@ -133,11 +133,20 @@
     flip:  function(){ thock({cut:2600, r1:132, r2:480, dur:.115, peak:1.0});
                        thock({cut:3400, r1:240, r2:900, dur:.045, peak:.40}, ctx.currentTime + .075); }
   };
+  /* Which sounds pull the music down under them. Deliberately not the whole
+     set: the scroll detent fires up to nine times a second and the key sounds
+     fire on every character typed into the contact form, so ducking on those
+     would leave the music pumping continuously. Only discrete, meaningful
+     events - the ones you are meant to notice - get to interrupt it. */
+  var DUCK = {click:1, big:1, open:1, close:1, land:1, flip:1,
+              revealPro:1, revealOff:1};
+
   function play(name, arg){
     if(!on) return;
     boot();
     if(!ctx) return;
     if(ctx.state === 'suspended') ctx.resume();
+    if(DUCK[name]) document.dispatchEvent(new CustomEvent('sfxduck'));
     try{ if(lib[name]) lib[name](arg); }catch(e){}
   }
   window.sfx = { play: play, isOn: function(){ return on; } };
@@ -361,7 +370,7 @@
      Matched to the same 860px the layout uses, and live, so rotating the
      phone or resizing a window re-levels rather than waiting for a reload. */
   var MOBILE = matchMedia('(max-width:860px)');
-  function vol(){ return MOBILE.matches ? 0.05 : 0.11; }
+  function vol(){ return MOBILE.matches ? 0.028 : 0.11; }
 
   var el = {}, on = false, cur = null, ducked = 0, dead = false;
 
@@ -444,6 +453,20 @@
   })();
 
   document.addEventListener('viewflip', swap);
+  /* Level alone does not solve masking: a sustained bed hides a 50ms
+     transient even when the bed is quieter than it. So the music also steps
+     back under each discrete effect and comes straight back - short enough
+     to read as the effect cutting through rather than as the music dipping. */
+  document.addEventListener('sfxduck', function(){
+    if(!on || !cur || !el[cur]) return;
+    ducked++;
+    fade(el[cur], target(), 70);
+    setTimeout(function(){
+      ducked = Math.max(0, ducked - 1);
+      if(on && cur && el[cur]) fade(el[cur], target(), 320);
+    }, 260);
+  });
+
   /* the climax should still land - pull the music down under it, briefly */
   document.addEventListener('sfxclimax', function(){
     if(!on || !cur || !el[cur]) return;
