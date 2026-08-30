@@ -1,0 +1,249 @@
+  /* ===== view chrome: sticky bar, corner badge, flip wipe ===== */
+  .bar{
+    position:fixed;top:0;left:0;right:0;z-index:60;
+    display:flex;align-items:center;justify-content:space-between;gap:24px;
+    padding:12px clamp(16px,3vw,40px);
+    background:var(--bar-bg);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--bar-line);color:var(--cream);
+    translate:0 -101%;
+  }
+  .bar.on{translate:0 0}
+  .bar-brand{
+    display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;white-space:nowrap;
+    /* it is a button now: strip the UA chrome, keep the type */
+    background:none;border:0;padding:0;color:inherit;font-family:inherit;
+    cursor:pointer;transition:color .18s ease-out;
+  }
+  .bar-brand:hover{color:var(--orange)}
+  .bar-brand:focus-visible{outline:2px solid var(--orange);outline-offset:4px;border-radius:4px}
+  .bar-brand .mark{width:21px;height:21px;flex:none;display:block}
+  .bar-nav{display:flex;gap:clamp(12px,1.8vw,26px)}
+  .bar-nav a{font-size:13px;color:var(--cream-dim);text-decoration:none;transition:color .18s ease-out}
+  .bar-nav a:hover{color:var(--cream)}
+  @media (max-width:860px){.bar-nav{display:none}}
+  .bar-flip,.vbadge{
+    display:flex;align-items:center;gap:9px;cursor:pointer;white-space:nowrap;
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    border:1.5px solid var(--pill-line);border-radius:99px;padding:9px 16px;
+    background:transparent;color:var(--cream);
+    transition:border-color .18s ease-out,background .18s ease-out,color .18s ease-out;
+  }
+  .bar-flip:hover,.vbadge:hover{border-color:var(--orange);background:var(--orange);color:#fff}
+  .bar-flip .dot,.vbadge .dot{
+    width:8px;height:8px;border-radius:50%;background:var(--orange);flex:none;
+    transition:background .18s ease-out;
+  }
+  /* the bar is light on this side - a white dot would vanish into it */
+  body.offline .bar-flip .dot,body.offline .vbadge .dot{background:var(--cream)}
+  .bar-flip:hover .dot,.vbadge:hover .dot{background:#fff}
+  body.offline .bar-flip:hover .dot,body.offline .vbadge:hover .dot{background:var(--ink)}
+  .bar-flip .swap{color:var(--cream-dim);border-left:1px solid var(--pill-line);padding-left:9px}
+  /* sound toggle - same pill language as the flip control */
+  .bar-right{display:flex;align-items:center;gap:clamp(8px,1vw,14px)}
+  .sfx-btn{
+    display:flex;align-items:center;gap:9px;cursor:pointer;white-space:nowrap;
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    border:1.5px solid var(--pill-quiet);border-radius:99px;padding:9px 14px;
+    background:transparent;color:var(--pill-fg);
+    transition:border-color .18s ease-out,color .18s ease-out;
+  }
+  .sfx-btn:hover{border-color:var(--orange);color:var(--cream)}
+  .sfx-btn[aria-pressed="true"]{color:var(--cream);border-color:#5A554C}
+  .sfx-btn .wave{display:flex;align-items:flex-end;gap:2px;height:11px}
+  .sfx-btn .wave i{width:2px;height:3px;background:currentColor;border-radius:1px}
+  .sfx-btn[aria-pressed="true"] .wave i{animation:sfx-w .9s ease-in-out infinite}
+  .sfx-btn[aria-pressed="true"] .wave i:nth-child(2){animation-delay:.15s}
+  .sfx-btn[aria-pressed="true"] .wave i:nth-child(3){animation-delay:.3s}
+  @keyframes sfx-w{0%,100%{height:3px}50%{height:11px}}
+  /* pointer-less devices get no UI sound, so they get no control either */
+  @media (hover:none){.sfx-btn{display:none}}
+  /* music pill: same shell as the sound pill, but a turning record instead of
+     a level meter - two different things should not wear one icon */
+  .mus-btn{
+    display:flex;align-items:center;gap:9px;cursor:pointer;white-space:nowrap;
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    border:1.5px solid var(--pill-quiet);border-radius:99px;padding:9px 14px;
+    background:transparent;color:var(--pill-fg);
+    transition:border-color .18s ease-out,color .18s ease-out;
+  }
+  .mus-btn:hover{border-color:var(--orange);color:var(--cream)}
+  .mus-btn[aria-pressed="true"]{color:var(--cream);border-color:#5A554C}
+  .mus-btn[disabled]{opacity:.45;cursor:not-allowed}
+  .mus-btn .disc{
+    position:relative;width:13px;height:13px;flex:none;
+    border:2px solid currentColor;border-radius:50%;
+  }
+  .mus-btn .disc::before{
+    content:"";position:absolute;left:50%;top:1px;width:1.5px;height:4px;
+    background:currentColor;translate:-50% 0;
+  }
+  .mus-btn .disc::after{
+    content:"";position:absolute;left:50%;top:50%;width:3px;height:3px;
+    border-radius:50%;background:currentColor;translate:-50% -50%;
+  }
+  .mus-btn[aria-pressed="true"] .disc{animation:mus-spin 2.4s linear infinite}
+  @keyframes mus-spin{to{rotate:360deg}}
+  .hero-top .mus-btn{
+    font-size:clamp(13px,1.15vw,17px);padding:12px 21px;gap:12px;
+    border:2px solid var(--orange);color:var(--cream);
+  }
+  .hero-top .mus-btn .disc{width:16px;height:16px}
+  .hero-top .mus-btn:hover,
+  .hero-top .mus-btn[aria-pressed="true"]{background:var(--orange);color:#fff;border-color:var(--orange)}
+  @media (max-width:760px){.hero-top .mus-btn{font-size:12px;padding:10px 15px}}
+  @media (max-width:600px){.mus-btn .mus-lab{display:none}.mus-btn{padding:9px 11px}}
+  /* theme pill - same shell again; the icon shows the mode you are in */
+  .thm-btn{
+    display:flex;align-items:center;gap:9px;cursor:pointer;white-space:nowrap;
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    border:1.5px solid var(--pill-quiet);border-radius:99px;padding:9px 14px;
+    background:transparent;color:var(--pill-fg);
+    transition:border-color .18s ease-out,color .18s ease-out;
+  }
+  .thm-btn:hover{border-color:var(--orange);color:var(--cream)}
+  .thm-ico{width:15px;height:15px;flex:none;overflow:visible}
+  .thm-ico circle,.thm-ico path{
+    fill:none;stroke:currentColor;stroke-width:1.7;
+    stroke-linecap:round;stroke-linejoin:round;
+  }
+  .thm-ico .i-moon path{fill:currentColor;stroke:none}
+  html[data-theme="dark"] .thm-ico .i-sun{display:none}
+  html[data-theme="light"] .thm-ico .i-moon{display:none}
+  .hero-top .thm-btn{
+    font-size:clamp(13px,1.15vw,17px);padding:12px 21px;gap:12px;
+    border:2px solid var(--orange);color:var(--cream);
+  }
+  .hero-top .thm-ico{width:19px;height:19px}
+  .hero-top .thm-btn:hover{background:var(--orange);color:#fff}
+  @media (max-width:760px){.hero-top .thm-btn{font-size:12px;padding:10px 15px}}
+  @media (max-width:600px){.thm-btn .thm-lab{display:none}.thm-btn{padding:9px 11px}}
+  .hero-top-right{display:flex;align-items:center;gap:clamp(18px,2.8vw,40px)}
+  .hero-top-left{display:flex;align-items:center;gap:clamp(14px,1.7vw,28px)}
+  /* the hero control is the one people meet first - it wears the accent */
+  .hero-top .sfx-btn{
+    font-size:clamp(13px,1.15vw,17px);padding:12px 21px;gap:12px;
+    border:2px solid var(--orange);color:var(--cream);
+  }
+  .hero-top .sfx-btn .wave{height:15px}
+  .hero-top .sfx-btn .wave i{width:3px;background:var(--orange)}
+  .hero-top .sfx-btn[aria-pressed="true"] .wave i{animation-name:sfx-wh}
+  @keyframes sfx-wh{0%,100%{height:4px}50%{height:15px}}
+  .hero-top .sfx-btn:hover,
+  .hero-top .sfx-btn[aria-pressed="true"]{background:var(--orange);color:#fff;border-color:var(--orange)}
+  .hero-top .sfx-btn:hover .wave i,
+  .hero-top .sfx-btn[aria-pressed="true"] .wave i{background:#fff}
+  /* three soft pulses on arrival, then it stops asking */
+  .hero-top .sfx-btn[aria-pressed="false"]{animation:sfx-pulse 2.2s ease-out 1.4s 3}
+  @keyframes sfx-pulse{
+    0%{box-shadow:0 0 0 0 rgba(240,127,40,.35)}
+    45%{box-shadow:0 0 0 10px rgba(240,127,40,0)}
+    100%{box-shadow:0 0 0 0 rgba(240,127,40,0)}
+  }
+  @media (max-width:760px){.hero-top .sfx-btn{font-size:12px;padding:10px 15px}}
+  @media (max-width:600px){.sfx-btn .sfx-lab{display:none}.sfx-btn{padding:9px 11px}}
+  .bar-flip:hover .swap{color:#fff;border-color:rgba(255,255,255,.5)}
+  /* nav swap: links drop in one after another, the bar sweeps behind them */
+  .bar-nav a,.bar-flip span:not(.swap),.vbadge span:not(.dot){
+    display:inline-block;
+    animation:nav-in .62s cubic-bezier(.22,1.35,.36,1) backwards;
+  }
+  .bar-nav a:nth-child(1){animation-delay:.06s}
+  .bar-nav a:nth-child(2){animation-delay:.13s}
+  .bar-nav a:nth-child(3){animation-delay:.20s}
+  .bar-nav a:nth-child(4){animation-delay:.27s}
+  .bar-nav a:nth-child(5){animation-delay:.34s}
+  @keyframes nav-in{
+    0%{opacity:0;translate:0 -26px;scale:.86;filter:blur(6px)}
+    60%{opacity:1;filter:blur(0)}
+    100%{opacity:1;translate:0 0;scale:1}
+  }
+  /* an orange light sweeps across the bar as the page underneath changes */
+  .bar::after{
+    content:"";position:absolute;inset:0;pointer-events:none;opacity:0;
+    background:linear-gradient(100deg,
+      transparent 0%, rgba(240,127,40,.06) 35%,
+      rgba(240,127,40,.42) 50%, rgba(240,127,40,.06) 65%, transparent 100%);
+  }
+  .bar.flipping::after{animation:bar-sweep .85s cubic-bezier(.4,0,.2,1)}
+  @keyframes bar-sweep{
+    0%{opacity:1;translate:-100% 0}
+    100%{opacity:1;translate:100% 0}
+  }
+  .bar.flipping{border-bottom-color:var(--orange)}
+  .bar.flipping .bar-brand .mark{color:var(--orange);scale:1.25}
+  .bar .bar-brand .mark{transition:color .45s ease-out,scale .45s cubic-bezier(.22,1.35,.36,1)}
+  /* the status dot snaps over as the view lands */
+  .bar.flipping .dot,.vbadge.flipping .dot{animation:dot-pop .6s cubic-bezier(.22,1.35,.36,1)}
+  @keyframes dot-pop{0%{scale:0}55%{scale:2.1}100%{scale:1}}
+  .bar{
+    overflow:hidden;
+    transition:translate .34s cubic-bezier(.32,.72,0,1),border-color .45s ease-out;
+  }
+
+  /* corner badge: the same answer, kept in reach on small screens */
+  .vbadge{
+    position:fixed;right:clamp(12px,2vw,24px);bottom:clamp(12px,2vw,24px);z-index:60;
+    background:var(--bar-bg);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+    box-shadow:0 10px 26px rgba(0,0,0,.35);
+    opacity:0;pointer-events:none;translate:0 12px;
+    transition:opacity .28s ease-out,translate .28s cubic-bezier(.32,.72,0,1),
+               border-color .18s ease-out,background .18s ease-out,color .18s ease-out;
+  }
+  .vbadge.on{opacity:1;pointer-events:auto;translate:0 0}
+  @media (min-width:861px){.vbadge{display:none}}
+  /* the flip itself: a short wipe so the change is never missed */
+  .wipe{
+    position:fixed;inset:0;z-index:95;background:var(--card);
+    opacity:0;pointer-events:none;transition:opacity .22s ease-out;
+  }
+  .wipe.on{opacity:1}
+
+  .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+  /* the first section of the incoming view leads itself in as it reaches the
+     fold - a moving thing just below the hero is the scroll invitation */
+  .lead-arm .sec-head h2,.lead-arm .sec-head .meta{opacity:0;translate:0 26px;filter:blur(5px)}
+  .lead-go .sec-head h2,.lead-go .sec-head .meta{
+    animation:lead-in .72s cubic-bezier(.22,1.35,.36,1) forwards;
+  }
+  .lead-go .sec-head .meta{animation-delay:.09s}
+  @keyframes lead-in{
+    0%{opacity:0;translate:0 26px;filter:blur(5px)}
+    100%{opacity:1;translate:0 0}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .lead-arm .sec-head h2,.lead-arm .sec-head .meta{opacity:1;translate:0 0;filter:none}
+    .lead-go .sec-head h2,.lead-go .sec-head .meta{animation:none}
+  }
+
+  /* ===== scroll cue: one big white arrow, raised after a view flip ===== */
+  .scue{
+    position:fixed;z-index:70;right:clamp(10px,2vw,30px);top:50%;
+    pointer-events:none;
+    opacity:0;translate:0 -50%;
+    transition:opacity .35s ease-out;
+  }
+  .scue.on{opacity:1}
+  .scue svg{
+    display:block;height:clamp(124px,21vh,224px);width:auto;
+    /* it rides over the dark hero and, once scrolled, light sections */
+    filter:drop-shadow(0 2px 10px rgba(0,0,0,.45));
+  }
+  .scue path{
+    stroke:var(--cue);stroke-width:5;fill:none;
+    stroke-linecap:round;stroke-linejoin:round;
+    vector-effect:non-scaling-stroke;
+  }
+  .scue.on svg{animation:scue-arrow 1.5s cubic-bezier(.5,0,.35,1) infinite}
+  @keyframes scue-arrow{
+    0%{translate:0 -16px;opacity:0}
+    30%{opacity:1}
+    70%{opacity:1}
+    100%{translate:0 20px;opacity:0}
+  }
+  @media (max-width:860px){
+    /* clear of the corner badge */
+    .scue{top:auto;bottom:calc(clamp(12px,2vw,24px) + 62px);translate:0 0}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .scue.on svg{animation:none}
+  }

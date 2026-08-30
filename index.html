@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>James Magpantay, Security in Training</title>
+<meta name="description" content="James Randall A. Magpantay. BSIT student stacking cybersecurity credentials toward SOC, GRC, network, and cloud security roles.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Crect%20width%3D%22100%22%20height%3D%22100%22%20rx%3D%2220%22%20fill%3D%22%23171512%22%2F%3E%3Cpath%20fill-rule%3D%22evenodd%22%20fill%3D%22%23EFE9DC%22%20d%3D%22M20%200H80A20%2020%200%200%201%20100%2020V80A20%2020%200%200%201%2080%20100H0V20A20%2020%200%200%201%2020%200ZM41%2026V74H12V61H28V26ZM49%2074V26H62L68.5%2044L75%2026H88V74H75V50L68.5%2062L62%2050V74Z%22%2F%3E%3C%2Fsvg%3E">
+<meta name="theme-color" content="#171512" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#EFEDE8" media="(prefers-color-scheme: light)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Sans:ital,wght@0,400;0,500;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>
+/* The theme is a property of the view, not of the visitor: the security
+   profile is always dark, off the clock is always light. The landing view is
+   the security profile, so set that before first paint. */
+document.documentElement.setAttribute('data-theme', 'dark');
+</script>
+<link rel="stylesheet" href="styles/01-tokens.css">
+<link rel="stylesheet" href="styles/02-hero.css">
+<link rel="stylesheet" href="styles/03-stage.css">
+<link rel="stylesheet" href="styles/04-view-chrome.css">
+<link rel="stylesheet" href="styles/05-sections.css">
+<link rel="stylesheet" href="styles/06-progress.css">
+<link rel="stylesheet" href="styles/07-galleries.css">
+<link rel="stylesheet" href="styles/08-responsive.css">
+<link rel="stylesheet" href="styles/09-feedback.css">
+<script defer src="scripts/01-hero.js"></script>
+<script defer src="scripts/02-projects.js"></script>
+<script defer src="scripts/03-experience.js"></script>
+<script defer src="scripts/04-overlays.js"></script>
+<script defer src="scripts/05-contact.js"></script>
+<script defer src="scripts/06-hero-motion.js"></script>
+<script defer src="scripts/07-view-chrome.js"></script>
+<script defer src="scripts/08-hero-marks.js"></script>
+<script defer src="scripts/09-sound.js"></script>
+<script defer src="scripts/10-theme.js"></script>
+<script defer src="scripts/11-see-all.js"></script>
+<script defer src="scripts/12-navigation.js"></script>
+<script defer src="scripts/13-a11y.js"></script>
+<script defer src="scripts/14-feedback.js"></script>
+</head>
+<body>
+
+<!-- The curtain. It is display:none until the script below turns it on, so a
+     visitor without JavaScript never meets a screen they cannot dismiss. -->
+<div class="pre" id="pre" aria-hidden="true">
+  <svg class="pre-mark" viewBox="0 0 100 100" aria-hidden="true"><path fill-rule="evenodd" d="M20 0H80A20 20 0 0 1 100 20V80A20 20 0 0 1 80 100H0V20A20 20 0 0 1 20 0ZM41 26V74H12V61H28V26ZM49 74V26H62L68.5 44L75 26H88V74H75V50L68.5 62L62 50V74Z"/></svg>
+  <p class="pre-name">James Magpantay</p>
+  <div class="pre-rail"><i class="pre-fill" id="pre-fill"></i></div>
+  <p class="pre-meta" id="pre-meta">Loading&hellip;</p>
+</div>
+<script>
+/* First thing, before anything else can fail: arm the way out. Everything
+   below is an optimisation on top of a curtain that is already guaranteed
+   to lift. */
+(function(){
+  var root = document.documentElement;
+  root.className += ' js loading';
+
+  /* A curtain nobody sees is just a flash of dark. On a warm cache this page
+     is ready in under 200ms, so hold the opening for a beat and it reads as
+     deliberate rather than as a rendering hiccup. Someone who asked for less
+     motion gets a much shorter hold - the point of the pause is the small
+     animation, and they are not being shown one. */
+  var MIN = matchMedia('(prefers-reduced-motion: reduce)').matches ? 400 : 1100;
+  var t0 = Date.now(), pending = null, done = false;
+  window.__pre = {t0:t0, min:MIN};
+
+  function finish(){
+    if(done) return;
+    done = true;
+    window.__preDone = true;
+    document.dispatchEvent(new CustomEvent('preready'));
+    /* let the rail land on 100% before the curtain starts to go */
+    setTimeout(function(){
+      root.classList.add('ready');
+      /* the hero's entrance is released here, so it plays through the fade
+         instead of being over by the time the curtain has gone */
+      root.classList.remove('loading');
+      setTimeout(function(){
+        var el = document.getElementById('pre');
+        if(el && el.parentNode) el.parentNode.removeChild(el);
+      }, 700);
+    }, 180);
+  }
+  /* force skips the floor - that path is the failsafe, and a failsafe that
+     waits for anything is not one */
+  function reveal(force){
+    if(done) return;
+    var left = force ? 0 : MIN - (Date.now() - t0);
+    if(left > 0){
+      if(!pending) pending = setTimeout(function(){ pending = null; finish(); }, left);
+      return;
+    }
+    if(pending){ clearTimeout(pending); pending = null; }
+    finish();
+  }
+  window.__reveal = reveal;
+  setTimeout(function(){ reveal(true); }, 4500);   /* the hard failsafe */
+  addEventListener('load', function(){ reveal(); });
+  addEventListener('error', function(){ setTimeout(reveal, 300); }, true);
+})();
+</script>
+
+<div class="toasts" id="toasts" role="status" aria-live="polite" aria-atomic="false"></div>
+
+<noscript>
+  <p class="nojs">This site uses JavaScript for its two profiles, the galleries
+    and the contact form &mdash; with it switched off you can still read
+    everything here, and reach me at
+    <a href="mailto:jamess.a.magpantay@gmail.com">jamess.a.magpantay@gmail.com</a>.</p>
+</noscript>
+
+<a class="skiplink" href="#main">Skip to content</a>
+
+<header class="bar" id="bar">
+  <i class="bar-prog" aria-hidden="true"></i>
+  <button class="bar-brand" type="button" id="totop" aria-label="Back to top"><svg class="mark" viewBox="0 0 100 100" aria-hidden="true"><path fill-rule="evenodd" d="M20 0H80A20 20 0 0 1 100 20V80A20 20 0 0 1 80 100H0V20A20 20 0 0 1 20 0ZM41 26V74H12V61H28V26ZM49 74V26H62L68.5 44L75 26H88V74H75V50L68.5 62L62 50V74Z"/></svg>James Magpantay</button>
+  <nav class="bar-nav" data-view="pro" aria-label="Sections">
+    <a href="#experience">Experience</a>
+    <a href="#work">Projects</a>
+    <a href="#stack">Stack</a>
+    <a href="#certs">Certifications</a>
+    <a href="#summary">Summary</a>
+  </nav>
+  <nav class="bar-nav" data-view="off" aria-label="Sections" hidden>
+    <a href="#speaking">Speaking</a>
+    <a href="#events">Events</a>
+    <a href="#life">Off the clock</a>
+  </nav>
+  <div class="bar-right">
+  <span class="sprog" id="sprog" aria-hidden="true">0%</span>
+  <button class="sfx-btn" type="button" id="sfxbtn" aria-pressed="false" aria-label="Toggle interface sound">
+    <span class="wave" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="sfx-lab">Sound off</span>
+  </button>
+  <button class="mus-btn" type="button" aria-pressed="false" aria-label="Toggle background music">
+    <span class="disc" aria-hidden="true"></span>
+    <span class="mus-lab">Music off</span>
+  </button>
+  <button class="thm-btn" type="button" aria-pressed="false" aria-label="Toggle dark and light theme">
+    <svg class="thm-ico" viewBox="0 0 20 20" aria-hidden="true">
+      <g class="i-sun"><circle cx="10" cy="10" r="3.6"/><path d="M10 1.4v2.2M10 16.4v2.2M1.4 10h2.2M16.4 10h2.2M4 4l1.6 1.6M14.4 14.4L16 16M16 4l-1.6 1.6M5.6 14.4L4 16"/></g>
+      <g class="i-moon"><path d="M16 12.4A6.8 6.8 0 0 1 7.6 4a6.8 6.8 0 1 0 8.4 8.4z"/></g>
+    </svg>
+    <span class="thm-lab">Dark</span>
+  </button>
+  <button class="bar-flip" type="button" id="barflip">
+    <span class="dot" aria-hidden="true"></span>
+    <span data-view="pro">Security profile</span>
+    <span data-view="off" hidden>Off the clock</span>
+    <span class="swap" aria-hidden="true">Switch ⇄</span>
+  </button>
+</div>
+  <button class="menu-btn" type="button" id="menubtn"
+          aria-expanded="false" aria-controls="msheet" aria-label="Open menu">
+    <span class="menu-ico" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="menu-lab">Menu</span>
+  </button>
+</header>
+
+<!-- Mobile menu. The bar's own nav and controls have nowhere to go on a phone,
+     so they live here instead: sections for the current view, the view flip,
+     and the theme/music toggles. Links are cloned from the visible nav. -->
+<div class="msheet" id="msheet" role="dialog" aria-modal="true" aria-label="Menu" hidden>
+  <div class="msheet-top">
+    <span class="msheet-title">Menu</span>
+    <button class="msheet-close" type="button" id="msheetclose" aria-label="Close menu">&times;</button>
+  </div>
+  <nav class="msheet-nav" id="msheet-nav" aria-label="Sections"></nav>
+  <div class="msheet-foot">
+    <button class="bar-flip msheet-flip" type="button" id="msheetflip">
+      <span class="dot" aria-hidden="true"></span>
+      <span data-view="pro">Security profile</span>
+      <span data-view="off" hidden>Off the clock</span>
+      <span class="swap" aria-hidden="true">Switch &#8644;</span>
+    </button>
+    <div class="msheet-ctl">
+      <button class="thm-btn" type="button" aria-pressed="false" aria-label="Toggle dark and light theme">
+        <svg class="thm-ico" viewBox="0 0 20 20" aria-hidden="true">
+          <g class="i-sun"><circle cx="10" cy="10" r="3.6"/><path d="M10 1.4v2.2M10 16.4v2.2M1.4 10h2.2M16.4 10h2.2M4 4l1.6 1.6M14.4 14.4L16 16M16 4l-1.6 1.6M5.6 14.4L4 16"/></g>
+          <g class="i-moon"><path d="M16 12.4A6.8 6.8 0 0 1 7.6 4a6.8 6.8 0 1 0 8.4 8.4z"/></g>
+        </svg>
+        <span class="thm-lab">Dark</span>
+      </button>
+      <button class="mus-btn" type="button" aria-pressed="false" aria-label="Toggle background music">
+        <span class="disc" aria-hidden="true"></span>
+        <span class="mus-lab">Music off</span>
+      </button>
+    </div>
+    <a class="msheet-cta" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=jamess.a.magpantay@gmail.com" target="_blank" rel="noopener">Hire the candidate &rarr;</a>
+  </div>
+</div>
+
+<button class="vbadge" type="button" id="vbadge" aria-label="Switch view">
+  <span class="dot" aria-hidden="true"></span>
+  <span data-view="pro">Security profile</span>
+  <span data-view="off" hidden>Off the clock</span>
+</button>
+
+<div class="wipe" id="wipe" aria-hidden="true"></div>
+
+<!-- Scroll cue: raised for a few seconds after a view flip so the swapped
+     page below the hero doesn't go unnoticed. -->
+<div class="scue" id="scue" aria-hidden="true">
+  <svg viewBox="0 0 40 150" aria-hidden="true">
+    <path d="M20 4 V140"/>
+    <path d="M5 121 L20 142 L35 121"/>
+  </svg>
+</div>
+<p class="sr-only" id="scue-live" role="status" aria-live="polite"></p>
+<nav class="srail" id="srail" aria-label="Section progress"></nav>
+
+<div class="sheet">
+  <main id="main" tabindex="-1">
+  <!-- ============ HERO ============ -->
+  <section class="hero" aria-label="Introduction">
+    <div class="hero-top">
+      <div class="hero-top-left">
+      <span class="brand"><svg class="mark" viewBox="0 0 100 100" aria-hidden="true"><path fill-rule="evenodd" d="M20 0H80A20 20 0 0 1 100 20V80A20 20 0 0 1 80 100H0V20A20 20 0 0 1 20 0ZM41 26V74H12V61H28V26ZM49 74V26H62L68.5 44L75 26H88V74H75V50L68.5 62L62 50V74Z"/></svg>James Magpantay</span>
+      <button class="sfx-btn" type="button" aria-pressed="false" aria-label="Toggle interface sound">
+        <span class="wave" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="sfx-lab">Sound off</span>
+      </button>
+      <button class="mus-btn" type="button" aria-pressed="false" aria-label="Toggle background music">
+        <span class="disc" aria-hidden="true"></span>
+        <span class="mus-lab">Music off</span>
+      </button>
+      <button class="thm-btn" type="button" aria-pressed="false" aria-label="Toggle dark and light theme">
+        <svg class="thm-ico" viewBox="0 0 20 20" aria-hidden="true">
+          <g class="i-sun"><circle cx="10" cy="10" r="3.6"/><path d="M10 1.4v2.2M10 16.4v2.2M1.4 10h2.2M16.4 10h2.2M4 4l1.6 1.6M14.4 14.4L16 16M16 4l-1.6 1.6M5.6 14.4L4 16"/></g>
+          <g class="i-moon"><path d="M16 12.4A6.8 6.8 0 0 1 7.6 4a6.8 6.8 0 1 0 8.4 8.4z"/></g>
+        </svg>
+        <span class="thm-lab">Dark</span>
+      </button>
+      </div>
+      <div class="hero-top-right">
+      <nav data-view="pro" aria-label="Sections">
+        <a href="#experience">Experience</a>
+        <a href="#work">Projects</a>
+        <a href="#stack">Stack</a>
+        <a href="#certs">Certifications</a>
+        <a href="#summary">Summary</a>
+      </nav>
+      <nav data-view="off" aria-label="Sections" hidden>
+        <a href="#speaking">Speaking</a>
+        <a href="#events">Events</a>
+        <a href="#life">Off the clock</a>
+      </nav>
+      </div>
+    </div>
+
+    <div class="h-wrap" id="hwrap">
+      <button class="flip-chip" id="flip" type="button"><span>See the other side</span><svg class="flip-cur" aria-hidden="true" viewBox="0 0 14 19" width="14" height="19" aria-hidden="true"><rect x="1" y="1" width="1" height="1" fill="#171512"/><rect x="1" y="2" width="2" height="1" fill="#171512"/><rect x="1" y="3" width="3" height="1" fill="#171512"/><rect x="1" y="4" width="4" height="1" fill="#171512"/><rect x="1" y="5" width="5" height="1" fill="#171512"/><rect x="1" y="6" width="6" height="1" fill="#171512"/><rect x="1" y="7" width="7" height="1" fill="#171512"/><rect x="1" y="8" width="8" height="1" fill="#171512"/><rect x="1" y="9" width="9" height="1" fill="#171512"/><rect x="1" y="10" width="10" height="1" fill="#171512"/><rect x="1" y="11" width="11" height="1" fill="#171512"/><rect x="1" y="12" width="7" height="1" fill="#171512"/><rect x="1" y="13" width="3" height="1" fill="#171512"/><rect x="5" y="13" width="3" height="1" fill="#171512"/><rect x="1" y="14" width="2" height="1" fill="#171512"/><rect x="6" y="14" width="3" height="1" fill="#171512"/><rect x="1" y="15" width="1" height="1" fill="#171512"/><rect x="6" y="15" width="3" height="1" fill="#171512"/><rect x="7" y="16" width="3" height="1" fill="#171512"/><rect x="7" y="17" width="3" height="1" fill="#171512"/><rect x="0" y="0" width="1" height="1" fill="#fff"/><rect x="0" y="1" width="2" height="1" fill="#fff"/><rect x="0" y="2" width="3" height="1" fill="#fff"/><rect x="0" y="3" width="4" height="1" fill="#fff"/><rect x="0" y="4" width="5" height="1" fill="#fff"/><rect x="0" y="5" width="6" height="1" fill="#fff"/><rect x="0" y="6" width="7" height="1" fill="#fff"/><rect x="0" y="7" width="8" height="1" fill="#fff"/><rect x="0" y="8" width="9" height="1" fill="#fff"/><rect x="0" y="9" width="10" height="1" fill="#fff"/><rect x="0" y="10" width="11" height="1" fill="#fff"/><rect x="0" y="11" width="7" height="1" fill="#fff"/><rect x="0" y="12" width="3" height="1" fill="#fff"/><rect x="4" y="12" width="3" height="1" fill="#fff"/><rect x="0" y="13" width="2" height="1" fill="#fff"/><rect x="5" y="13" width="3" height="1" fill="#fff"/><rect x="0" y="14" width="1" height="1" fill="#fff"/><rect x="5" y="14" width="3" height="1" fill="#fff"/><rect x="6" y="15" width="3" height="1" fill="#fff"/><rect x="6" y="16" width="3" height="1" fill="#fff"/></svg></button>
+      <span class="pup-mark">
+        <img src="logos/pup.png" alt="Polytechnic University of the Philippines">
+        <span class="mk">
+          <img src="logos/gbf-mark.png" alt="">
+          <span class="mk-cap">Gokongwei Brothers Foundation<br><b>Scholar</b></span>
+        </span>
+      </span>
+      <h1 class="h-line">
+        <span id="t-sec"><span class="ln ol">Cyber</span><span class="ln sd">Security</span></span>
+        <span id="t-james" hidden><span class="ln ol">James</span><span class="ln sd">Magpantay</span></span>
+      </h1>
+      <p class="hero-cta"><a href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=jamess.a.magpantay@gmail.com" target="_blank" rel="noopener">Hire the<br>candidate →</a></p>
+      <div class="h-reveal" id="lens" aria-hidden="true">
+        <span class="rv h-line" id="rv-james"><span class="ln ol">James</span><span class="ln sd">Magpantay</span></span>
+        <span class="rv h-line" id="rv-sec" hidden><span class="ln ol">Cyber</span><span class="ln sd">Security</span></span>
+      </div>
+    </div>
+
+    <div class="h-cols" id="cols-on">
+      <p>I'm a <b>BSIT student at PUP Manila</b> and a <b id="gk">Gokongwei Brothers Foundation scholar</b>, training for the security operations floor: SOC analysis, GRC, network security, and cloud security. Currently interning, competing, and certifying my way there.</p>
+      <div class="git-wrap">
+        <a class="git" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=jamess.a.magpantay@gmail.com" target="_blank" rel="noopener">Get in touch →</a>
+        <span class="git-note">Click my photo to flip to James: more ways to reach me there</span>
+      </div>
+    </div>
+
+    <div class="h-cols" id="cols-off" hidden>
+      <p>Beyond the work, I like <b>the rooms where ideas get traded</b>: summits, meetups, and the occasional stage. Some of it is badges and org shirts and too much coffee with friends. Most of it is conversations that turn into people I'd want to build something with.</p>
+      <div class="git-wrap">
+        <a class="git" href="https://www.facebook.com/jamesrandall.a.magpantay/" target="_blank" rel="noopener">Say hello →</a>
+        <span class="git-note">Click any sticker below to reach me there</span>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="stage-photo">
+        <img id="img-fleece" src="james-fleece.png" alt="James Randall A. Magpantay">
+        <img id="img-blazer" src="james-hero.png" alt="James Randall A. Magpantay" hidden>
+        <div class="ph-reveal" id="plens" aria-hidden="true"></div>
+        <div class="dl">
+          <a href="docs/James_Magpantay_CV.pdf" download>Download CV</a>
+          <a href="docs/James_Magpantay_Resume.pdf" download>Download résumé</a>
+        </div>
+      </div>
+      <div class="stage-panel">
+        <div id="set-certs">
+          <span class="sticker s1"><img src="logos/ctia-ama.png" alt=""><b>CTIA Level III</b><small>Earned</small></span>
+          <span class="sticker s2"><img src="logos/google-cyber.png" alt=""><b>Google Cybersecurity</b><small>In progress</small></span>
+          <span class="sticker s3"><img src="logos/ccna.png" alt=""><b>Cisco CCNA</b><small>In training</small></span>
+          <span class="sticker s4"><img src="logos/ccp.png" alt=""><b>CCP · Appkademiya</b><small>Earned</small></span>
+          <span class="sticker s5"><img src="logos/isc2-cc.png" alt=""><b>ISC2 CC</b><small>Candidate</small></span>
+          <span class="sticker s6"><img src="logos/security-plus.png" alt=""><b>CompTIA Security+</b><small>Target</small></span>
+          <span class="sticker s7"><img src="logos/isc2-candidate.png" alt=""><b>ISC2 Candidate</b><small>Active</small></span>
+          <span class="sticker s8"><img src="logos/tryhackme.png" alt=""><b>TryHackMe</b><small>AI Odyssey CTF</small></span>
+        </div>
+
+        <div id="set-social" hidden>
+          <a class="sticker ss s1" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=jamess.a.magpantay@gmail.com" target="_blank" rel="noopener">
+            <img src="logos/social-gmail.png" alt="">
+            <b>Gmail</b><small>jamess.a.magpantay</small>
+          </a>
+          <a class="sticker ss s5" href="https://www.linkedin.com/in/james-randall-magpantay-60017b349" target="_blank" rel="noopener">
+            <img src="logos/social-linkedin.png" alt="">
+            <b>LinkedIn</b><small>james-randall-magpantay</small>
+          </a>
+          <a class="sticker ss s3" href="https://github.com/jamesmagpantay" target="_blank" rel="noopener">
+            <img src="logos/social-github.png" alt="">
+            <b>GitHub</b><small>jamesmagpantay</small>
+          </a>
+          <a class="sticker ss s2" href="https://outlook.office.com/mail/deeplink/compose?to=janesrandallamagpantay@iskolarngbayan.pup.edu.ph" target="_blank" rel="noopener">
+            <img src="logos/social-outlook.png" alt="">
+            <b>Outlook</b><small>PUP webmail</small>
+          </a>
+          <a class="sticker ss s6" href="https://www.facebook.com/jamesrandall.a.magpantay/" target="_blank" rel="noopener">
+            <img src="logos/social-facebook.png" alt="">
+            <b>Facebook</b><small>jamesrandall.a.magpantay</small>
+          </a>
+          <a class="sticker ss s4" href="https://www.instagram.com/threndir_j/" target="_blank" rel="noopener">
+            <img src="logos/social-instagram.png" alt="">
+            <b>Instagram</b><small>threndir_j</small>
+          </a>
+          <a class="sticker ss s7" id="dc" href="https://discord.com/app" target="_blank" rel="noopener">
+            <img src="logos/social-discord.png" alt="">
+            <b>Discord</b><small class="hint">d.grimes</small><small class="num">Copied ✓</small>
+          </a>
+          <a class="sticker ss s8" id="ph" href="tel:+639915863298">
+            <img src="logos/social-phone.png" alt="">
+            <b>Phone</b>
+            <small class="hint">Tap to reveal</small>
+            <small class="num">0991 586 3298</small>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SPEAKING (offline view) ============ -->
+  <section class="sec" id="speaking" data-view="off" aria-label="Speaking" hidden>
+    <div class="sec-head">
+      <h2>On the mic</h2>
+      <span class="meta big">Workshops and talks</span>
+    </div>
+    <div class="sec-cta">
+      <span class="kick">Available for talks and workshops</span>
+      <p><a href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=jamess.a.magpantay@gmail.com&amp;su=Speaking%20invitation" target="_blank" rel="noopener">Book the speaker →</a></p>
+    </div>
+    <div class="gal gal-feat">
+        <figure class="ph" style="--ar:1.0"><img src="photos/speak/speak-01.jpg" alt="Cisco NetConnect speakership" loading="lazy"><figcaption>Cisco NetConnect speakership</figcaption></figure>
+        <figure class="ph" style="--ar:1.333"><img src="photos/speak/speak-02.jpg" alt="Front of the room" loading="lazy"><figcaption>Front of the room</figcaption></figure>
+        <figure class="ph" style="--ar:1.304"><img src="photos/speak/speak-03.jpg" alt="Hosting the room" loading="lazy"><figcaption>Hosting the room</figcaption></figure>
+        <figure class="ph" style="--ar:1.775"><img src="photos/speak/speak-04.jpg" alt="On the mic" loading="lazy"><figcaption>On the mic</figcaption></figure>
+    </div>
+  </section>
+
+  <!-- ============ EVENTS (offline view) ============ -->
+  <section class="sec" id="events" data-view="off" aria-label="Tech events and networking" hidden style="padding-top:0">
+    <div class="sec-head">
+      <h2><button class="pa-open pa-open-gal" type="button">Rooms I show up in<span class="h-cue">See all 51</span></button></h2>
+      <span class="meta big">Summits, meetups, upskilling, and the people met there</span>
+    </div>
+    <div class="gal">
+        <figure class="ph" style="--ar:1.334"><img src="photos/events/events-01.jpg" alt="AWS AI workshop" loading="lazy"><figcaption>AWS AI workshop</figcaption></figure>
+        <figure class="ph" style="--ar:0.75"><img src="photos/events/events-02.jpg" alt="Front row, AWS AI" loading="lazy"><figcaption>Front row, AWS AI</figcaption></figure>
+        <figure class="ph" style="--ar:1.776"><img src="photos/events/events-03.jpg" alt="AWS Cloud Club shoot" loading="lazy"><figcaption>AWS Cloud Club shoot</figcaption></figure>
+        <figure class="ph" style="--ar:0.75"><img src="photos/events/events-04.jpg" alt="New year, new heights" loading="lazy"><figcaption>New year, new heights</figcaption></figure>
+        <figure class="ph" style="--ar:1.776"><img src="photos/events/events-05.jpg" alt="e:Novators meetup" loading="lazy"><figcaption>e:Novators meetup</figcaption></figure>
+        <figure class="ph" style="--ar:1.333"><img src="photos/events/events-06.jpg" alt="Org Christmas party" loading="lazy"><figcaption>Org Christmas party</figcaption></figure>
+        <figure class="ph" style="--ar:1.467"><img src="photos/events/events-07.jpg" alt="Cisco bridge programme" loading="lazy"><figcaption>Cisco bridge programme</figcaption></figure>
+        <figure class="ph" style="--ar:1.778"><img src="photos/events/events-08.jpg" alt="Cisco office tour" loading="lazy"><figcaption>Cisco office tour</figcaption></figure>
+        <figure class="ph" style="--ar:0.837"><img src="photos/events/events-09.jpg" alt="At Cisco" loading="lazy"><figcaption>At Cisco</figcaption></figure>
+        <figure class="ph" style="--ar:0.75"><img src="photos/events/events-10.jpg" alt="Cybersecurity summit" loading="lazy"><figcaption>Cybersecurity summit</figcaption></figure>
+        <figure class="ph" style="--ar:1.501"><img src="photos/events/events-11.jpg" alt="Christmas, eating" loading="lazy"><figcaption>Christmas, eating</figcaption></figure>
+        <figure class="ph" style="--ar:0.75"><img src="photos/events/events-13.jpg" alt="Nexus certification day" loading="lazy"><figcaption>Nexus certification day</figcaption></figure>
+        <figure class="ph" style="--ar:1.333"><img src="photos/events/events-14.jpg" alt="Project defended" loading="lazy"><figcaption>Project defended</figcaption></figure>
+        <figure class="ph" style="--ar:1.333"><img src="photos/events/events-15.jpg" alt="New year, new heights" loading="lazy"><figcaption>New year, new heights</figcaption></figure>
+        <figure class="ph" style="--ar:1.333"><img src="photos/events/events-16.jpg" alt="Nexus CCNA cohort" loading="lazy"><figcaption>Nexus CCNA cohort</figcaption></figure>
+        <figure class="ph" style="--ar:0.556"><img src="photos/events/events-12.jpg" alt="GDG cybersecurity team" loading="lazy"><figcaption>GDG cybersecurity team</figcaption></figure>
+        <figure class="ph" style="--ar:0.75"><img src="photos/events/events-17.jpg" alt="Hands on the switch" loading="lazy"><figcaption>Hands on the switch</figcaption></figure>
+        <figure class="ph" style="--ar:1.776"><img src="photos/events/events-18.jpg" alt="Vibe Code team" loading="lazy"><figcaption>Vibe Code team</figcaption></figure>
+        <figure class="ph" style="--ar:0.563"><img src="photos/events/events-19.jpg" alt="Vibe Code: IDS build" loading="lazy"><figcaption>Vibe Code: IDS build</figcaption></figure>
+        <figure class="ph" style="--ar:0.75"><img src="photos/events/events-20.jpg" alt="YGG Summit" loading="lazy"><figcaption>YGG Summit</figcaption></figure>
+        <figure class="ph" style="--ar:1.778"><img src="photos/events/events-21.jpg" alt="ChainSec" loading="lazy"><figcaption>ChainSec</figcaption></figure>
+        <figure class="ph" style="--ar:0.75"><img src="photos/events/events-22.jpg" alt="Digital safety summit" loading="lazy"><figcaption>Digital safety summit</figcaption></figure>
+        <figure class="ph" style="--ar:1.776"><img src="photos/events/events-23.jpg" alt="e:Novators" loading="lazy"><figcaption>e:Novators</figcaption></figure>
+        <figure class="ph" style="--ar:1.776"><img src="photos/events/events-24.jpg" alt="e:Novators marketing team" loading="lazy"><figcaption>e:Novators marketing team</figcaption></figure>
+        <figure class="ph" style="--ar:1.778"><img src="photos/events/events-25.jpg" alt="e:Novators onboarding" loading="lazy"><figcaption>e:Novators onboarding</figcaption></figure>
+        <figure class="ph" style="--ar:1.11"><img src="photos/events/events-26.jpg" alt="Last-minute changes" loading="lazy"><figcaption>Last-minute changes</figcaption></figure>
+        <figure class="ph" style="--ar:0.556"><img src="photos/events/events-27.jpg" alt="With Ayen" loading="lazy"><figcaption>With Ayen</figcaption></figure>
+        <figure class="ph" style="--ar:1.333"><img src="photos/events/events-28.jpg" alt="With VJ" loading="lazy"><figcaption>With VJ</figcaption></figure>
+        <figure class="ph" style="--ar:0.751"><img src="photos/events/events-29.jpg" alt="With Denisse" loading="lazy"><figcaption>With Denisse</figcaption></figure>
+        <figure class="ph" style="--ar:1.5"><img src="photos/events/events-30.jpg" alt="With Max at e:Novators" loading="lazy"><figcaption>With Max at e:Novators</figcaption></figure>
+        <figure class="ph" style="--ar:0.75"><img src="photos/events/events-31.jpg" alt="With Max" loading="lazy"><figcaption>With Max</figcaption></figure>
+        <figure class="ph" style="--ar:0.734"><img src="photos/events/events-32.jpg" alt="ASEAN Tech Summit, suited up" loading="lazy"><figcaption>ASEAN Tech Summit, suited up</figcaption></figure>
+        <figure class="ph" style="--ar:1.4"><img src="photos/events/events-33.jpg" alt="Hilton Manila, Newport World" loading="lazy"><figcaption>Hilton Manila, Newport World</figcaption></figure>
+        <figure class="ph" style="--ar:0.75"><img src="photos/events/events-34.jpg" alt="Cybersecurity summit hall" loading="lazy"><figcaption>Cybersecurity summit hall</figcaption></figure>
+        <figure class="ph" style="--ar:0.75"><img src="photos/events/events-35.jpg" alt="BusinessWorld Cybersecurity Summit" loading="lazy"><figcaption>BusinessWorld Cybersecurity Summit</figcaption></figure>
+        <figure class="ph" style="--ar:0.75"><img src="photos/events/events-36.jpg" alt="Toward stronger digital defense" loading="lazy"><figcaption>Toward stronger digital defense</figcaption></figure>
+        <figure class="ph" style="--ar:0.75"><img src="photos/events/events-37.jpg" alt="Building ASEAN's digital economy" loading="lazy"><figcaption>Building ASEAN's digital economy</figcaption></figure>
+        <figure class="ph" style="--ar:0.796"><img src="photos/events/events-38.jpg" alt="ASEAN Fintech Alliance wall" loading="lazy"><figcaption>ASEAN Fintech Alliance wall</figcaption></figure>
+        <figure class="ph" style="--ar:1.333"><img src="photos/events/events-39.jpg" alt="The economics of AI, keynote" loading="lazy"><figcaption>The economics of AI, keynote</figcaption></figure>
+        <figure class="ph" style="--ar:0.804"><img src="photos/events/events-40.jpg" alt="Before the summit" loading="lazy"><figcaption>Before the summit</figcaption></figure>
+        <figure class="ph" style="--ar:0.75"><img src="photos/events/events-41.jpg" alt="Four truths for business leaders" loading="lazy"><figcaption>Four truths for business leaders</figcaption></figure>
+        <figure class="ph" style="--ar:0.75"><img src="photos/events/events-42.jpg" alt="With the speaker" loading="lazy"><figcaption>With the speaker</figcaption></figure>
+        <figure class="ph" style="--ar:0.75"><img src="photos/events/events-43.jpg" alt="VST ECS Philippines, welcome" loading="lazy"><figcaption>VST ECS Philippines, welcome</figcaption></figure>
+        <figure class="ph" style="--ar:0.75"><img src="photos/events/events-44.jpg" alt="Microtel, event day" loading="lazy"><figcaption>Microtel, event day</figcaption></figure>
+        <figure class="ph" style="--ar:0.75"><img src="photos/events/events-45.jpg" alt="Cisco x VST ECS" loading="lazy"><figcaption>Cisco x VST ECS</figcaption></figure>
+        <figure class="ph" style="--ar:0.75"><img src="photos/events/events-46.jpg" alt="Cisco kit" loading="lazy"><figcaption>Cisco kit</figcaption></figure>
+        <figure class="ph" style="--ar:0.75"><img src="photos/events/events-47.jpg" alt="Cato Networks" loading="lazy"><figcaption>Cato Networks</figcaption></figure>
+        <figure class="ph" style="--ar:0.75"><img src="photos/events/events-48.jpg" alt="Catopia Tour 2026, Manila" loading="lazy"><figcaption>Catopia Tour 2026, Manila</figcaption></figure>
+        <figure class="ph" style="--ar:0.75"><img src="photos/events/events-49.jpg" alt="Catopia Tour, main stage" loading="lazy"><figcaption>Catopia Tour, main stage</figcaption></figure>
+        <figure class="ph" style="--ar:0.75"><img src="photos/events/events-50.jpg" alt="Catopia giveaway" loading="lazy"><figcaption>Catopia giveaway</figcaption></figure>
+        <figure class="ph" style="--ar:1.333"><img src="photos/events/events-51.jpg" alt="At the Cato backdrop" loading="lazy"><figcaption>At the Cato backdrop</figcaption></figure>
+    </div>
+
+  </section>
+
+  <!-- ============ LIFE (offline view) ============ -->
+  <section class="sec" id="life" data-view="off" aria-label="Off the clock" hidden style="padding-top:0">
+    <div class="sec-head">
+      <h2>Off the clock</h2>
+      <span class="meta big">The gym, the setup, RPGs, hiking, outfit shots, good friends, and family</span>
+    </div>
+    <div class="gal">
+        <figure class="ph" style="--ar:1.5"><img src="photos/life/life-01.jpg" alt="BSIT 1-2N" loading="lazy"><figcaption>BSIT 1-2N</figcaption></figure>
+        <figure class="ph" style="--ar:0.745"><img src="photos/life/life-02.jpg" alt="CAPSAA medal" loading="lazy"><figcaption>CAPSAA medal</figcaption></figure>
+        <figure class="ph" style="--ar:1.333"><img src="photos/life/life-03.jpg" alt="Dungeon Siege II" loading="lazy"><figcaption>Dungeon Siege II</figcaption></figure>
+        <figure class="ph" style="--ar:0.75"><img src="photos/life/life-04.jpg" alt="Green grass" loading="lazy"><figcaption>Green grass</figcaption></figure>
+        <figure class="ph" style="--ar:1.667"><img src="photos/life/life-05.jpg" alt="Receiving the diploma" loading="lazy"><figcaption>Receiving the diploma</figcaption></figure>
+        <figure class="ph" style="--ar:1.0"><img src="photos/life/life-06.jpg" alt="Archery" loading="lazy"><figcaption>Archery</figcaption></figure>
+        <figure class="ph" style="--ar:0.75"><img src="photos/life/life-07.jpg" alt="At the range" loading="lazy"><figcaption>At the range</figcaption></figure>
+        <figure class="ph" style="--ar:0.75"><img src="photos/life/life-08.jpg" alt="Billiards" loading="lazy"><figcaption>Billiards</figcaption></figure>
+        <figure class="ph" style="--ar:1.0"><img src="photos/life/life-09.jpg" alt="Escalator" loading="lazy"><figcaption>Escalator</figcaption></figure>
+        <figure class="ph" style="--ar:0.661"><img src="photos/life/life-10.jpg" alt="All black" loading="lazy"><figcaption>All black</figcaption></figure>
+        <figure class="ph" style="--ar:0.66"><img src="photos/life/life-11.jpg" alt="Side profile" loading="lazy"><figcaption>Side profile</figcaption></figure>
+        <figure class="ph" style="--ar:0.657"><img src="photos/life/life-12.jpg" alt="Blue and black" loading="lazy"><figcaption>Blue and black</figcaption></figure>
+        <figure class="ph" style="--ar:0.75"><img src="photos/life/life-13.jpg" alt="Blue cap" loading="lazy"><figcaption>Blue cap</figcaption></figure>
+        <figure class="ph" style="--ar:0.667"><img src="photos/life/life-14.jpg" alt="Night shot" loading="lazy"><figcaption>Night shot</figcaption></figure>
+        <figure class="ph" style="--ar:1.0"><img src="photos/life/life-15.jpg" alt="Creative shot" loading="lazy"><figcaption>Creative shot</figcaption></figure>
+        <figure class="ph" style="--ar:1.0"><img src="photos/life/life-16.jpg" alt="Dumbbells" loading="lazy"><figcaption>Dumbbells</figcaption></figure>
+        <figure class="ph" style="--ar:0.667"><img src="photos/life/life-17.jpg" alt="España" loading="lazy"><figcaption>España</figcaption></figure>
+        <figure class="ph" style="--ar:1.778"><img src="photos/life/life-18.jpg" alt="Friends" loading="lazy"><figcaption>Friends</figcaption></figure>
+        <figure class="ph" style="--ar:1.0"><img src="photos/life/life-19.jpg" alt="Gym" loading="lazy"><figcaption>Gym</figcaption></figure>
+        <figure class="ph" style="--ar:0.75"><img src="photos/life/life-20.jpg" alt="Lifting" loading="lazy"><figcaption>Lifting</figcaption></figure>
+        <figure class="ph" style="--ar:1.0"><img src="photos/life/life-21.jpg" alt="Hug" loading="lazy"><figcaption>Hug</figcaption></figure>
+        <figure class="ph" style="--ar:1.333"><img src="photos/life/life-22.jpg" alt="Vision board" loading="lazy"><figcaption>Vision board</figcaption></figure>
+        <figure class="ph" style="--ar:0.75"><img src="photos/life/life-23.jpg" alt="With my sister" loading="lazy"><figcaption>With my sister</figcaption></figure>
+        <figure class="ph" style="--ar:0.75"><img src="photos/life/life-24.jpg" alt="Mini hike" loading="lazy"><figcaption>Mini hike</figcaption></figure>
+        <figure class="ph" style="--ar:0.75"><img src="photos/life/life-25.jpg" alt="Trail day" loading="lazy"><figcaption>Trail day</figcaption></figure>
+        <figure class="ph" style="--ar:0.75"><img src="photos/life/life-26.jpg" alt="The setup" loading="lazy"><figcaption>The setup</figcaption></figure>
+        <figure class="ph" style="--ar:1.0"><img src="photos/life/life-27.jpg" alt="Nature trip" loading="lazy"><figcaption>Nature trip</figcaption></figure>
+        <figure class="ph" style="--ar:0.75"><img src="photos/life/life-28.jpg" alt="Shadows" loading="lazy"><figcaption>Shadows</figcaption></figure>
+        <figure class="ph" style="--ar:0.75"><img src="photos/life/life-29.jpg" alt="Fit check" loading="lazy"><figcaption>Fit check</figcaption></figure>
+        <figure class="ph" style="--ar:0.667"><img src="photos/life/life-30.jpg" alt="Looking up" loading="lazy"><figcaption>Looking up</figcaption></figure>
+        <figure class="ph" style="--ar:1.245"><img src="photos/life/life-31.jpg" alt="Graduation, with friends" loading="lazy"><figcaption>Graduation, with friends</figcaption></figure>
+        <figure class="ph" style="--ar:1.333"><img src="photos/life/life-32.jpg" alt="Senior high graduation" loading="lazy"><figcaption>Senior high graduation</figcaption></figure>
+        <figure class="ph" style="--ar:0.75"><img src="photos/life/life-33.jpg" alt="SHS medal" loading="lazy"><figcaption>SHS medal</figcaption></figure>
+        <figure class="ph" style="--ar:1.0"><img src="photos/life/life-34.jpg" alt="TFT nights" loading="lazy"><figcaption>TFT nights</figcaption></figure>
+        <figure class="ph" style="--ar:1.354"><img src="photos/life/life-35.jpg" alt="The boys" loading="lazy"><figcaption>The boys</figcaption></figure>
+        <figure class="ph" style="--ar:0.751"><img src="photos/life/life-36.jpg" alt="White and blue" loading="lazy"><figcaption>White and blue</figcaption></figure>
+    </div>
+  </section>
+
+  <!-- ============ EXPERIENCE ============ -->
+  <section class="sec" id="experience" data-view="pro" aria-label="Experience">
+    <div class="sec-head">
+      <h2><button class="pa-open pa-open-xp" type="button">Experience<span class="h-cue">See all 5</span></button></h2>
+      <span class="meta big">Internship + org leadership</span>
+    </div>
+    <div class="xp">
+      <button class="xp-row" type="button" aria-expanded="true">
+        <div class="xp-co">
+          <img class="olg" src="logos/dost.png" alt="">
+          <div class="co-txt">
+            <h3>Department of Science and Technology</h3>
+            <span class="span">Manila · Jul 2026 – Aug 2026 · 2 mos</span>
+          </div>
+        </div>
+        <div class="xp-right">
+          <ul class="xp-role">
+          <li><h4>Software Developer Intern</h4><p class="r-when">Jul 2026 - Aug 2026 · 2 mos</p></li>
+        </ul>
+          <div class="xp-desc"><div class="xp-desc-in"><ul class="xp-pts"><li>Contributed to the development and security of DOST software systems across the frontend, backend, and file service layers. Focused primarily on identifying and remediating application security vulnerabilities, including an authentication flaw that accepted forged tokens due to improper signature validation. Secured file handling by validating uploaded content against declared file types, preventing malicious files containing embedded scripts, and addressing vulnerabilities in SVG processing and upload workflows. Supported frontend and backend development while conducting security audits, documenting findings using CWE classifications, and implementing security-focused fixes across the application stack.</li></ul></div></div>
+        </div>
+        <span class="xp-cue" aria-hidden="true"><span class="pm"></span></span>
+      </button>
+      <button class="xp-row" type="button" aria-expanded="false">
+        <div class="xp-co">
+          <img class="olg" src="logos/netconnect.jpg" alt="">
+          <div class="co-txt">
+            <h3>Cisco NetConnect PUP – Manila</h3>
+            <span class="span">CCNA training org · 10 mos</span>
+          </div>
+        </div>
+        <div class="xp-right">
+          <ul class="xp-role">
+          <li><h4>Vice Chief Technology Officer</h4><p class="r-when">Jul 2026 - Present · 2 mos</p></li>
+          <li><h4>Junior Networking Officer</h4><p class="r-when">Feb 2026 - Jul 2026 · 6 mos</p></li>
+          <li><h4>Cybersecurity Cadet</h4><p class="r-when">Nov 2025 - Feb 2026 · 4 mos</p></li>
+        </ul>
+          <div class="xp-desc"><div class="xp-desc-in"><ul class="xp-pts"><li>Led technical initiatives centered around enterprise networking and infrastructure security. I applied CCNA concepts such as VLANs, trunking, STP, subnetting, DHCP, DNS, and network segmentation to design and evaluate secure network environments. I also designed, analyzed, and troubleshot network topologies using Cisco Packet Tracer, translating theoretical networking concepts into practical infrastructure solutions while considering reliability, scalability, and security.</li></ul></div></div>
+        </div>
+        <span class="xp-cue" aria-hidden="true"><span class="pm"></span></span>
+      </button>
+      <button class="xp-row" type="button" aria-expanded="false">
+        <div class="xp-co">
+          <img class="olg" src="logos/gdg.jpg" alt="">
+          <div class="co-txt">
+            <h3>Google Developer Groups on Campus PUP</h3>
+            <span class="span">Cybersecurity track · 10 mos</span>
+          </div>
+        </div>
+        <div class="xp-right">
+          <ul class="xp-role">
+          <li><h4>Cybersecurity Compliance Analyst</h4><p class="r-when">Feb 2026 - Present · 7 mos</p></li>
+          <li><h4>Red Team Cadet</h4><p class="r-when">Dec 2025 - Feb 2026 · 3 mos</p></li>
+          <li><h4>Cybersecurity Cadet</h4><p class="r-when">Nov 2025 - Dec 2025 · 2 mos</p></li>
+        </ul>
+          <div class="xp-desc"><div class="xp-desc-in"><ul class="xp-pts"><li>Supported the cybersecurity education program for a cohort of more than 200 Cybersecurity Cadets. My role involved reviewing and maintaining the integrity of cybersecurity learning materials to ensure that technical information was accurate, relevant, and suitable for participants. I also co-facilitated cybersecurity workshops covering security concepts, tools, and best practices, helping translate technical topics into practical learning experiences. As part of the program, I designed a controlled CTF challenge that introduced participants to vulnerability exploitation in a safe, educational environment.</li></ul></div></div>
+        </div>
+        <span class="xp-cue" aria-hidden="true"><span class="pm"></span></span>
+      </button>
+      <button class="xp-row" type="button" aria-expanded="false">
+        <div class="xp-co">
+          <img class="olg" src="logos/aws-cloud-club.png" alt="">
+          <div class="co-txt">
+            <h3>AWS Cloud Club PUP</h3>
+            <span class="span">Dec 2025 – Present · 9 mos</span>
+          </div>
+        </div>
+        <div class="xp-right">
+          <ul class="xp-role">
+          <li><h4>Associate, Department of Network Security</h4><p class="r-when">Dec 2025 - Present · 9 mos</p></li>
+        </ul>
+          <div class="xp-desc"><div class="xp-desc-in"><ul class="xp-pts"><li>Contributed to hands-on cloud security activities focused on designing and deploying secure AWS infrastructure. Participated in provisioning Amazon EC2 instances, configuring Virtual Private Clouds (VPCs), implementing network segmentation, and applying the Principle of Least Privilege to strengthen cloud environments. The experience provided practical exposure to cloud architecture and security engineering, while collaborating with other builders to understand how security can be integrated throughout the infrastructure deployment lifecycle.</li></ul></div></div>
+        </div>
+        <span class="xp-cue" aria-hidden="true"><span class="pm"></span></span>
+      </button>
+      <button class="xp-row" type="button" aria-expanded="false">
+        <div class="xp-co">
+          <img class="olg" src="logos/enovators.png" alt="">
+          <div class="co-txt">
+            <h3>AWS User Group e:Novators Philippines</h3>
+            <span class="span">Feb 2026 – Present · 7 mos</span>
+          </div>
+        </div>
+        <div class="xp-right">
+          <ul class="xp-role">
+          <li><h4>Associate Marketing &amp; Communications Director</h4><p class="r-when">Feb 2026 - Present · 7 mos</p></li>
+        </ul>
+          <div class="xp-desc"><div class="xp-desc-in"><ul class="xp-pts"><li>Led marketing and communications initiatives while promoting clear, responsible, and security-conscious digital communication. Developed and coordinated content designed to engage technical communities, translating complex technology into accessible messaging for broader audiences. Contributed to building digital trust by emphasizing responsible information sharing, privacy awareness, and effective communication of technology-related risks across organizational platforms.</li></ul></div></div>
+        </div>
+        <span class="xp-cue" aria-hidden="true"><span class="pm"></span></span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ============ WORK ============ -->
+  <section class="sec" id="work" data-view="pro" aria-label="Projects and field work" style="padding-top:0">
+    <div class="sec-head">
+      <h2><button class="pa-open pa-open-proj" type="button">Projects / Field Work<span class="h-cue">See all 7</span></button></h2>
+      <span class="meta big">Builds, audits, hackathons, and competitions · 2025–2026</span>
+    </div>
+    <div class="proj-rail">
+      <div class="proj-grid">
+      <article class="proj c1">
+        <div class="proj-shot"><img src="photos/projects/siem.jpg" alt="SIEM dashboard and ticket queue" loading="lazy"></div>
+        <div class="proj-body">
+          <h3>PUP OUS SIEM &amp; Ticketing System</h3>
+          <p>Custom SIEM engine for the PUP Open University System: SHA-256 hash chaining on every database write, source-IP alert grouping, and client-IP rate limits with account lockout.</p>
+          <span class="fact">100% audit-log tamper detection</span>
+        </div>
+      </article>
+      <article class="proj c2">
+        <div class="proj-shot"><img src="photos/projects/scanner.jpg" alt="Port scanner output" loading="lazy"></div>
+        <div class="proj-body">
+          <h3>Automated Network Vulnerability &amp; Change Scanner</h3>
+          <p>Two-phase Python and Nmap engine for rapid host discovery and targeted OS version detection, with risk classification that labels open ports by severity and explains each finding.</p>
+          <span class="fact">Flags new, closed, and modified ports over time</span>
+        </div>
+      </article>
+      <article class="proj c3">
+        <div class="proj-shot"><img src="photos/projects/pams.jpg" alt="Personnel monitoring system" loading="lazy"></div>
+        <div class="proj-body">
+          <h3>PUP OUS Personnel Accomplishment Monitoring System</h3>
+          <p>Directed the end-to-end project lifecycle to automate task management for multi-departmental personnel, enforcing secure authentication aligned with modern password standards.</p>
+          <span class="fact">Data handling policies for confidentiality, integrity, availability</span>
+        </div>
+      </article>
+      <article class="proj c4">
+        <div class="proj-shot"><img class="top" src="photos/projects/ctf.jpg" alt="TryHackMe AI Odyssey CTF" loading="lazy"></div>
+        <div class="proj-body">
+          <h3>AI Odyssey CTF · TryHackMe</h3>
+          <p>International CTF: bypassed LLM safety filters via prompt injection to capture flags, used Burp Suite to intercept model traffic, and analysed adversarial machine learning risks.</p>
+          <span class="fact">Flags captured, vulnerabilities exploited</span>
+        </div>
+      </article>
+      <article class="proj c1">
+        <div class="proj-shot"><img src="photos/projects/dost.jpg" alt="DOST platform" loading="lazy"></div>
+        <div class="proj-body">
+          <h3>DOST Security Remediation</h3>
+          <p>Internship at the Department of Science and Technology: restored signature validation on an auth service accepting forged tokens, blocked malicious uploads, and patched SVG handling.</p>
+          <span class="fact">Production auth flaw closed</span>
+        </div>
+      </article>
+      <article class="proj c2">
+        <div class="proj-shot"><img src="photos/projects/buddy.jpg" alt="PUP Enrollment Buddy chatbot" loading="lazy"></div>
+        <div class="proj-body">
+          <h3>PUP Enrollment Buddy · AWS Cloud Club</h3>
+          <p>RAG chatbot built with LangFlow, DataStax Astra DB, and Google AI Studio to refine university processes, with prompt engineering to sharpen response accuracy and relevance.</p>
+          <span class="fact">LLM architecture in a real conversational interface</span>
+        </div>
+      </article>
+      <article class="proj c4">
+        <div class="proj-shot"><img src="photos/projects/eely.jpg" alt="Eely bill scanner" loading="lazy"></div>
+        <div class="proj-body">
+          <h3>Eely · CODEKADA</h3>
+          <p>Cybersecurity lead on an AI electricity bill scanner: formulated data privacy protocols for AI modelling, secured data integrity during extraction, and shaped the energy-insight UI.</p>
+          <span class="fact">100% compliance securing sensitive utility data</span>
+        </div>
+      </article>
+        <!-- duplicated set: makes the marquee loop seamlessly -->
+      <article class="proj c1" aria-hidden="true">
+        <div class="proj-shot"><img src="photos/projects/siem.jpg" alt="SIEM dashboard and ticket queue" loading="lazy"></div>
+        <div class="proj-body">
+          <h3>PUP OUS SIEM &amp; Ticketing System</h3>
+          <p>Custom SIEM engine for the PUP Open University System: SHA-256 hash chaining on every database write, source-IP alert grouping, and client-IP rate limits with account lockout.</p>
+          <span class="fact">100% audit-log tamper detection</span>
+        </div>
+      </article>
+      <article class="proj c2" aria-hidden="true">
+        <div class="proj-shot"><img src="photos/projects/scanner.jpg" alt="Port scanner output" loading="lazy"></div>
+        <div class="proj-body">
+          <h3>Automated Network Vulnerability &amp; Change Scanner</h3>
+          <p>Two-phase Python and Nmap engine for rapid host discovery and targeted OS version detection, with risk classification that labels open ports by severity and explains each finding.</p>
+          <span class="fact">Flags new, closed, and modified ports over time</span>
+        </div>
+      </article>
+      <article class="proj c3" aria-hidden="true">
+        <div class="proj-shot"><img src="photos/projects/pams.jpg" alt="Personnel monitoring system" loading="lazy"></div>
+        <div class="proj-body">
+          <h3>PUP OUS Personnel Accomplishment Monitoring System</h3>
+          <p>Directed the end-to-end project lifecycle to automate task management for multi-departmental personnel, enforcing secure authentication aligned with modern password standards.</p>
+          <span class="fact">Data handling policies for confidentiality, integrity, availability</span>
+        </div>
+      </article>
+      <article class="proj c4" aria-hidden="true">
+        <div class="proj-shot"><img class="top" src="photos/projects/ctf.jpg" alt="TryHackMe AI Odyssey CTF" loading="lazy"></div>
+        <div class="proj-body">
+          <h3>AI Odyssey CTF · TryHackMe</h3>
+          <p>International CTF: bypassed LLM safety filters via prompt injection to capture flags, used Burp Suite to intercept model traffic, and analysed adversarial machine learning risks.</p>
+          <span class="fact">Flags captured, vulnerabilities exploited</span>
+        </div>
+      </article>
+      <article class="proj c1" aria-hidden="true">
+        <div class="proj-shot"><img src="photos/projects/dost.jpg" alt="DOST platform" loading="lazy"></div>
+        <div class="proj-body">
+          <h3>DOST Security Remediation</h3>
+          <p>Internship at the Department of Science and Technology: restored signature validation on an auth service accepting forged tokens, blocked malicious uploads, and patched SVG handling.</p>
+          <span class="fact">Production auth flaw closed</span>
+        </div>
+      </article>
+      <article class="proj c2" aria-hidden="true">
+        <div class="proj-shot"><img src="photos/projects/buddy.jpg" alt="PUP Enrollment Buddy chatbot" loading="lazy"></div>
+        <div class="proj-body">
+          <h3>PUP Enrollment Buddy · AWS Cloud Club</h3>
+          <p>RAG chatbot built with LangFlow, DataStax Astra DB, and Google AI Studio to refine university processes, with prompt engineering to sharpen response accuracy and relevance.</p>
+          <span class="fact">LLM architecture in a real conversational interface</span>
+        </div>
+      </article>
+      <article class="proj c4" aria-hidden="true">
+        <div class="proj-shot"><img src="photos/projects/eely.jpg" alt="Eely bill scanner" loading="lazy"></div>
+        <div class="proj-body">
+          <h3>Eely · CODEKADA</h3>
+          <p>Cybersecurity lead on an AI electricity bill scanner: formulated data privacy protocols for AI modelling, secured data integrity during extraction, and shaped the energy-insight UI.</p>
+          <span class="fact">100% compliance securing sensitive utility data</span>
+        </div>
+      </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TECH STACK ============ -->
+  <section class="sec" id="stack" data-view="pro" aria-label="Tech stack" style="padding-top:0">
+    <div class="sec-head">
+      <h2>Tech stack</h2>
+      <span class="meta big">Languages, tooling, and platforms in daily use</span>
+    </div>
+    <div class="tk-groups">
+      <div class="tkg tkg-main">
+        <h3 class="tkg-h">Security &amp; analysis</h3>
+        <ul class="tks">
+          <li class="tk" style="--k:1.1"><img src="logos/tech/kali.webp" alt="" loading="lazy"><span class="tk-n">Kali Linux</span></li>
+          <li class="tk"><img src="logos/tech/burp.png" alt="" loading="lazy"><span class="tk-n">Burp Suite</span></li>
+          <li class="tk" style="--k:1.35"><img src="logos/tech/nmap.png" alt="" loading="lazy"><span class="tk-n">Nmap</span></li>
+          <li class="tk" style="--k:1.01"><img src="logos/tech/wireshark.png" alt="" loading="lazy"><span class="tk-n">Wireshark</span></li>
+          <li class="tk" style="--k:1.09"><img src="logos/tech/elastic.png" alt="" loading="lazy"><span class="tk-n">Elastic SIEM</span></li>
+          <li class="tk"><img src="logos/tech/cyberchef.png" alt="" loading="lazy"><span class="tk-n">CyberChef</span></li>
+        </ul>
+      </div>
+      <div class="tkg">
+        <h3 class="tkg-h">Languages</h3>
+        <ul class="tks">
+          <li class="tk"><img src="logos/tech/python.png" alt="" loading="lazy"><span class="tk-n">Python</span></li>
+          <li class="tk" style="--k:1.06"><img src="logos/tech/c.png" alt="" loading="lazy"><span class="tk-n">C</span></li>
+          <li class="tk" style="--k:1.16"><img src="logos/tech/java.png" alt="" loading="lazy"><span class="tk-n">Java</span></li>
+          <li class="tk" style="--k:1.35"><img src="logos/tech/sql.png" alt="" loading="lazy"><span class="tk-n">SQL</span></li>
+        </ul>
+      </div>
+      <div class="tkg">
+        <h3 class="tkg-h">Platforms &amp; tooling</h3>
+        <ul class="tks">
+          <li class="tk" style="--k:1.13"><img src="logos/tech/packet-tracer.png" alt="" loading="lazy"><span class="tk-n">Cisco Packet Tracer</span></li>
+          <li class="tk" style="--k:1.35"><img src="logos/tech/git.png" alt="" loading="lazy"><span class="tk-n">Git</span></li>
+          <li class="tk" style="--k:1.01"><img src="logos/tech/github.png" alt="" loading="lazy"><span class="tk-n">GitHub</span></li>
+          <li class="tk"><img src="logos/tech/vscode.png" alt="" loading="lazy"><span class="tk-n">VS Code</span></li>
+          <li class="tk" style="--k:1.05"><img src="logos/tech/windows.png" alt="" loading="lazy"><span class="tk-n">Windows 10/11</span></li>
+          <li class="tk" style="--k:1.05"><img src="logos/tech/virtualbox.png" alt="" loading="lazy"><span class="tk-n">VirtualBox</span></li>
+        </ul>
+      </div>
+      <div class="tkg">
+        <h3 class="tkg-h">AI tooling</h3>
+        <ul class="tks">
+          <li class="tk"><img src="logos/tech/claude.png" alt="" loading="lazy"><span class="tk-n">Claude</span></li>
+          <li class="tk" style="--k:1.35"><img src="logos/tech/openai.png" alt="" loading="lazy"><span class="tk-n">OpenAI</span></li>
+          <li class="tk"><img src="logos/tech/gemini.png" alt="" loading="lazy"><span class="tk-n">Gemini</span></li>
+          <li class="tk" style="--k:1.03"><img src="logos/tech/antigravity.png" alt="" loading="lazy"><span class="tk-n">Antigravity</span></li>
+          <li class="tk"><img src="logos/tech/kiro.png" alt="" loading="lazy"><span class="tk-n">Kiro</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CERT LEDGER ============ -->
+  <section class="sec" id="certs" data-view="pro" aria-label="Certifications" style="padding-top:0">
+    <div class="sec-head">
+      <h2>Certifications</h2>
+      <span class="meta big">Credentials · verified against CV · 2026-08-29</span>
+    </div>
+    <div class="ledger">
+      <div class="row earned"><img class="lg" src="logos/ctia-ama.png" alt=""><div><h3>Cyber Threat Intelligence Analysis</h3><p class="via">CTIA Level III</p></div><span class="yr">2026</span><span class="st">Earned</span></div>
+      <div class="row earned"><img class="lg" src="logos/ccp.png" alt=""><div><h3>Certified Cybersecurity Professional</h3><p class="via">Appkademiya</p></div><span class="yr">2026</span><span class="st">Earned</span></div>
+      <div class="row"><img class="lg" src="logos/google-cyber.png" alt=""><div><h3>Google Cybersecurity Professional</h3><p class="via">Coursera</p></div><span class="yr">est. 2026</span><span class="st">In progress</span></div>
+      <div class="row"><img class="lg" src="logos/isc2-cc.png" alt=""><div><h3>ISC2 Certified in Cybersecurity</h3><p class="via">ISC2 Candidate</p></div><span class="yr">est. 2027</span><span class="st">Candidate</span></div>
+      <div class="row"><img class="lg" src="logos/security-plus.png" alt=""><div><h3>CompTIA Security+</h3><p class="via">Next on the roadmap</p></div><span class="yr">target</span><span class="st">Target</span></div>
+      <div class="row"><img class="lg" src="logos/ccna.png" alt=""><div><h3>Cisco CCNA</h3><p class="via">Training via Cisco NetConnect PUP</p></div><span class="yr">target</span><span class="st">Target</span></div>
+    </div>
+  </section>
+
+  <!-- ============ PROFESSIONAL SUMMARY ============ -->
+  <section id="summary" data-view="pro" aria-label="Professional summary">
+    <div class="off off-grid">
+      <div class="off-copy">
+      <h2>Professional summary</h2>
+      <p>A detail-oriented <span class="stick">Information Technology student</span> with a working foundation in networking, cybersecurity, and systems administration, built through a security-focused internship at the DOST, CCNA training, and projects that ship real controls: hash-chained audit logs, port-change detection, and a patched production authentication flaw.</p>
+      <p>Seeking <span class="stick2">SOC, GRC, network, and cloud security roles</span> where hands-on technical skill supports and secures organisational infrastructure. Gokongwei Brothers Foundation scholar and President&rsquo;s Lister at PUP Manila, certified in Cyber Threat Intelligence Analysis (CTIA Level III) and as a Certified Cybersecurity Professional, with Security+ and CCNA next on the roadmap.</p>
+      <p class="meta">Manila, PH · BSIT, PUP Manila · Expected 2028 · Open to internships and entry-level security roles</p>
+      </div>
+
+      <form class="cform" id="cform" novalidate>
+        <h3>Get in touch</h3>
+        <label for="cf-name">Your name</label>
+        <input id="cf-name" name="name" type="text" autocomplete="name" placeholder="John Doe"
+               required aria-describedby="err-name">
+        <p class="cf-err" id="err-name"></p>
+        <label for="cf-from">Your email</label>
+        <input id="cf-from" name="from" type="email" autocomplete="email" placeholder="johndoe@company.com"
+               required aria-describedby="err-from">
+        <p class="cf-err" id="err-from"></p>
+        <label for="cf-msg">Message</label>
+        <textarea id="cf-msg" name="msg" rows="4" placeholder="Role, team, and what you need. Happy to talk."
+                  required aria-describedby="err-msg"></textarea>
+        <p class="cf-err" id="err-msg"></p>
+        <button type="submit">Send message →</button>
+        <p class="cf-note">Opens in your mail app, addressed to
+          <a href="mailto:jamess.a.magpantay@gmail.com">jamess.a.magpantay@gmail.com</a>.
+          <button type="button" class="cf-copy" id="cf-copy">Copy address</button>
+        </p>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ WHAT'S NEXT ============ -->
+  <section id="nextup" data-view="pro" aria-label="What's next">
+    <div class="nx">
+      <span class="nx-kick">Coming next</span>
+      <h2 class="nx-h">Writeups &amp; blog</h2>
+      <p>I'm starting to write the work down: CTF walkthroughs, lab notes, and what I
+        learn from breaking things and then fixing them. Keep an eye on this space.</p>
+      <span class="nx-meta">In progress · check back soon</span>
+    </div>
+  </section>
+
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer id="contact">
+    <p class="big"><a href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=jamess.a.magpantay@gmail.com" target="_blank" rel="noopener">Hire the<br>candidate →</a></p>
+    <p class="sub">Building a SOC, GRC, network, or cloud security team? I bring earned credentials, shipped security projects, and the appetite to keep stacking both.</p>
+    <ul class="f-links">
+      <li><span class="k">Email</span><a href="mailto:jamess.a.magpantay@gmail.com">jamess.a.magpantay@gmail.com</a></li>
+      <li><span class="k">LinkedIn</span><a href="https://www.linkedin.com/in/james-randall-magpantay-60017b349" target="_blank" rel="noopener">www.linkedin.com/in/james-randall-magpantay-60017b349</a></li>
+      <li><span class="k">GitHub</span><a href="https://github.com/jamesmagpantay" target="_blank" rel="noopener">github.com/jamesmagpantay</a></li>
+    </ul>
+    <div class="f-bottom">
+      <span>© 2026 James Randall A. Magpantay</span>
+      <span class="aud-credit">Music: &ldquo;Doctor&rsquo;s Orders&rdquo; by Always Altered Audio
+        and &ldquo;What Kind of Love&rdquo; by Humdrm, both
+        <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">CC BY 3.0</a></span>
+    </div>
+  </footer>
+</div>
+
+
+<button class="skipto" id="skipto" type="button" aria-hidden="true">
+  <span>Off the clock</span>
+  <svg viewBox="0 0 14 16" aria-hidden="true"><path d="M7 1v13M1.6 8.6 7 14.2l5.4-5.6"/></svg>
+</button>
+
+<div class="pa" id="ga" role="dialog" aria-modal="true" aria-label="All event photos">
+  <button class="pa-close" type="button" aria-label="Close">&times;</button>
+  <div class="pa-in">
+    <div class="pa-head">
+      <span class="pa-h">Rooms I show up in</span>
+      <span class="pa-meta">Every photo, in one view</span>
+    </div>
+    <div class="gal" id="ga-grid"></div>
+  </div>
+</div>
+
+<div class="pa" id="xa" role="dialog" aria-modal="true" aria-label="All experience">
+  <button class="pa-close" type="button" aria-label="Close">&times;</button>
+  <div class="pa-in">
+    <div class="pa-head">
+      <span class="pa-h">Experience</span>
+      <span class="pa-meta">Every role, fully open</span>
+    </div>
+    <div class="xa-list" id="xa-grid"></div>
+  </div>
+</div>
+
+<div class="pa" id="pa" role="dialog" aria-modal="true" aria-label="All projects and field work">
+  <button class="pa-close" type="button" aria-label="Close">&times;</button>
+  <div class="pa-in">
+    <div class="pa-head">
+      <span class="pa-h">Projects / Field Work</span>
+      <span class="pa-meta">Everything, in one view</span>
+    </div>
+    <div class="pa-grid" id="pa-grid"></div>
+  </div>
+</div>
+
+<div class="pm" id="pm" role="dialog" aria-modal="true" aria-label="Project detail">
+  <div class="pm-panel">
+    <div class="pm-shot"><img id="pm-img" src="" alt=""></div>
+    <div class="pm-body">
+      <button class="pm-close" type="button" aria-label="Close">&times;</button>
+      <h3 id="pm-title"></h3>
+      <p id="pm-copy"></p>
+      <span class="fact" id="pm-fact"></span>
+    </div>
+  </div>
+</div>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Photo">
+  <button class="lb-close" type="button" aria-label="Close">&times;</button>
+  <figure><img id="lb-img" src="" alt=""><figcaption id="lb-cap"></figcaption></figure>
+</div>
+
+</body>
+</html>

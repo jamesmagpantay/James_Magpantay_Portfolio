@@ -1,0 +1,104 @@
+  :root{
+    --matte:#A6A49F;
+    --cyan:#7CD9D2;
+    --pink:#F2699E;
+    --yellow:#F2CC3F;
+    --green:#A9D958;
+    /* the page gutter. Past 1900px it grows instead of the measure growing,
+       which centres the content at a readable width while the backgrounds
+       stay full-bleed - no letterbox bars on an ultrawide. */
+    --gut:clamp(20px,4vw,64px);
+    --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+    --body:'Instrument Sans',Helvetica,Arial,sans-serif;
+    --disp:'Anton',Haettenschweiler,'Arial Narrow',sans-serif;
+  }
+  /* ===== the 2x2 =====
+     The VIEW decides warmth, shape and pace: security is cool, tight and
+     quick; off the clock is warm, soft and unhurried.
+     The THEME decides polarity only. Tokens live on <html> so the scrollbar
+     can see them; the JS mirrors the .offline class up from <body>. */
+  html[data-theme="dark"]{                 /* SECURITY - DARK */
+    --card:#171512; --cream:#EFE9DC; --cream-dim:#B8B2A5;
+    --panel:#EDE6D7; --light:#EFEDE8; --line:#D8D4CA; --ink:#171512;
+    --orange:#F07F28;
+    --bar-bg:rgba(19,17,15,.9); --bar-line:#2E2A24;
+    --pill-line:#4A463F; --pill-quiet:#3B372F; --pill-fg:#8A857A;
+    --thumb:#5C554A; --thumb-hi:#7E7566; --rail:#C4793F; --lens-hi:#241F19; --cue:var(--orange);
+    --chip-bg:#EFE9DC; --chip-fg:#171512;
+    --meta:#605C54; --meta-strong:#494640;
+    --rad:16px; --mo:.25s; --mo-ease:cubic-bezier(.32,.72,0,1);
+  }
+  html[data-theme="light"]{                /* SECURITY - LIGHT: cool, technical */
+    --card:#E7E7E3; --cream:#15171A; --cream-dim:#5C6068;
+    --panel:#DEDED8; --light:#F4F4F1; --line:#CBCBC4; --ink:#15171A;
+    --orange:#DC5F14;
+    --bar-bg:rgba(231,231,227,.92); --bar-line:#CFCFC8;
+    --pill-line:#AFAFA7; --pill-quiet:#C2C2BA; --pill-fg:#6E7278;
+    --thumb:#9C9C93; --thumb-hi:#7C7C74; --rail:#BC7038; --lens-hi:#D9D9D3; --cue:var(--orange);
+    --chip-bg:#15171A; --chip-fg:#F4F4F1;
+    --meta:#5C6066; --meta-strong:#42464C;
+    --rad:16px; --mo:.25s; --mo-ease:cubic-bezier(.32,.72,0,1);
+  }
+  html.offline[data-theme="dark"]{         /* OFF THE CLOCK - DARK: warm night */
+    --card:#221C15; --cream:#F1E7D6; --cream-dim:#A99C88;
+    --panel:#2C251C; --light:#251E17; --line:#3B3227; --ink:#F1E7D6;
+    --orange:#D9975C;
+    --bar-bg:rgba(34,28,21,.92); --bar-line:#3B3227;
+    --pill-line:#584C3D; --pill-quiet:#463C30; --pill-fg:#9C907E;
+    --thumb:#6B5B48; --thumb-hi:#8C7860; --rail:var(--orange); --lens-hi:#2F271D; --cue:#F1E7D6;
+    --chip-bg:#F1E7D6; --chip-fg:#221C15;
+    --meta:#9A8E7C; --meta-strong:#B6A991;
+    --rad:26px; --mo:.45s; --mo-ease:cubic-bezier(.22,.61,.36,1);
+  }
+  html.offline[data-theme="light"]{        /* OFF THE CLOCK - LIGHT: warm day */
+    --card:#F3EEE3; --cream:#2B261F; --cream-dim:#6F675B;
+    --panel:#EFE7D6; --light:#F8F3E9; --line:#DED5C4; --ink:#2B261F;
+    --orange:#CE8A4F;
+    --bar-bg:rgba(243,238,227,.92); --bar-line:#DED5C4;
+    --pill-line:#C6BCA8; --pill-quiet:#D3CAB8; --pill-fg:#8A8172;
+    --thumb:#B5A992; --thumb-hi:#9A8C73; --rail:var(--orange); --lens-hi:#E9E1D2; --cue:#2B261F;
+    --chip-bg:#2B261F; --chip-fg:#F3EEE3;
+    --meta:#6F675B; --meta-strong:#5A5348;
+    --rad:26px; --mo:.45s; --mo-ease:cubic-bezier(.22,.61,.36,1);
+  }
+  @media (min-width:1900px){
+    :root{--gut:max(64px,calc((100vw - 1800px) / 2))}
+  }
+  /* the stage loses its technical grid off the clock */
+  body.offline .stage-panel{background-image:none}
+
+  *{margin:0;padding:0;box-sizing:border-box}
+  [hidden]{display:none!important}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{animation:none!important;transition:none!important}
+    .flip-chip{opacity:1}
+  }
+  body{
+    background:var(--card);color:var(--ink);
+    font-family:var(--body);font-size:16px;line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--orange);color:#fff}
+  a{color:inherit}
+  /* one visible focus ring for everything interactive, not just links */
+  a:focus-visible,button:focus-visible,[tabindex]:focus-visible,
+  input:focus-visible,textarea:focus-visible{
+    outline:2px solid var(--orange);outline-offset:3px;border-radius:3px;
+  }
+  /* skip link: the first tab stop, parked off-screen until focused */
+  .skiplink{
+    position:fixed;left:12px;top:-120px;z-index:200;
+    background:var(--orange);color:#fff;text-decoration:none;
+    font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+    padding:12px 18px;border-radius:10px;transition:top .18s ease-out;
+  }
+  .skiplink:focus{top:12px}
+  ::-webkit-scrollbar{width:10px}
+  ::-webkit-scrollbar-track{background:var(--card)}
+  ::-webkit-scrollbar-thumb{background:var(--thumb);border-radius:5px}
+  ::-webkit-scrollbar-thumb:hover{background:var(--thumb-hi)}
+  html{scrollbar-color:var(--thumb) var(--card);scrollbar-width:thin}
+
+  .sheet{margin:0 auto;background:var(--light);overflow:hidden}

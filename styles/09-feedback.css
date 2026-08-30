@@ -1,0 +1,119 @@
+  /* ============================================================
+     THE CHROME AROUND THE CONTENT
+     A curtain while the hero loads, a place for the page to answer
+     back when you do something, and a designed state for the things
+     that can fail. All of it degrades: with JavaScript off the
+     curtain never appears and the page is simply there.
+     ============================================================ */
+
+  /* ---------- loading curtain ---------- */
+  .pre{display:none}
+  html.js .pre{
+    position:fixed;inset:0;z-index:300;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:clamp(18px,3vh,30px);
+    background:var(--card);color:var(--cream);
+    transition:opacity .5s ease-out,visibility .5s ease-out;
+  }
+  html.js.ready .pre{opacity:0;visibility:hidden;pointer-events:none}
+  .pre-mark{width:clamp(52px,6vw,78px);height:auto;display:block;color:var(--cream)}
+  .pre-mark path{fill:currentColor}
+  .pre-name{
+    font-family:var(--disp);font-weight:400;text-transform:uppercase;
+    font-size:clamp(26px,4.6vw,50px);line-height:1;letter-spacing:.02em;text-align:center;
+  }
+  .pre-rail{
+    position:relative;width:min(62vw,240px);height:2px;
+    background:var(--pill-quiet);border-radius:2px;overflow:hidden;
+  }
+  .pre-fill{
+    position:absolute;inset:0;background:var(--orange);
+    transform-origin:left center;scale:var(--lp,.02) 1;
+    transition:scale .4s cubic-bezier(.32,.72,0,1);
+  }
+  .pre-meta{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--cream-dim);font-variant-numeric:tabular-nums;
+  }
+  /* the hero has an entrance - it should not spend it behind the curtain */
+  html.loading .sheet *{animation-play-state:paused!important}
+  @media (prefers-reduced-motion:reduce){
+    html.js .pre{transition:opacity .01s linear,visibility .01s linear}
+    .pre-fill{transition:none}
+  }
+
+  /* ---------- the page answering back ---------- */
+  .toasts{
+    position:fixed;left:clamp(12px,2vw,24px);bottom:clamp(12px,2vw,24px);z-index:150;
+    display:flex;flex-direction:column-reverse;gap:10px;
+    width:min(86vw,370px);pointer-events:none;
+  }
+  .toast{
+    display:flex;align-items:flex-start;gap:11px;pointer-events:auto;
+    background:var(--card);color:var(--cream);
+    border:1.5px solid var(--pill-line);border-left:3px solid var(--orange);
+    border-radius:14px;padding:13px 15px;
+    box-shadow:0 14px 34px rgba(0,0,0,.38);
+    font-family:var(--mono);font-size:11.5px;letter-spacing:.05em;line-height:1.55;
+    animation:toast-in .32s cubic-bezier(.16,1,.3,1);
+  }
+  .toast.ok{border-left-color:var(--green)}
+  .toast.err{border-left-color:var(--pink)}
+  .toast.out{animation:toast-out .24s ease-in forwards}
+  @keyframes toast-in{from{opacity:0;translate:-14px 0;scale:.97}}
+  @keyframes toast-out{to{opacity:0;translate:-10px 0;scale:.97}}
+  .toast-dot{
+    width:7px;height:7px;border-radius:50%;flex:none;margin-top:.42em;
+    background:var(--orange);
+  }
+  .toast.ok .toast-dot{background:var(--green)}
+  .toast.err .toast-dot{background:var(--pink)}
+  .toast b{display:block;font-weight:500;color:var(--cream)}
+  .toast span{display:block;color:var(--cream-dim);letter-spacing:.03em}
+  @media (max-width:860px){
+    /* clear of the view badge and the skip pill sharing this edge */
+    .toasts{bottom:calc(clamp(12px,2vw,24px) + 62px)}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .toast,.toast.out{animation:none}
+  }
+
+  /* ---------- form errors, said in the page rather than by the browser ---- */
+  .cf-err{
+    display:none;align-items:center;gap:7px;margin-top:6px;
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.07em;line-height:1.45;
+    color:#B4335F;
+  }
+  .cf-err.on{display:flex}
+  .cf-err::before{
+    content:"";width:5px;height:5px;border-radius:50%;background:currentColor;flex:none;
+  }
+  .cform input[aria-invalid="true"],.cform textarea[aria-invalid="true"]{
+    border-color:#B4335F;box-shadow:0 0 0 3px rgba(180,51,95,.15);
+  }
+
+  /* ---------- pictures that did not arrive ----------
+     A broken-image glyph is the one piece of a page nobody designed. These
+     keep the shape of what is missing and say so in the page's own voice. */
+  .ph.img-fail,.proj-shot.img-fail,.pm-shot.img-fail{
+    display:grid;place-items:center;background:var(--panel);
+  }
+  .ph.img-fail{aspect-ratio:4/3;cursor:default}
+  .ph.img-fail::after,.proj-shot.img-fail::after,.pm-shot.img-fail::after{
+    content:"Image unavailable";
+    font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--meta);text-align:center;padding:12px;
+  }
+  .pm-shot.img-fail{background:var(--panel)}
+  .proj-shot.img-fail::before{display:none}
+  /* a logo that fails just leaves; the label beside it already says the name */
+  img.gone{display:none}
+
+  /* ---------- no JavaScript ---------- */
+  .nojs{
+    position:relative;z-index:1;
+    margin:0;padding:14px clamp(20px,4vw,64px);
+    background:var(--orange);color:#fff;
+    font-family:var(--mono);font-size:11.5px;letter-spacing:.05em;line-height:1.6;
+  }
+  .nojs a{color:#fff;text-underline-offset:3px}

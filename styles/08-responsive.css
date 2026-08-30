@@ -1,0 +1,240 @@
+  /* ============================================================
+     MOBILE + ACCESSIBILITY
+     The layout above hides its navigation below 860px and scatters the
+     stage stickers across absolute positions a phone has no room for.
+     Everything from here down is about giving small screens a real way
+     through the page.
+     ============================================================ */
+
+  /* ---------- the menu control, and the sheet it opens ---------- */
+  .menu-btn{
+    display:none;align-items:center;gap:9px;cursor:pointer;white-space:nowrap;
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    border:1.5px solid var(--pill-line);border-radius:99px;padding:10px 16px;
+    background:transparent;color:var(--cream);min-height:44px;
+    transition:border-color .18s ease-out,background .18s ease-out,color .18s ease-out;
+  }
+  .menu-btn:hover{border-color:var(--orange);background:var(--orange);color:#fff}
+  .menu-ico{display:flex;flex-direction:column;justify-content:center;gap:3px;width:16px;height:12px}
+  .menu-ico i{display:block;height:2px;background:currentColor;border-radius:2px;transition:translate .2s ease-out}
+  .menu-btn[aria-expanded="true"] .menu-ico i:first-child{translate:0 5px}
+  .menu-btn[aria-expanded="true"] .menu-ico i:last-child{translate:0 -5px}
+
+  .msheet{
+    position:fixed;inset:0;z-index:90;
+    background:var(--card);color:var(--cream);
+    display:flex;flex-direction:column;
+    padding:clamp(16px,4vw,28px) clamp(18px,5vw,32px) clamp(24px,6vw,36px);
+    overflow-y:auto;overscroll-behavior:contain;
+    animation:msheet-in .24s cubic-bezier(.16,1,.3,1);
+  }
+  @keyframes msheet-in{from{opacity:0;translate:0 -14px}}
+  .msheet-top{
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    padding-bottom:14px;border-bottom:1px solid var(--bar-line);
+  }
+  .msheet-title{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--cream-dim);
+  }
+  .msheet-close{
+    width:44px;height:44px;border-radius:50%;flex:none;cursor:pointer;
+    display:grid;place-items:center;font-size:26px;line-height:1;font-family:var(--body);
+    background:transparent;color:var(--cream);border:1.5px solid var(--pill-line);
+    transition:background .18s ease-out,border-color .18s ease-out,color .18s ease-out;
+  }
+  .msheet-close:hover{background:var(--orange);border-color:var(--orange);color:#fff}
+  .msheet-nav{
+    display:flex;flex-direction:column;
+    margin:clamp(14px,4vh,30px) 0 clamp(20px,5vh,36px);
+  }
+  .msheet-nav a{
+    font-family:var(--disp);font-weight:400;text-transform:uppercase;
+    font-size:clamp(28px,8.5vw,46px);line-height:1.05;letter-spacing:.01em;
+    text-decoration:none;color:var(--cream);
+    padding:14px 0;border-bottom:1px solid var(--bar-line);
+    transition:color .18s ease-out;
+  }
+  .msheet-nav a:hover,.msheet-nav a:focus-visible{color:var(--orange)}
+  .msheet-foot{display:flex;flex-direction:column;gap:12px;margin-top:auto}
+  .msheet-flip{justify-content:center;min-height:50px;font-size:11px;padding:14px 18px}
+  .msheet-ctl{display:flex;gap:10px;flex-wrap:wrap}
+  .msheet-ctl .thm-btn,.msheet-ctl .mus-btn{
+    flex:1 1 auto;justify-content:center;min-height:48px;font-size:10.5px;padding:12px 14px;
+  }
+  /* the labels are the point in here - keep them past the 600px cut-off */
+  .msheet-ctl .thm-lab,.msheet-ctl .mus-lab{display:inline!important}
+  .msheet-cta{
+    display:block;text-align:center;text-decoration:none;
+    font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+    background:var(--orange);color:#fff;border-radius:99px;padding:17px 20px;
+  }
+  body.msheet-open{overflow:hidden}
+
+  /* ---------- galleries and cards reachable from the keyboard ---------- */
+  .ph:focus-visible{outline:2px solid var(--orange);outline-offset:3px}
+  /* the rail is a scrollable region now, so it can take focus - the mask
+     clips anything drawn outside it, so the ring goes on the inside */
+  .proj-rail:focus-visible{outline:2px solid var(--orange);outline-offset:-3px;border-radius:8px}
+
+  /* ---------- viewport units that survive mobile browser chrome ---------- */
+  @supports (height:100dvh){
+    .lb img{max-height:82dvh}
+    .msheet{height:100dvh}
+  }
+
+  /* ============ below 900px ============ */
+  @media (max-width:900px){
+    /* the expand cue has no right-hand gutter to sit in once the row stacks */
+    .xp-row{padding-right:clamp(16px,1.7vw,24px);padding-bottom:calc(var(--pad) + 4px)}
+    .xp-cue{
+      position:static;translate:0 0;flex-direction:row;justify-content:flex-start;
+      gap:12px;margin-top:4px;
+    }
+    .xp-cue .pm{width:38px;height:38px}
+    .xp-row[aria-expanded="true"] .xp-role h4{font-size:clamp(19px,4.4vw,26px)}
+  }
+
+  /* ============ below 860px: the bar carries the navigation ============ */
+  @media (max-width:860px){
+    /* it can no longer wait for the hero to leave - it is the only way out */
+    .bar{translate:0 0;gap:12px}
+    .bar-right{display:none}
+    html.js .menu-btn{display:flex}
+    /* without JS the menu button does nothing - fall back to the plain links */
+    html:not(.js) .bar-nav{display:flex;flex-wrap:wrap;gap:8px 14px}
+    body{padding-top:60px}
+    /* headings must clear the fixed bar when an anchor lands on them */
+    section[id],footer[id]{scroll-margin-top:74px}
+    .vbadge{min-height:44px}
+    .skipto{bottom:calc(clamp(12px,2vw,24px) + 64px)}
+  }
+
+  /* ============ below 760px ============ */
+  @media (max-width:760px){
+    /* the marquee card was wider than the screen it had to fit in */
+    .proj{width:min(82vw,420px)}
+    .proj h3{font-size:clamp(20px,5.4vw,26px)}
+    /* nothing on a phone should be able to push the page sideways */
+    html,body{overflow-x:hidden}
+    .h-cols{max-width:100%}
+    .sec-cta p{font-size:clamp(34px,11vw,60px)}
+    footer .big{font-size:clamp(38px,12vw,72px)}
+    .nx{padding:clamp(22px,6vw,34px)}
+    /* tap targets: 44px is the floor, everywhere */
+    .dl a,.git,.f-links a,.msheet-nav a{min-height:44px}
+    .dl a{display:flex;align-items:center;justify-content:center}
+    .cform button[type=submit]{min-height:48px;align-self:stretch;text-align:center}
+    .h-cue{padding:9px 14px;font-size:11.5px;letter-spacing:.1em}
+  }
+
+  /* ====== below 900px: the stage stops being a collage ======
+     The stickers are placed by percentage against the panel while the
+     portrait is a fixed 380px in the middle of it. Measured at 800px wide
+     the right-hand column lands 70px inside the portrait, and it only gets
+     worse from there - so a portrait tablet is already broken, not just a
+     phone. Below this the panel becomes an ordinary column: portrait, then
+     the stickers as a plain grid. Every one of them stays on the page,
+     which matters because off the clock they are the contact links. */
+  @media (max-width:900px){
+    /* the portrait is a sibling of the panel, not a child - the column has
+       to be built on .stage itself */
+    .stage{
+      display:flex;flex-direction:column;align-items:center;
+      gap:clamp(18px,4vw,30px);padding-bottom:0;
+    }
+    .stage-panel{
+      order:2;width:100%;height:auto;border-radius:0 clamp(56px,10vw,90px) 0 0;
+      padding:clamp(22px,5vw,38px) clamp(14px,3vw,28px) clamp(26px,6vw,44px);
+    }
+    .stage-photo{
+      order:1;position:relative;left:auto;bottom:auto;transform:none;
+      width:min(50vw,320px);height:auto;aspect-ratio:966/1495;
+    }
+    body.offline .stage-photo{width:min(56vw,350px);aspect-ratio:1180/1499}
+    #set-certs,#set-social{
+      display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:clamp(16px,3.5vw,28px) clamp(8px,2vw,18px);width:100%;
+    }
+    .sticker{
+      position:static;width:auto;gap:7px;
+      left:auto;right:auto;top:auto;bottom:auto;
+      rotate:0deg;animation:none;
+    }
+    /* the ones the collage had to drop now have room again */
+    .s2,.s7{display:flex}
+    .sticker img,.s2 img,.s4 img,.s7 img{height:clamp(44px,7vw,74px)}
+    .dl{top:auto;bottom:5%;width:max-content}
+  }
+
+  /* ============ below 640px ============ */
+  @media (max-width:640px){
+    .stage-photo{width:min(70vw,280px)}
+    body.offline .stage-photo{width:min(78vw,310px)}
+    #set-certs,#set-social{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .sticker img,.s2 img,.s4 img,.s7 img{height:clamp(44px,12.5vw,58px)}
+    .sticker b{font-size:12.5px;line-height:1.2}
+    .sticker small{font-size:9.5px;letter-spacing:.05em}
+    .ss.revealed .num{font-size:9.5px}
+    .dl{bottom:4%}
+    .dl a{padding:12px 18px;font-size:12px}
+    /* the arrow is half a phone tall - it has made its point already */
+    .scue svg{height:clamp(88px,15vh,130px)}
+  }
+
+  /* ============ taller than it is wide ============
+     A rotated monitor, or any tablet held upright, is a wide-screen viewport
+     by width alone - so the media queries above leave it on the desktop
+     layout while the shapes inside it want the stacked one. */
+  /* gated on width too: a phone is also taller than it is wide, and it is
+     already served by the width queries above - this is for the big ones */
+  @media (max-aspect-ratio:5/6) and (min-width:901px){
+    /* a 16:9 screenshot in a tall, narrow column is mostly empty gutter */
+    .pm-panel{
+      width:min(90vw,900px);height:auto;max-height:88vh;
+      grid-template-columns:1fr;grid-template-rows:auto 1fr;
+    }
+    .pm-shot{aspect-ratio:16/9}
+    .pm-body{justify-content:flex-start}
+    /* three masonry columns in a narrow column give postage stamps */
+    .gal{columns:2}
+    .gal-feat{grid-template-columns:repeat(2,1fr);max-width:900px}
+  }
+  @supports (height:100dvh){
+    .pm-panel{max-height:88dvh}
+  }
+
+  /* ============ short viewports: a phone on its side, a netbook ============
+     Everything here is vertical-rhythm relief - at 400px of height the page
+     is mostly padding and one oversized headline. */
+  @media (max-height:560px) and (min-width:480px){
+    .hero{padding-top:clamp(12px,2vw,24px)}
+    .hero-top{margin-bottom:clamp(18px,4vh,36px)}
+    .h-line .ol{font-size:clamp(34px,6vw,90px)}
+    .h-line .sd{font-size:clamp(40px,7.4vw,110px)}
+    .sec{padding-top:clamp(34px,7vh,64px);padding-bottom:clamp(34px,7vh,64px)}
+    .scue{display:none}
+    .lb img{max-height:74vh}
+  }
+  @media (max-height:560px){
+    /* the menu is a full-height sheet - it has to be able to scroll */
+    .msheet-nav a{font-size:clamp(20px,5vw,28px);padding:9px 0}
+    .msheet-nav{margin:12px 0 18px}
+    .msheet-foot{margin-top:18px}
+  }
+
+  /* ============ very wide: more columns, not wider ones ============ */
+  @media (min-width:2100px){
+    .gal{columns:4}
+    .gal-feat{max-width:1900px}
+  }
+
+  /* ============ below 420px ============ */
+  @media (max-width:420px){
+    #set-certs,#set-social{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .stage-photo,body.offline .stage-photo{width:min(74vw,240px)}
+    .bar-brand{font-size:0;gap:0}
+    .bar-brand .mark{width:26px;height:26px}
+    .h-line .ol{letter-spacing:.09em}
+    .proj{width:86vw}
+  }

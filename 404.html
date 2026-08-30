@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404, this route doesn't resolve — James Magpantay</title>
+<meta name="description" content="The page you asked for isn't here. Head back to the portfolio of James Randall A. Magpantay.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Crect%20width%3D%22100%22%20height%3D%22100%22%20rx%3D%2220%22%20fill%3D%22%23171512%22%2F%3E%3Cpath%20fill-rule%3D%22evenodd%22%20fill%3D%22%23EFE9DC%22%20d%3D%22M20%200H80A20%2020%200%200%201%20100%2020V80A20%2020%200%200%201%2080%20100H0V20A20%2020%200%200%201%2020%200ZM41%2026V74H12V61H28V26ZM49%2074V26H62L68.5%2044L75%2026H88V74H75V50L68.5%2062L62%2050V74Z%22%2F%3E%3C%2Fsvg%3E">
+<meta name="theme-color" content="#171512" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#EFEDE8" media="(prefers-color-scheme: light)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Sans:ital,wght@0,400;0,500;0,700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* Deliberately self-contained: a 404 is served for any path at any depth,
+     so it cannot rely on a relative stylesheet or a relative image resolving.
+     Everything it needs is in this file, apart from the webfonts, which have
+     real fallbacks. */
+  :root{
+    --card:#171512; --cream:#EFE9DC; --cream-dim:#B8B2A5;
+    --line:#2E2A24; --pill:#4A463F; --quiet:#8A857A;
+    --orange:#F07F28; --pink:#F2699E;
+    --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+    --body:'Instrument Sans',Helvetica,Arial,sans-serif;
+    --disp:'Anton',Haettenschweiler,'Arial Narrow',sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    background:var(--card);color:var(--cream);
+    font-family:var(--body);font-size:16px;line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;display:flex;flex-direction:column;
+  }
+  @supports (min-height:100dvh){ body{min-height:100dvh} }
+  ::selection{background:var(--orange);color:#fff}
+  a{color:inherit}
+  a:focus-visible,button:focus-visible{
+    outline:2px solid var(--orange);outline-offset:3px;border-radius:3px;
+  }
+
+  /* ---------- masthead ---------- */
+  .top{
+    display:flex;align-items:center;justify-content:space-between;gap:20px;
+    padding:clamp(18px,3vw,32px) clamp(20px,4vw,64px);
+    border-bottom:1px solid var(--line);
+  }
+  .brand{
+    display:flex;align-items:center;gap:12px;text-decoration:none;
+    font-weight:700;font-size:clamp(17px,2vw,22px);letter-spacing:-.02em;white-space:nowrap;
+  }
+  .brand svg{width:clamp(28px,3vw,36px);height:auto;flex:none;display:block}
+  .brand path{fill:currentColor}
+  .brand:hover{color:var(--orange)}
+  .top .status{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--quiet);white-space:nowrap;
+  }
+
+  /* ---------- the message ---------- */
+  main{
+    flex:1;display:flex;flex-direction:column;justify-content:center;
+    padding:clamp(40px,8vh,90px) clamp(20px,4vw,64px);
+    max-width:1100px;width:100%;margin:0 auto;
+  }
+  .code{
+    font-family:var(--disp);font-weight:400;line-height:.82;
+    font-size:clamp(96px,26vw,300px);letter-spacing:.02em;
+    color:transparent;-webkit-text-stroke:3px var(--cream);
+    margin-bottom:clamp(14px,2.5vh,28px);
+  }
+  @media (max-width:600px){ .code{-webkit-text-stroke-width:2px} }
+  h1{
+    font-family:var(--disp);font-weight:400;text-transform:uppercase;
+    font-size:clamp(30px,6vw,72px);line-height:.98;letter-spacing:.01em;
+    margin-bottom:clamp(14px,2vh,22px);text-wrap:balance;
+  }
+  .lede{
+    font-size:clamp(15px,1.3vw,18px);line-height:1.6;color:var(--cream-dim);
+    max-width:56ch;margin-bottom:clamp(22px,3.5vh,34px);
+  }
+
+  /* the requested path, read back - on a security portfolio a log line is
+     the natural way to say "here is exactly what you asked for" */
+  .log{
+    display:block;margin-bottom:clamp(26px,4vh,40px);
+    border:1px solid var(--line);border-left:3px solid var(--pink);
+    border-radius:12px;padding:14px 16px;background:rgba(255,255,255,.025);
+    font-family:var(--mono);font-size:12px;letter-spacing:.03em;line-height:1.7;
+    color:var(--cream-dim);overflow-x:auto;
+  }
+  .log b{color:var(--cream);font-weight:500}
+  .log .miss{color:var(--pink)}
+  .log .path{
+    word-break:break-all;color:var(--cream);
+  }
+
+  /* ---------- the ways out ---------- */
+  .outs{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:clamp(26px,4vh,40px)}
+  .btn{
+    display:inline-flex;align-items:center;gap:9px;min-height:48px;
+    font-family:var(--mono);font-size:11.5px;font-weight:500;
+    letter-spacing:.12em;text-transform:uppercase;text-decoration:none;
+    border-radius:99px;padding:14px 24px;border:2px solid var(--pill);
+    color:var(--cream);background:transparent;
+    transition:background .18s ease-out,border-color .18s ease-out,color .18s ease-out,translate .18s ease-out;
+  }
+  .btn:hover{border-color:var(--orange);background:var(--orange);color:#fff;translate:0 -2px}
+  .btn.lead{background:var(--cream);color:var(--card);border-color:var(--cream)}
+  .btn.lead:hover{background:var(--orange);border-color:var(--orange);color:#fff}
+
+  .jump{
+    border-top:1px solid var(--line);padding-top:clamp(20px,3vh,28px);
+  }
+  .jump-k{
+    display:block;font-family:var(--mono);font-size:10px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--quiet);margin-bottom:12px;
+  }
+  .jump ul{
+    list-style:none;display:flex;flex-wrap:wrap;gap:10px clamp(18px,3vw,36px);
+  }
+  .jump a{
+    display:inline-block;min-height:32px;
+    font-family:var(--mono);font-size:12px;letter-spacing:.06em;
+    color:var(--cream-dim);text-decoration:none;
+    border-bottom:1px solid transparent;padding-bottom:2px;
+    transition:color .18s ease-out,border-color .18s ease-out;
+  }
+  .jump a:hover{color:var(--orange);border-bottom-color:var(--orange)}
+
+  footer{
+    border-top:1px solid var(--line);
+    padding:18px clamp(20px,4vw,64px);
+    display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 20px;
+    font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--quiet);
+  }
+  footer a{color:var(--cream-dim);text-decoration:none}
+  footer a:hover{color:var(--orange)}
+
+  @media (max-width:520px){
+    .outs .btn{width:100%;justify-content:center}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none!important;animation:none!important}
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <a class="brand" href="/">
+    <svg viewBox="0 0 100 100" aria-hidden="true"><path fill-rule="evenodd" d="M20 0H80A20 20 0 0 1 100 20V80A20 20 0 0 1 80 100H0V20A20 20 0 0 1 20 0ZM41 26V74H12V61H28V26ZM49 74V26H62L68.5 44L75 26H88V74H75V50L68.5 62L62 50V74Z"/></svg>
+    James Magpantay
+  </a>
+  <span class="status">Error 404 &middot; Not found</span>
+</header>
+
+<main>
+  <p class="code" aria-hidden="true">404</p>
+  <h1>This route doesn&rsquo;t resolve</h1>
+  <p class="lede">The page you asked for isn&rsquo;t here. It may have moved, the link
+    may be wrong, or I may not have built it yet. Nothing is broken on your end.</p>
+
+  <code class="log">
+    <b>GET</b> <span class="path" id="path">/</span><br>
+    <span class="miss">&rarr; 404</span> no matching route
+  </code>
+
+  <div class="outs">
+    <a class="btn lead" href="/">Back to the portfolio</a>
+    <a class="btn" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=jamess.a.magpantay@gmail.com"
+       target="_blank" rel="noopener">Email me &rarr;</a>
+  </div>
+
+  <nav class="jump" aria-label="Portfolio sections">
+    <span class="jump-k">Or go straight to</span>
+    <ul>
+      <li><a href="/#experience">Experience</a></li>
+      <li><a href="/#work">Projects</a></li>
+      <li><a href="/#stack">Tech stack</a></li>
+      <li><a href="/#certs">Certifications</a></li>
+      <li><a href="/#summary">Summary</a></li>
+    </ul>
+  </nav>
+</main>
+
+<footer>
+  <span>&copy; 2026 James Randall A. Magpantay</span>
+  <span><a href="/">jamesmagpantay portfolio</a></span>
+</footer>
+
+<script>
+/* Read the requested path back to the visitor. textContent, never innerHTML -
+   the URL is attacker-controlled and this page is exactly where a reflected
+   XSS would be tried. Truncated so a very long path cannot wreck the layout. */
+(function(){
+  var el = document.getElementById('path');
+  if(!el) return;
+  var p = location.pathname + location.search;
+  if(p.length > 120) p = p.slice(0, 120) + '…';
+  el.textContent = p || '/';
+})();
+</script>
+</body>
+</html>

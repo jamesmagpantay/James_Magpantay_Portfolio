@@ -1,0 +1,206 @@
+  /* ---------- dark hero card ---------- */
+  .hero{
+    position:relative;background:var(--card);color:var(--cream);
+    padding:clamp(20px,3vw,44px) var(--gut) 0;
+    /* the shared left edge: the midpoint of the first cert sticker (.s1 sits
+       at left:4% of the panel and shares this containing block) */
+    --amid:calc(4% + clamp(130px,15vw,200px) / 2);
+  }
+  /* the hero reads better a notch smaller than the rest of the page, so it
+     renders at 80% while every section below it stays at 100% */
+  @media (min-width:901px){
+    .hero{zoom:.8}
+    /* zoom scales the padding too, so the hero's edge landed ~20% inside
+       every section below it. Divide it back out and the two line up -
+       which matters most on a wide monitor, where --gut is the margin. */
+    .hero{padding-inline:calc(var(--gut) / .8)}
+  }
+  .hero-top{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:clamp(36px,6vh,72px)}
+  .brand{display:flex;align-items:center;gap:16px;white-space:nowrap;font-weight:700;font-size:clamp(29px,3.3vw,50px);line-height:1;letter-spacing:-.028em}
+  /* the mark: a square badge with JM knocked out of it. One fill, taken from
+     currentColor, so it inverts across every palette without a variant. */
+  .mark path{fill:currentColor}
+  .brand .mark{width:clamp(44px,4.4vw,64px);height:clamp(44px,4.4vw,64px);flex:none;display:block}
+  nav{display:flex;align-items:center;gap:clamp(18px,2.8vw,40px)}
+  nav a{font-size:clamp(17px,1.5vw,22px);font-weight:500;text-decoration:none;color:var(--cream-dim);transition:color .18s ease-out}
+  nav a:hover{color:var(--cream)}
+  @media (max-width:760px){nav{display:none}}
+
+  /* school + scholarship marks - centred on the headline, out of flow so the
+     portrait stays put; the right edge lands on the "G" of Gokongwei below,
+     measured at runtime into --gkx */
+  .pup-mark{
+    position:absolute;top:50%;translate:0 -50%;z-index:4;pointer-events:none;
+    /* the marks themselves take the cursor so they can respond to hover;
+       a click still passes up to the headline and flips the view */
+    left:auto;
+    /* --gko nudges the pair past the measured "G" */
+    --gko:clamp(62px,6.4vw,128px);
+    right:calc(100% - (var(--gkx,calc(var(--amid) + 300px)) + var(--gko)));
+    display:flex;align-items:center;gap:clamp(10px,1.1vw,20px);
+  }
+  .pup-mark img{
+    height:clamp(108px,10.4vw,186px);width:auto;pointer-events:auto;
+    filter:drop-shadow(0 6px 16px rgba(0,0,0,.45));
+  }
+  /* the seal sits a touch above the scholarship mark, which carries a caption
+     under it - lifting it optically levels the pair */
+  .pup-mark > img{translate:0 calc(-1 * clamp(7px,.9vw,16px))}
+  /* the scholarship: symbol only, with the name set as live type so it stays
+     crisp at any size instead of relying on the logo’s baked-in wordmark */
+  .pup-mark .mk{display:flex;flex-direction:column;align-items:center;gap:clamp(8px,.8vw,13px)}
+  /* the mark is landscape (240×214) while the seal is square, so equal
+     heights make it read wider - step it back to match optically */
+  .pup-mark .mk img{height:clamp(88px,8.5vw,152px)}
+  .mk-cap{
+    font-family:var(--mono);font-size:clamp(8.5px,.62vw,11px);
+    letter-spacing:.13em;text-transform:uppercase;line-height:1.5;
+    text-align:center;color:var(--cream-dim);text-wrap:balance;
+  }
+  .mk-cap b{display:block;font-weight:400;color:var(--cream)}
+  @media (max-width:900px){.pup-mark{display:none}}
+
+  .h-wrap{position:relative;z-index:0;margin-bottom:clamp(6px,1.4vh,18px);cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;translate:0 clamp(8px,2.2vw,38px)}
+  @media (max-width:900px){.h-wrap{translate:0 0}}
+  .h-wrap:focus-visible{outline:2px solid var(--orange);outline-offset:8px}
+  .h-line{
+    font-family:var(--disp);font-weight:400;text-transform:uppercase;
+    text-align:center;color:var(--cream);line-height:.9;
+  }
+  .h-line .ln{display:block}
+  .h-line .ol{
+    color:transparent;-webkit-text-stroke:2.5px var(--cream);
+    font-size:clamp(50px,9.2vw,152px);letter-spacing:.14em;
+  }
+  .h-line .sd{font-size:clamp(60px,11.4vw,186px);letter-spacing:.01em}
+  @media (max-width:760px){.h-line .ol{-webkit-text-stroke-width:1.6px}}
+  .h-line > span{display:block}
+  .h-line > span:not([hidden]){animation:pop .55s cubic-bezier(.16,1,.3,1)}
+  @keyframes pop{from{opacity:0;translate:0 26px;filter:blur(5px)}}
+
+  /* liquid lens: reveals the other identity only around the cursor */
+  .h-reveal{
+    position:absolute;inset:0;z-index:2;pointer-events:none;
+    display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(circle calc(var(--rr,0px) * 1.15) at var(--mx,50%) var(--my,50%),
+      var(--lens-hi) 0%, var(--card) 62%);
+    clip-path:circle(0px at 50% 50%);
+  }
+  .h-reveal::before{
+    content:"";position:absolute;inset:0;
+    background:radial-gradient(circle var(--rr,0px) at var(--mx,50%) var(--my,50%),
+      rgba(255,255,255,.13), rgba(255,255,255,.04) 55%, rgba(255,255,255,0) 72%);
+  }
+  .h-reveal .rv{
+    position:relative;font-family:var(--disp);font-weight:400;text-transform:uppercase;
+    text-align:center;color:var(--cream);line-height:.9;white-space:nowrap;
+  }
+
+  .flip-chip{
+    position:absolute;left:50%;top:-46px;translate:-50% 0;rotate:-3deg;z-index:5;
+    pointer-events:auto;cursor:pointer;-webkit-appearance:none;appearance:none;
+    background:var(--chip-bg);color:var(--chip-fg);border:2px solid var(--orange);
+    font-family:var(--mono);font-size:clamp(14px,1.15vw,17px);font-weight:600;
+    letter-spacing:.11em;text-transform:uppercase;
+    padding:13px 26px;border-radius:99px;
+    box-shadow:0 10px 30px rgba(0,0,0,.45);
+    transition:scale .18s ease-out,background .18s ease-out,color .18s ease-out;
+    /* enters after the hero settles, then bobs - see chip-in delay */
+    animation:chip-in .5s cubic-bezier(.16,1,.3,1) 1.2s backwards,
+              wiggle 3.2s ease-in-out 1.7s infinite;
+  }
+  /* once it has arrived, drop chip-in from the list - otherwise every class
+     change restarts it and its 1.2s delay blanks the chip */
+  .flip-chip.landed{animation:wiggle 3.2s ease-in-out infinite}
+  /* the chip taps itself now and then, so the gesture is demonstrated */
+  .flip-chip.landed.tap{animation:wiggle 3.2s ease-in-out infinite,press .5s cubic-bezier(.3,1.4,.5,1)}
+  @keyframes press{
+    0%{scale:1}
+    22%{scale:.9}
+    45%{scale:1.05}
+    70%{scale:.98}
+    100%{scale:1}
+  }
+  .flip-chip.landed.tap .flip-cur{animation:tap .5s cubic-bezier(.3,1.4,.5,1)}
+  @keyframes tap{
+    0%{translate:0 0}
+    22%{translate:-5px -6px}
+    50%{translate:1px 1px}
+    100%{translate:0 0}
+  }
+
+  .flip-chip::after{content:" ↓"}
+  body.offline .flip-chip::after{content:" ↺"}
+  @keyframes chip-in{from{opacity:0;scale:.8}to{opacity:1;scale:1}}
+  @keyframes wiggle{0%,100%{translate:-50% 0}50%{translate:-50% -9px}}
+  /* pixel-art cursor pointing into the chip */
+  .flip-cur{
+    position:absolute;right:-30px;bottom:-34px;width:clamp(26px,2.2vw,34px);height:auto;
+    shape-rendering:crispEdges;rotate:3deg;
+  }
+  /* the name responds to the cursor, so the chip reads as an affordance */
+  .h-wrap:hover .flip-chip{background:var(--orange);color:#fff;scale:1.06}
+  .h-wrap:hover .h-line .ol{-webkit-text-stroke-color:var(--orange)}
+  .h-line .ol{transition:-webkit-text-stroke-color .2s ease-out}
+  /* hero CTA - same lockup as the footer, scaled down */
+  .hero-cta{
+    position:absolute;right:clamp(0px,1.5vw,28px);top:50%;translate:0 -50%;z-index:6;
+    font-family:var(--disp);font-weight:400;text-transform:uppercase;
+    font-size:clamp(20px,2.6vw,44px);line-height:.96;text-align:center;color:var(--cream);
+  }
+  .hero-cta a{text-decoration:none;color:inherit;transition:color .18s ease-out}
+  .hero-cta a:hover{color:var(--orange)}
+  @media (max-width:1000px){.hero-cta{display:none}}
+
+  .h-cols{
+    position:relative;z-index:2;
+    display:grid;grid-template-columns:1fr auto;gap:clamp(20px,4vw,64px);
+    align-items:start;max-width:min(92%,1560px);
+    /* the headline is translated down and set at line-height .9 - keep real
+       clearance here or the copy runs under the last row of type */
+    margin:clamp(8px,1.6vh,24px) auto clamp(10px,1.4vh,18px);
+  }
+  .h-cols p{font-size:clamp(15px,1.05vw,17px);line-height:1.55;color:var(--cream-dim);max-width:42ch}
+  .h-cols p:nth-of-type(2){justify-self:end}
+  .h-cols p b{color:var(--cream);font-weight:500}
+  .git{
+    font-family:var(--mono);font-size:clamp(14px,1.15vw,17px);letter-spacing:.12em;text-transform:uppercase;
+    color:var(--cream);text-decoration:none;border-bottom:1px solid var(--cream);
+    padding-bottom:4px;white-space:nowrap;transition:color .18s ease-out,border-color .18s ease-out;
+  }
+  .git:hover{color:var(--orange);border-color:var(--orange)}
+  /* attribution for the CC BY soundtrack - required, so it stays visible */
+  .aud-credit{
+    display:block;margin-top:10px;max-width:66ch;
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;
+    line-height:1.6;color:var(--meta);
+  }
+  .aud-credit a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+  .aud-credit a:hover{color:var(--orange)}
+  /* the stickers below are live links - say so, quietly, under the CTA */
+  .git-wrap{display:flex;flex-direction:column;align-items:flex-end;gap:clamp(9px,1vw,14px)}
+  /* the CTA rides above the intro copy’s first line - --gity is the only dial */
+  @media (min-width:901px){
+    .git-wrap{--gity:clamp(12px,1.8vw,34px);translate:0 calc(-1 * var(--gity))}
+  }
+  .git-note{
+    font-family:var(--mono);font-size:clamp(10px,.78vw,12px);
+    letter-spacing:.1em;text-transform:uppercase;line-height:1.55;
+    color:var(--cream-dim);text-align:right;max-width:24ch;text-wrap:balance;
+  }
+  @media (max-width:900px){
+    .git-wrap{align-items:flex-start}
+    .git-note{text-align:left}
+  }
+  /* the off-clock intro runs longer, and a relaxed side can carry a wider measure */
+  body.offline .h-cols p{max-width:52ch}
+  @media (max-width:900px){.h-cols{grid-template-columns:1fr;gap:18px}.h-cols p{max-width:56ch}}
+  /* the intro copy starts at the midpoint of the first cert sticker below it
+     (.s1 is left:4% of the panel and shares this containing block) */
+  @media (min-width:901px){
+    .h-cols{
+      --hcl:clamp(18px,2vw,40px);            /* nudge back left of the sticker midpoint */
+      margin-left:calc(var(--amid) - var(--hcl));margin-right:0;
+      max-width:min(calc(100% - var(--amid) + var(--hcl)),1560px);
+    }
+  }

@@ -1,0 +1,463 @@
+{
+ "speak": [
+  [
+   "speak-01.jpg",
+   "Cisco NetConnect speakership",
+   1.0
+  ],
+  [
+   "speak-02.jpg",
+   "Front of the room",
+   1.333
+  ],
+  [
+   "speak-03.jpg",
+   "Hosting the room",
+   1.304
+  ],
+  [
+   "speak-04.jpg",
+   "On the mic",
+   1.775
+  ]
+ ],
+ "events": [
+  [
+   "events-01.jpg",
+   "AWS AI workshop",
+   1.334
+  ],
+  [
+   "events-02.jpg",
+   "Front row, AWS AI",
+   0.75
+  ],
+  [
+   "events-03.jpg",
+   "AWS Cloud Club shoot",
+   1.776
+  ],
+  [
+   "events-04.jpg",
+   "New year, new heights",
+   0.75
+  ],
+  [
+   "events-05.jpg",
+   "e:Novators meetup",
+   1.776
+  ],
+  [
+   "events-06.jpg",
+   "Org Christmas party",
+   1.333
+  ],
+  [
+   "events-07.jpg",
+   "Cisco bridge programme",
+   1.467
+  ],
+  [
+   "events-08.jpg",
+   "Cisco office tour",
+   1.778
+  ],
+  [
+   "events-09.jpg",
+   "At Cisco",
+   0.837
+  ],
+  [
+   "events-10.jpg",
+   "Cybersecurity summit",
+   0.75
+  ],
+  [
+   "events-11.jpg",
+   "Christmas, eating",
+   1.501
+  ],
+  [
+   "events-12.jpg",
+   "GDG cybersecurity team",
+   0.556
+  ],
+  [
+   "events-13.jpg",
+   "Nexus certification day",
+   0.75
+  ],
+  [
+   "events-14.jpg",
+   "Project defended",
+   1.333
+  ],
+  [
+   "events-15.jpg",
+   "New year, new heights",
+   1.333
+  ],
+  [
+   "events-16.jpg",
+   "Nexus CCNA cohort",
+   1.333
+  ],
+  [
+   "events-17.jpg",
+   "Hands on the switch",
+   0.75
+  ],
+  [
+   "events-18.jpg",
+   "Vibe Code team",
+   1.776
+  ],
+  [
+   "events-19.jpg",
+   "Vibe Code: IDS build",
+   0.563
+  ],
+  [
+   "events-20.jpg",
+   "YGG Summit",
+   0.75
+  ],
+  [
+   "events-21.jpg",
+   "ChainSec",
+   1.778
+  ],
+  [
+   "events-22.jpg",
+   "Digital safety summit",
+   0.75
+  ],
+  [
+   "events-23.jpg",
+   "e:Novators",
+   1.776
+  ],
+  [
+   "events-24.jpg",
+   "e:Novators marketing team",
+   1.776
+  ],
+  [
+   "events-25.jpg",
+   "e:Novators onboarding",
+   1.778
+  ],
+  [
+   "events-26.jpg",
+   "Last-minute changes",
+   1.11
+  ],
+  [
+   "events-27.jpg",
+   "With Ayen",
+   0.556
+  ],
+  [
+   "events-28.jpg",
+   "With VJ",
+   1.333
+  ],
+  [
+   "events-29.jpg",
+   "With Denisse",
+   0.751
+  ],
+  [
+   "events-30.jpg",
+   "With Max at e:Novators",
+   1.5
+  ],
+  [
+   "events-31.jpg",
+   "With Max",
+   0.75
+  ],
+  [
+   "events-32.jpg",
+   "ASEAN Tech Summit, suited up",
+   0.734
+  ],
+  [
+   "events-33.jpg",
+   "Hilton Manila, Newport World",
+   1.4
+  ],
+  [
+   "events-34.jpg",
+   "Cybersecurity summit hall",
+   0.75
+  ],
+  [
+   "events-35.jpg",
+   "BusinessWorld Cybersecurity Summit",
+   0.75
+  ],
+  [
+   "events-36.jpg",
+   "Toward stronger digital defense",
+   0.75
+  ],
+  [
+   "events-37.jpg",
+   "Building ASEAN's digital economy",
+   0.75
+  ],
+  [
+   "events-38.jpg",
+   "ASEAN Fintech Alliance wall",
+   0.796
+  ],
+  [
+   "events-39.jpg",
+   "The economics of AI, keynote",
+   1.333
+  ],
+  [
+   "events-40.jpg",
+   "Before the summit",
+   0.804
+  ],
+  [
+   "events-41.jpg",
+   "Four truths for business leaders",
+   0.75
+  ],
+  [
+   "events-42.jpg",
+   "With the speaker",
+   0.75
+  ],
+  [
+   "events-43.jpg",
+   "VST ECS Philippines, welcome",
+   0.75
+  ],
+  [
+   "events-44.jpg",
+   "Microtel, event day",
+   0.75
+  ],
+  [
+   "events-45.jpg",
+   "Cisco x VST ECS",
+   0.75
+  ],
+  [
+   "events-46.jpg",
+   "Cisco kit",
+   0.75
+  ],
+  [
+   "events-47.jpg",
+   "Cato Networks",
+   0.75
+  ],
+  [
+   "events-48.jpg",
+   "Catopia Tour 2026, Manila",
+   0.75
+  ],
+  [
+   "events-49.jpg",
+   "Catopia Tour, main stage",
+   0.75
+  ],
+  [
+   "events-50.jpg",
+   "Catopia giveaway",
+   0.75
+  ],
+  [
+   "events-51.jpg",
+   "At the Cato backdrop",
+   1.333
+  ]
+ ],
+ "life": [
+  [
+   "life-01.jpg",
+   "BSIT 1-2N",
+   1.5
+  ],
+  [
+   "life-02.jpg",
+   "CAPSAA medal",
+   0.745
+  ],
+  [
+   "life-03.jpg",
+   "Dungeon Siege II",
+   1.333
+  ],
+  [
+   "life-04.jpg",
+   "Green grass",
+   0.75
+  ],
+  [
+   "life-05.jpg",
+   "Receiving the diploma",
+   1.667
+  ],
+  [
+   "life-06.jpg",
+   "Archery",
+   1.0
+  ],
+  [
+   "life-07.jpg",
+   "At the range",
+   0.75
+  ],
+  [
+   "life-08.jpg",
+   "Billiards",
+   0.75
+  ],
+  [
+   "life-09.jpg",
+   "Escalator",
+   1.0
+  ],
+  [
+   "life-10.jpg",
+   "All black",
+   0.661
+  ],
+  [
+   "life-11.jpg",
+   "Side profile",
+   0.66
+  ],
+  [
+   "life-12.jpg",
+   "Blue and black",
+   0.657
+  ],
+  [
+   "life-13.jpg",
+   "Blue cap",
+   0.75
+  ],
+  [
+   "life-14.jpg",
+   "Night shot",
+   0.667
+  ],
+  [
+   "life-15.jpg",
+   "Creative shot",
+   1.0
+  ],
+  [
+   "life-16.jpg",
+   "Dumbbells",
+   1.0
+  ],
+  [
+   "life-17.jpg",
+   "España",
+   0.667
+  ],
+  [
+   "life-18.jpg",
+   "Friends",
+   1.778
+  ],
+  [
+   "life-19.jpg",
+   "Gym",
+   1.0
+  ],
+  [
+   "life-20.jpg",
+   "Lifting",
+   0.75
+  ],
+  [
+   "life-21.jpg",
+   "Hug",
+   1.0
+  ],
+  [
+   "life-22.jpg",
+   "Vision board",
+   1.333
+  ],
+  [
+   "life-23.jpg",
+   "With my sister",
+   0.75
+  ],
+  [
+   "life-24.jpg",
+   "Mini hike",
+   0.75
+  ],
+  [
+   "life-25.jpg",
+   "Trail day",
+   0.75
+  ],
+  [
+   "life-26.jpg",
+   "The setup",
+   0.75
+  ],
+  [
+   "life-27.jpg",
+   "Nature trip",
+   1.0
+  ],
+  [
+   "life-28.jpg",
+   "Shadows",
+   0.75
+  ],
+  [
+   "life-29.jpg",
+   "Fit check",
+   0.75
+  ],
+  [
+   "life-30.jpg",
+   "Looking up",
+   0.667
+  ],
+  [
+   "life-31.jpg",
+   "Graduation, with friends",
+   1.245
+  ],
+  [
+   "life-32.jpg",
+   "Senior high graduation",
+   1.333
+  ],
+  [
+   "life-33.jpg",
+   "SHS medal",
+   0.75
+  ],
+  [
+   "life-34.jpg",
+   "TFT nights",
+   1.0
+  ],
+  [
+   "life-35.jpg",
+   "The boys",
+   1.354
+  ],
+  [
+   "life-36.jpg",
+   "White and blue",
+   0.751
+  ]
+ ]
+}
