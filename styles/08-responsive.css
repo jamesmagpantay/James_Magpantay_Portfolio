@@ -156,8 +156,9 @@
     .stage{
       display:flex;flex-direction:column;align-items:center;
       gap:0;padding-bottom:0;
-      /* how far the cut-out sinks into the tile it stands on */
-      --sink:clamp(22px,6vw,52px);
+      /* how far the cut-out sinks into the tile it stands on, and so also
+         the distance over which its hard bottom crop is dissolved away */
+      --sink:clamp(40px,10vw,80px);
     }
     .stage-panel{
       order:2;width:100%;height:auto;border-radius:0 clamp(56px,10vw,90px) 0 0;
@@ -176,6 +177,22 @@
       width:min(50vw,320px);height:auto;aspect-ratio:966/1495;
       margin-bottom:calc(-1 * var(--sink));
     }
+    /* The cut-out ends in a hard horizontal crop, which is what makes it read
+       as pasted onto the tile rather than standing in it. Fade the last
+       stretch to nothing so the figure dissolves across the tile's edge.
+
+       A mask rather than a cream gradient laid over the top: the panel is a
+       different colour in each of the four palettes, so anything colour-
+       matched here would be right in one of them and wrong in three. A mask
+       just lets whatever is behind come through. It also fades the drop
+       shadow with it - masks apply after filters - so there is no shadow
+       left hanging under a figure that is no longer there. */
+    .stage-photo img{
+      --fade:calc(var(--sink) * .92);
+      -webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - var(--fade)),transparent);
+              mask-image:linear-gradient(to bottom,#000 calc(100% - var(--fade)),transparent);
+      filter:drop-shadow(0 8px 18px rgba(23,21,18,.26));
+    }
     body.offline .stage-photo{width:min(56vw,350px);aspect-ratio:1180/1499}
     #set-certs,#set-social{
       display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
@@ -189,7 +206,9 @@
     /* the ones the collage had to drop now have room again */
     .s2,.s7{display:flex}
     .sticker img,.s2 img,.s4 img,.s7 img{height:clamp(44px,7vw,74px)}
-    .dl{top:auto;bottom:5%;width:max-content}
+    /* clear of the dissolve, so they sit on the figure rather than on the
+       part of it that is fading out */
+    .dl{top:auto;bottom:calc(var(--sink) + clamp(8px,2.5vw,20px));width:max-content}
   }
 
   /* ============ below 640px ============ */
@@ -201,7 +220,6 @@
     .sticker b{font-size:12.5px;line-height:1.2}
     .sticker small{font-size:9.5px;letter-spacing:.05em}
     .ss.revealed .num{font-size:9.5px}
-    .dl{bottom:4%}
     .dl a{padding:12px 18px;font-size:12px}
     /* the arrow is half a phone tall - it has made its point already */
     .scue svg{height:clamp(88px,15vh,130px)}
