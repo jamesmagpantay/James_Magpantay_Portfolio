@@ -146,9 +146,9 @@
   @media (max-width:760px){
     .flip-chip{
       top:-38px;
-      font-size:clamp(10px,2.9vw,13px);
-      letter-spacing:.07em;
-      padding:clamp(9px,2.4vw,12px) clamp(12px,4vw,20px);
+      font-size:clamp(10px,2.6vw,12.5px);
+      letter-spacing:.05em;
+      padding:clamp(8px,2.1vw,11px) clamp(10px,3.2vw,16px);
       box-shadow:0 8px 20px rgba(0,0,0,.4);
     }
     .flip-cur{right:-18px;bottom:-22px;width:clamp(18px,5vw,24px)}

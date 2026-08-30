@@ -301,6 +301,15 @@
     .xp-row[aria-expanded="true"] .xp-co .span{font-size:clamp(12px,.85vw,14px)}
     .xp-right{border-top:1px solid var(--line);padding:14px 0 0}
     .xp-right::before{display:none}
+    /* The one-line rule exists so the name cannot reflow mid-expand while the
+       column is resizing. Down here the column is a full-width 1fr in both
+       states, so there is nothing to protect against - and holding one line
+       only means "Department of Science and Technology" arrives as
+       "Department of Scienc...". Let both lines wrap. */
+    .xp-co h3,.xp-co .span{
+      white-space:normal;overflow:visible;text-overflow:clip;
+    }
+    .xp-co h3{line-height:1.08;text-wrap:balance}
   }
 
   /* the section heading opens every project at once */
