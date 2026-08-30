@@ -161,6 +161,27 @@
   });
   paint();
 
+  /* A stored "on" cannot make a sound by itself: no browser starts audio
+     before the visitor has interacted with the page, so after a refresh the
+     toggle sat there claiming to be on while nothing played.
+
+     Waiting for play() to be reached is not enough either. On a pointer
+     device the first thing that reaches it is a hover, and hover events do
+     not grant user activation - so boot() built the context in a suspended
+     state and resume() was ignored. It only came back on the next real
+     click. Arm it on the first genuinely activating event instead. */
+  if(on){
+    (function(){
+      var EVS = ['pointerdown', 'keydown', 'touchend'];
+      function unlock(){
+        EVS.forEach(function(e){ removeEventListener(e, unlock, true); });
+        boot();
+        if(ctx && ctx.state === 'suspended') ctx.resume();
+      }
+      EVS.forEach(function(e){ addEventListener(e, unlock, true); });
+    })();
+  }
+
   /* ---- wiring ---- */
   var lastTick = 0;
   function hover(el){
@@ -420,17 +441,28 @@
     }, 420);
   });
 
-  /* returning visitor who had it on: try, and if the browser blocks autoplay
-     (it will, until they interact) pick it up on their first click */
+  /* Returning visitor who had it on. Try to start - a visitor who has built
+     up enough engagement with this origin may be allowed to autoplay - but
+     arm the fallback FIRST, and unconditionally.
+
+     It used to be registered inside the rejection handler, which loses two
+     ways: the promise settles asynchronously, so anyone who clicks before it
+     rejects gets no listener and no music at all; and a browser that returns
+     nothing from play() never rejects, so the handler never ran. */
   var pref = false;
   try{ pref = localStorage.getItem(KEY) === '1'; }catch(err){}
   if(pref){
     on = true; cur = view();
+    var EVS = ['pointerdown', 'keydown', 'touchend'];
+    var kick = function(){
+      EVS.forEach(function(e){ removeEventListener(e, kick, true); });
+      /* nothing to do if autoplay was allowed and it is already running */
+      if(on && (!el[cur] || el[cur].paused)) start();
+    };
+    EVS.forEach(function(e){ addEventListener(e, kick, true); });
+
     var a = make(cur), p = a.play();
-    if(p && p.then) p.then(function(){ fade(a, target(), FADE_IN); })
-                     .catch(function(){
-                       addEventListener('pointerdown', function once(){ if(on) start(); }, {once:true});
-                     });
+    if(p && p.then) p.then(function(){ fade(a, target(), FADE_IN); }).catch(function(){});
   }
   paint();
 })();
