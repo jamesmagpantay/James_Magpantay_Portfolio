@@ -109,6 +109,15 @@
 
   var lib = {
     tick:  function(){ thock({cut:4200, r1:290, r2:1250, dur:.020, peak:.20}); },
+    /* a detent under the thumb. 15ms and a peak a tenth of a click - it has
+       to survive being heard a few times a second without becoming the thing
+       you notice. f is how hard the page is being moved: a flick is brighter
+       and a little louder than a nudge. */
+    scroll:function(f){
+      f = f || 0;
+      thock({cut:4400 + f * 1000, r1:295 + f * 80, r2:1300 + f * 380,
+             dur:.015, peak:.055 + f * .075});
+    },
     key:   function(){ thock(pick(KEYS)); },
     keyup: function(){ thock({cut:5200, r1:330, r2:1500, dur:.022, peak:.26}); },
     click: function(){ thock(pick(KEYS)); },
@@ -124,12 +133,12 @@
     flip:  function(){ thock({cut:2600, r1:132, r2:480, dur:.115, peak:1.0});
                        thock({cut:3400, r1:240, r2:900, dur:.045, peak:.40}, ctx.currentTime + .075); }
   };
-  function play(name){
+  function play(name, arg){
     if(!on) return;
     boot();
     if(!ctx) return;
     if(ctx.state === 'suspended') ctx.resume();
-    try{ if(lib[name]) lib[name](); }catch(e){}
+    try{ if(lib[name]) lib[name](arg); }catch(e){}
   }
   window.sfx = { play: play, isOn: function(){ return on; } };
 
@@ -237,6 +246,36 @@
     el.addEventListener('pointerleave', rollStop);
     el.addEventListener('click', climax);
   });
+
+  /* ---- the page under the thumb ----
+     Scroll fires tens of times a second, so this cannot be "a sound on
+     scroll" - it is a detent: one tick per fixed distance travelled, with a
+     hard floor on how close together two of them may land. Distance alone
+     would buzz on a fast flick; time alone would tick while nothing moved.
+     Both together give a run of clicks that tracks the page, and silence the
+     moment it stops. Works the same on a wheel, a trackpad and a thumb. */
+  (function(){
+    var STEP = 190,   /* px of travel between ticks */
+        GAP  = 110,   /* ms floor between two ticks - caps a flick at ~9/sec */
+        JUMP = 600;   /* px: past this it is a jump, not a scroll */
+    var last = window.scrollY || 0, acc = 0, at = 0;
+    addEventListener('scroll', function(){
+      if(!on) return;
+      var y = window.scrollY, d = Math.abs(y - last);
+      last = y;
+      /* a rail dot, a "back to top", the scroll after a view flip - those are
+         travel the visitor did not make, and they should not sound like it */
+      if(d > JUMP){ acc = 0; return; }
+      acc += d;
+      if(acc < STEP) return;
+      var now = performance.now();
+      /* hold the charge rather than dropping it, so the next tick lands as
+         soon as the floor allows instead of needing another full STEP */
+      if(now - at < GAP){ acc = STEP; return; }
+      acc = 0; at = now;
+      play('scroll', Math.min(1, d / 60));
+    }, {passive:true});
+  })();
 
   /* the page types back - held keys are ignored so a repeat never machine-guns */
   addEventListener('keydown', function(e){
