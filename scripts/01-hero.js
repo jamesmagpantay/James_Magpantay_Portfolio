@@ -42,21 +42,17 @@
      be seen again. Jumping instantly there instead means the curtain stays
      the only thing anyone sees move. */
   var wipe = document.getElementById('wipe');
-  /* .pup-mark is the logo tile beside the headline on desktop; below 900px
-     it is display:none and a second copy, .git-marks, rides beside the CTA
-     instead - and that copy exists twice besides, once per view, with only
-     one ever actually on screen at a time (the other's ancestor is
-     [hidden]). Whichever of these is genuinely rendered right now - checked
-     via offsetParent, which is null for anything display:none - is the one
-     worth measuring; a mark nobody can see says nothing about where the
-     hero actually ends. */
-  var heroMarks = [].slice.call(document.querySelectorAll('.pup-mark, .git-marks'));
+  /* .stage-panel is the cream panel holding the photo and the sticker set -
+     certifications in the security view, social links in the other - and it
+     stays on screen (and the same element) across both breakpoints and both
+     views, unlike the logo marks above it, which swap out or disappear
+     depending on which. Its bottom edge is the actual end of the hero as
+     someone reading down the page would judge it - past the stickers, not
+     just past the headline. */
+  var stage = document.querySelector('.stage-panel');
   var reducedMo = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   function nearHero(){
-    for(var i = 0; i < heroMarks.length; i++){
-      if(heroMarks[i].offsetParent !== null) return heroMarks[i].getBoundingClientRect().bottom > 0;
-    }
-    return window.scrollY < 40;
+    return stage ? stage.getBoundingClientRect().bottom > 0 : window.scrollY < 40;
   }
   function flip(){
     if(reducedMo || nearHero()){
