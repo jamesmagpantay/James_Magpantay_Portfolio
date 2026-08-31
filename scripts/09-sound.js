@@ -1,3 +1,29 @@
+/* Silent-mode bypass, shared by both audio modules below. A plain
+   AudioContext's output stays under the ringer/silent switch on iOS, but the
+   page's whole audio session flips into the "playback" category - which
+   ignores that switch - the instant any HTMLMediaElement is playing. Both
+   the interface sounds and the music are meant to be heard even with the
+   phone silenced, so rather than leave that to whichever one happens to
+   play an <audio> element first, a silent looping clip is started on the
+   very first gesture to hold the session in that category from the start. */
+(function(){
+  var SILENCE = 'data:audio/wav;base64,UklGRtQEAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YbAEAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA=';
+  var armed = false;
+  function arm(){
+    if(armed) return;
+    armed = true;
+    try{
+      var a = new Audio(SILENCE);
+      a.loop = true;
+      var p = a.play();
+      if(p && p.catch) p.catch(function(){ armed = false; });
+    }catch(e){ armed = false; }
+  }
+  ['pointerdown','keydown','touchend'].forEach(function(e){
+    addEventListener(e, arm, true);
+  });
+})();
+
 /* Interface sound. Everything is synthesised in the Web Audio API - no files to
    host, and every character of it is a number you can tune. Five sounds, off by
    default, remembered per visitor. */
@@ -375,18 +401,10 @@
   var on = false, cur = null, ducked = 0, dead = false;
 
   /* Played through plain Web Audio buffer sources rather than <audio>
-     elements. The moment any HTMLMediaElement plays on iOS, Safari flips the
-     page's whole audio session into the "playback" category, which ignores
-     the hardware silent switch from then on for every sound on the page -
-     including the synthesised sfx above, which otherwise honour it fine on
-     their own. Fetching and decoding the track into an AudioBufferSourceNode
-     keeps the session in the "ambient" category throughout, so music and sfx
-     consistently respect the switch together instead of the sfx silently
-     unmuting the moment music starts.
-
-     It also means level control was already solved: everything here runs
-     through a GainNode, same as the sfx module, rather than
-     HTMLMediaElement.volume, which iOS ignores outright. */
+     elements, so level control runs through a GainNode - same as the sfx
+     module - rather than HTMLMediaElement.volume, which iOS ignores
+     outright. (The silent-mode bypass above already takes care of the
+     switch itself, for this and the sfx module both.) */
   var actx = null, gainNodes = {}, buffers = {}, sources = {}, fadeRAF = {};
 
   function ensureCtx(){
@@ -581,4 +599,31 @@
     fade(cur, target(), FADE_IN);
   }
   paint();
+})();
+
+/* First-visit heads-up, once per visitor: the silent-mode bypass above is a
+   surprise the first time it happens, so it gets a beat at the top of the
+   page instead of waiting to be found tucked into the mobile menu. */
+(function(){
+  if(!matchMedia('(max-width:860px)').matches) return;
+  var el = document.getElementById('snote');
+  if(!el) return;
+  var KEY = 'snote-seen';
+  var seen = false;
+  try{ seen = localStorage.getItem(KEY) === '1'; }catch(e){}
+  if(seen) return;
+  try{ localStorage.setItem(KEY, '1'); }catch(e){}
+
+  function show(){
+    requestAnimationFrame(function(){ el.classList.add('on'); });
+    var t = setTimeout(hide, 6000);
+    el.querySelector('.snote-close').addEventListener('click', function(){
+      clearTimeout(t); hide();
+    });
+  }
+  function hide(){ el.classList.remove('on'); }
+  /* after the curtain has actually lifted, not underneath it */
+  function land(){ setTimeout(show, 500); }
+  document.addEventListener('preready', land);
+  if(window.__preDone) land();
 })();
