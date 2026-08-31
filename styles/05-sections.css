@@ -17,9 +17,18 @@
     display:flex;flex-direction:column;gap:clamp(14px,1.6vw,20px);
     border:1px solid var(--line);border-radius:16px;
     padding:clamp(20px,2.2vw,28px);
+    transition:translate .32s cubic-bezier(.22,.61,.36,1),
+               box-shadow .32s ease-out,border-color .32s ease-out;
+  }
+  .edu-card:hover{
+    translate:0 -6px;border-color:var(--line);
+    box-shadow:0 20px 40px rgba(23,21,18,.14);
   }
   .edu-head{display:flex;align-items:center;gap:clamp(14px,1.5vw,20px)}
-  .edu-lg{width:clamp(46px,4vw,60px);height:clamp(46px,4vw,60px);object-fit:contain;flex:none}
+  .edu-lg{
+    width:clamp(64px,5.6vw,88px);height:clamp(64px,5.6vw,88px);object-fit:contain;flex:none;
+    transition:rotate .4s cubic-bezier(.22,.61,.36,1),scale .4s cubic-bezier(.22,.61,.36,1);
+  }
   .edu-txt{display:flex;flex-direction:column;gap:5px;min-width:0}
   .edu-txt h3{font-size:clamp(15px,1.35vw,19px);font-weight:700;letter-spacing:-.015em;line-height:1.15}
   .edu-when{font-family:var(--mono);font-size:11px;color:var(--meta);white-space:nowrap}
@@ -27,11 +36,30 @@
   .edu-focus{display:block;margin-top:3px;font-size:12.5px;font-weight:400;color:var(--meta)}
   .edu-pts{list-style:none;padding:0;display:flex;flex-direction:column;gap:9px}
   .edu-pts li{
-    position:relative;padding-left:18px;
-    font-size:13px;line-height:1.6;color:#54514A;
+    position:relative;padding-left:18px;max-width:56ch;
+    font-size:13.5px;line-height:1.7;color:#54514A;text-wrap:pretty;
   }
   .edu-pts li::before{
-    content:"";position:absolute;left:2px;top:.6em;width:7px;height:2px;background:var(--orange);
+    content:"";position:absolute;left:2px;top:.65em;width:7px;height:2px;background:var(--orange);
+  }
+  /* a unique gesture per card rather than one repeated hover - the point is
+     that each place shaped James differently, so the marks answer the
+     cursor differently too. */
+  /* PUP: leaning in, like tilting a screen to read it more closely */
+  .edu-card:nth-child(1):hover .edu-lg{rotate:-8deg;scale:1.08}
+  /* Gokongwei: a slow, warm pulse - the community that keeps showing up */
+  .edu-card:nth-child(2):hover .edu-lg{animation:edu-pulse 1.3s ease-in-out infinite}
+  @keyframes edu-pulse{0%,100%{scale:1}50%{scale:1.12}}
+  /* FEU Roosevelt: a proud little pop, for the one with the awards on it */
+  .edu-card:nth-child(3):hover .edu-lg{animation:edu-pop .55s cubic-bezier(.34,1.56,.64,1)}
+  @keyframes edu-pop{0%{scale:1}45%{scale:1.22}75%{scale:.94}100%{scale:1}}
+  @media (prefers-reduced-motion:reduce){
+    .edu-card{transition:border-color .2s ease-out}
+    .edu-card:hover{translate:0 0}
+    .edu-lg{transition:none}
+    .edu-card:nth-child(1):hover .edu-lg{rotate:0deg;scale:1}
+    .edu-card:nth-child(2):hover .edu-lg,
+    .edu-card:nth-child(3):hover .edu-lg{animation:none}
   }
 
   /* tech stack - bare logos, grouped; security leads at a larger size */
