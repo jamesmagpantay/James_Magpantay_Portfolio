@@ -231,3 +231,15 @@
     (window.flipView || function(){ document.getElementById('flip').click(); })();
   }, {passive:true});
 })();
+
+/* The footer CTA gets a one-time entrance the first time it scrolls into
+   view, rather than replaying on every visit to the bottom of the page. */
+(function(){
+  var el = document.getElementById('fintro');
+  if(!el) return;
+  new IntersectionObserver(function(e, obs){
+    if(!e[0].isIntersecting) return;
+    el.classList.add('on');
+    obs.disconnect();
+  }, {rootMargin:'0px 0px -10% 0px'}).observe(el);
+})();
