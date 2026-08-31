@@ -28,15 +28,22 @@
   /* the hero CTA lives inside the toggle area - don't flip the page on its click */
   var heroCta = document.querySelector('.hero-cta a');
   if(heroCta) heroCta.addEventListener('click', function(e){ e.stopPropagation(); });
-  /* flipping mid-page is disorienting - wipe, swap, and return to the top */
+  /* flipping mid-page is disorienting - wipe, swap, and return to the top.
+     The swipe gesture passes a target section instead: it already knows the
+     matched spot in the other view, and landing there loses the wipe's
+     usual "return to the top" only for that one entry point. */
   var wipe = document.getElementById('wipe');
   var reducedMo = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function flip(){
-    if(reducedMo || window.scrollY < 40){ toggle(); if(window.scrollY) window.scrollTo(0,0); return; }
+  function land(target){
+    if(target) target.scrollIntoView();
+    else if(window.scrollY) window.scrollTo(0, 0);
+  }
+  function flip(target){
+    if(reducedMo || (window.scrollY < 40 && !target)){ toggle(); land(target); return; }
     wipe.classList.add('on');
     setTimeout(function(){
       toggle();
-      window.scrollTo(0,0);
+      land(target);
       requestAnimationFrame(function(){ wipe.classList.remove('on'); });
     }, 230);
   }

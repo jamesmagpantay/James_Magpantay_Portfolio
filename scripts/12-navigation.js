@@ -198,8 +198,32 @@
 
 /* Swipe to flip the view, on touch only - a mouse never fires these events,
    so this never competes with anything on desktop. Live from the very top
-   of the page, not just once the bar's own flip control appears. */
+   of the page, not just once the bar's own flip control appears.
+
+   The button/badge flip always resets to the top of the other view - that
+   is deliberate there, since arriving from a menu click has no real "where
+   I was" to preserve. A swipe happens mid-read, so it lands on the section
+   judged closest in kind rather than resetting, hand-paired below since the
+   two views don't share a structure a formula could infer. Several sections
+   share a match on one side; nothing on the other side maps back to Stack
+   or Certifications, which is as close as either view gets to a dead end. */
 (function(){
+  var MATCH = {
+    experience: 'speaking', work: 'events', stack: 'life', certs: 'life', summary: 'life',
+    speaking: 'experience', events: 'work', life: 'summary'
+  };
+  function current(){
+    var nav = document.querySelector('.bar-nav[data-view="' +
+              (document.body.classList.contains('offline') ? 'off' : 'pro') + '"]');
+    if(!nav) return null;
+    var mid = innerHeight * .45, id = null;
+    [].forEach.call(nav.querySelectorAll('a'), function(a){
+      var sec = document.querySelector(a.getAttribute('href'));
+      if(sec && sec.getBoundingClientRect().top <= mid) id = sec.id;
+    });
+    return id;
+  }
+
   var EDGE = 24;       /* px from either screen edge - the OS's own back-swipe territory */
   var MIN_DX = 70;      /* px of travel before this counts as a swipe, not a tap */
   var MAX_MS = 700;     /* slower than this reads as a drag, not a flick */
@@ -225,6 +249,9 @@
         dt = performance.now() - t0;
     if(dt > MAX_MS) return;
     if(Math.abs(dx) < MIN_DX || Math.abs(dx) < Math.abs(dy) * SKEW) return;
-    (window.flipView || function(){ document.getElementById('flip').click(); })();
+
+    var id = current(), target = id && document.getElementById(MATCH[id]);
+    if(window.flipView) window.flipView(target || undefined);
+    else document.getElementById('flip').click();
   }, {passive:true});
 })();
