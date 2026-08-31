@@ -31,16 +31,24 @@
   /* flipping mid-page is disorienting - wipe, swap, and return to the top.
      Near the hero there is no wipe at all - the toggle's own lens/image swap
      is the transition, and it is a good one, so a small smooth scroll to (0,0)
-     riding along with it goes unnoticed. Further down, the wipe curtain is
-     already the transition and already fully covers the screen - an animated
-     scroll-to-top running underneath it used to keep going after the curtain
-     lifted, so the page was visibly still scrolling once it could be seen
-     again. Jumping instantly there instead means the curtain stays the only
-     thing anyone sees move. */
+     riding along with it goes unnoticed. That covers the whole hero, not
+     just its very top: as long as any part of the logo tile is still on
+     screen, this still counts as "near the hero" - it is only once its
+     bottom edge has scrolled past the top of the viewport that the page
+     reads as properly mid-scroll. From there the wipe curtain is already
+     the transition and already fully covers the screen - an animated
+     scroll-to-top running underneath it used to keep going after the
+     curtain lifted, so the page was visibly still scrolling once it could
+     be seen again. Jumping instantly there instead means the curtain stays
+     the only thing anyone sees move. */
   var wipe = document.getElementById('wipe');
+  var pupMark = document.querySelector('.pup-mark');
   var reducedMo = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function nearHero(){
+    return pupMark ? pupMark.getBoundingClientRect().bottom > 0 : window.scrollY < 40;
+  }
   function flip(){
-    if(reducedMo || window.scrollY < 40){
+    if(reducedMo || nearHero()){
       toggle();
       if(window.scrollY) window.scrollTo(0, 0);
       return;
