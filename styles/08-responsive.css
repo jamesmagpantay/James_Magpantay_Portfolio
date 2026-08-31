@@ -158,10 +158,10 @@
       gap:0;padding-bottom:0;
       /* the school marks beside the CTA above now carry real height of their
          own - close the gap that opened up under them so the photo and its
-         tile sit right underneath instead of drifting down the page. Capped
-         well short of the marks' own height so the tile can't ride up into
-         them. */
-      margin-top:clamp(-56px,-10vw,-24px);
+         tile sit right underneath instead of drifting down the page. Pulled
+         up far enough that the figure's head lands level with the "Click my
+         photo to..." note above it, not just closer to it. */
+      margin-top:clamp(-84px,-15vw,-44px);
       /* how far the cut-out's hard bottom crop is dissolved away into the
          tile it stands on */
       --sink:clamp(40px,10vw,80px);
