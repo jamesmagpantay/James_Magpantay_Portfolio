@@ -35,11 +35,11 @@
   .dl a{
     font-family:var(--mono);font-size:clamp(13px,1.15vw,17px);font-weight:700;letter-spacing:.09em;
     text-transform:uppercase;text-decoration:none;
-    border-radius:99px;padding:16px 28px;border:2px solid var(--ink);
+    border-radius:99px;padding:16px 28px;
+    border:2px solid var(--chip-bg);background:var(--chip-bg);color:var(--chip-fg);
     box-shadow:0 8px 20px rgba(23,21,18,.28);
     transition:background .18s ease-out,color .18s ease-out,translate .18s ease-out;
   }
-  .dl a{background:var(--ink);color:var(--light)}
   /* over the blazer photo, --ink swings light-on-dark or dark-on-light
      depending on the theme toggle, and either way sits too close to the
      photo's own tone to read as a button. A fixed, lighter warm brown
