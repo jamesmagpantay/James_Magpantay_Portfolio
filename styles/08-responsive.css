@@ -130,15 +130,15 @@
     .bar-brand{
       max-width:0;opacity:0;overflow:hidden;pointer-events:none;
       margin-right:0;white-space:nowrap;
-      transition:max-width .4s cubic-bezier(.22,.61,.36,1),
-                 margin-right .4s cubic-bezier(.22,.61,.36,1),
-                 opacity .2s ease-out;
+      transition:max-width .7s cubic-bezier(.22,.61,.36,1),
+                 margin-right .7s cubic-bezier(.22,.61,.36,1),
+                 opacity .35s ease-out;
     }
     .bar.on .bar-brand{
       max-width:220px;opacity:1;pointer-events:auto;margin-right:10px;
-      transition:max-width .4s cubic-bezier(.22,.61,.36,1),
-                 margin-right .4s cubic-bezier(.22,.61,.36,1),
-                 opacity .3s ease-out .1s;
+      transition:max-width .7s cubic-bezier(.22,.61,.36,1),
+                 margin-right .7s cubic-bezier(.22,.61,.36,1),
+                 opacity .55s ease-out .15s;
     }
     /* pinned to the corner regardless of how much room the brand is taking -
        the toggles between it and the brand are the ones that get to move */
