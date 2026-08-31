@@ -156,26 +156,32 @@
     .stage{
       display:flex;flex-direction:column;align-items:center;
       gap:0;padding-bottom:0;
-      /* how far the cut-out sinks into the tile it stands on, and so also
-         the distance over which its hard bottom crop is dissolved away */
+      /* how far the cut-out's hard bottom crop is dissolved away into the
+         tile it stands on */
       --sink:clamp(40px,10vw,80px);
+      /* how far the tile itself climbs behind the figure - taller than the
+         dissolve above, so the panel reads as a backdrop behind the
+         shoulders, not just a floor under the feet */
+      --rise:clamp(150px,40vw,240px);
     }
     .stage-panel{
       order:2;width:100%;height:auto;border-radius:0 clamp(56px,10vw,90px) 0 0;
-      /* the sink is added back as padding, so the figure gains a floor to
+      /* the rise is added back as padding, so the figure gains a floor to
          stand on without the first row of stickers ending up behind it */
-      padding:calc(clamp(22px,5vw,38px) + var(--sink))
+      padding:calc(clamp(22px,5vw,38px) + var(--rise))
               clamp(14px,3vw,28px) clamp(26px,6vw,44px);
     }
     /* On desktop the cut-out stands on the panel floor. Stacked, it was
        left hovering above the tile with a gap under it - and its drop
        shadow fell into empty background rather than onto a surface, which
        is what read as floating. Sink the base into the tile instead: the
-       shadow lands on the cream, and the figure is standing on something. */
+       shadow lands on the cream, and the figure is standing on something.
+       The overlap runs up past the waist and into the shoulders, so the
+       tile shows as a backdrop there too, not just a strip behind the feet. */
     .stage-photo{
       order:1;position:relative;z-index:2;left:auto;bottom:auto;transform:none;
       width:min(50vw,320px);height:auto;aspect-ratio:966/1495;
-      margin-bottom:calc(-1 * var(--sink));
+      margin-bottom:calc(-1 * var(--rise));
     }
     /* The cut-out ends in a hard horizontal crop, which is what makes it read
        as pasted onto the tile rather than standing in it. Fade the last
@@ -213,6 +219,10 @@
 
   /* ============ below 640px ============ */
   @media (max-width:640px){
+    /* the photo grows relative to the viewport here (70vw vs 50vw above),
+       so the tile has to climb further behind it to keep reaching the same
+       point on the figure - the shoulders, not a fixed pixel height */
+    .stage{--rise:clamp(190px,58vw,270px)}
     .stage-photo{width:min(70vw,280px)}
     body.offline .stage-photo{width:min(78vw,310px)}
     #set-certs,#set-social{grid-template-columns:repeat(3,minmax(0,1fr))}
