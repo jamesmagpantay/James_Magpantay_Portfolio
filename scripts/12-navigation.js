@@ -195,3 +195,36 @@
   /* back on a wide screen the bar has its own nav again */
   addEventListener('resize', function(){ if(innerWidth > 860) hide(); });
 })();
+
+/* Swipe to flip the view, on touch only - a mouse never fires these events,
+   so this never competes with anything on desktop. Live from the very top
+   of the page, not just once the bar's own flip control appears. */
+(function(){
+  var EDGE = 24;       /* px from either screen edge - the OS's own back-swipe territory */
+  var MIN_DX = 70;      /* px of travel before this counts as a swipe, not a tap */
+  var MAX_MS = 700;     /* slower than this reads as a drag, not a flick */
+  var SKEW = 1.5;        /* how much more horizontal than vertical it has to be */
+  /* left alone entirely - its own horizontal drag, and anything full-screen
+     stacked over the page where a page-wide flip would be a surprise */
+  var EXEMPT = '.proj-rail, .msheet, .pa, .lb, .pm, [role="dialog"]';
+
+  var x0 = 0, y0 = 0, t0 = 0, live = false;
+
+  addEventListener('touchstart', function(e){
+    var t = e.touches[0];
+    live = t.clientX > EDGE && t.clientX < innerWidth - EDGE &&
+           !(e.target.closest && e.target.closest(EXEMPT));
+    x0 = t.clientX; y0 = t.clientY; t0 = performance.now();
+  }, {passive:true});
+
+  addEventListener('touchend', function(e){
+    if(!live) return;
+    live = false;
+    var t = e.changedTouches[0],
+        dx = t.clientX - x0, dy = t.clientY - y0,
+        dt = performance.now() - t0;
+    if(dt > MAX_MS) return;
+    if(Math.abs(dx) < MIN_DX || Math.abs(dx) < Math.abs(dy) * SKEW) return;
+    (window.flipView || function(){ document.getElementById('flip').click(); })();
+  }, {passive:true});
+})();
