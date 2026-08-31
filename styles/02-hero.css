@@ -206,10 +206,9 @@
   }
   .git:hover{color:var(--orange);border-color:var(--orange)}
   /* the school marks live beside the headline on desktop (.pup-mark) - below
-     900px that spot disappears, so they ride on the note line instead,
-     pinned to its right, rather than dropping off the page entirely. The
-     note itself keeps its own position - only the marks are new here. */
-  .git-line{display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap}
+     900px that spot disappears, so they ride level with the CTA instead,
+     pinned to its right, rather than dropping off the page entirely. */
+  .git-line{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
   .git-marks{display:none}
   .git-marks .mk-cap-short{display:none}
   @media (max-width:900px){
@@ -217,8 +216,12 @@
     .git-marks{display:flex;align-items:center;gap:clamp(14px,4vw,24px);flex:none}
     .git-marks img{width:auto;filter:drop-shadow(0 3px 8px rgba(0,0,0,.35))}
     /* same lockup as the desktop headline mark: seal, then scholarship mark
-       with its caption underneath - just scaled for the row it sits in here */
-    .git-marks > img{height:clamp(64px,20vw,110px)}
+       with its caption underneath - just scaled for the row it sits in here.
+       The mark's own image is shorter than the seal, but the caption under
+       it pulls the whole .mk block's visual centre down - so centering the
+       two containers left the seal reading low. Lift the seal the same way
+       the desktop headline mark does, scaled to this row's size. */
+    .git-marks > img{height:clamp(64px,20vw,110px);translate:0 calc(-1 * clamp(4px,1.8vw,10px))}
     .git-marks .mk{display:flex;flex-direction:column;align-items:center;gap:6px}
     .git-marks .mk img{height:clamp(52px,16vw,90px)}
     .git-marks .mk-cap{font-size:clamp(9px,2.4vw,11px);white-space:nowrap}
