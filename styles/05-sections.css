@@ -529,3 +529,11 @@
      grid goes dark. Flipping just these two rather than the whole grid,
      since every other logo here already carries its own color. */
   html[data-theme="dark"] .mono-lg{filter:invert(1) brightness(1.35)}
+  /* ISC2 CC, CCNA, and the Gokongwei mark carry real brand color (teal,
+     green, blue) alongside dark text and outlines on a transparent
+     background - inverting like the two above would wreck those colors, so
+     they get a small light card behind them instead, keeping both the
+     colors and the dark text true regardless of the section's own theme. */
+  html[data-theme="dark"] .chip-lg{
+    background:#fff;border-radius:10px;padding:6px;box-sizing:border-box;
+  }
