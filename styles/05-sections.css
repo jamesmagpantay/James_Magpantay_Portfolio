@@ -26,11 +26,26 @@
   }
   .edu-head{display:flex;align-items:center;gap:clamp(14px,1.5vw,20px)}
   .edu-lg{
-    width:clamp(64px,5.6vw,88px);height:clamp(64px,5.6vw,88px);object-fit:contain;flex:none;
+    width:clamp(88px,8vw,124px);height:clamp(88px,8vw,124px);object-fit:contain;flex:none;
     transition:rotate .4s cubic-bezier(.22,.61,.36,1),scale .4s cubic-bezier(.22,.61,.36,1);
   }
   .edu-txt{display:flex;flex-direction:column;gap:5px;min-width:0}
-  .edu-txt h3{font-size:clamp(15px,1.35vw,19px);font-weight:700;letter-spacing:-.015em;line-height:1.15}
+  /* the name draws its own underline in on hover, timed with the logo's
+     motion so the card reads as activating as one thing, not a moving
+     picture beside static type */
+  .edu-txt h3{
+    position:relative;padding-bottom:5px;
+    font-size:clamp(15px,1.35vw,19px);font-weight:700;letter-spacing:-.015em;line-height:1.15;
+  }
+  .edu-txt h3::after{
+    content:"";position:absolute;left:0;bottom:0;width:100%;height:2px;
+    background:var(--orange);transform-origin:0 50%;scale:0 1;
+    transition:scale .4s cubic-bezier(.22,.61,.36,1);
+  }
+  .edu-card:hover .edu-txt h3::after{scale:1 1}
+  @media (prefers-reduced-motion:reduce){
+    .edu-txt h3::after{transition:none}
+  }
   .edu-when{font-family:var(--mono);font-size:11px;color:var(--meta);white-space:nowrap}
   .edu-role{font-size:14px;font-weight:600;color:var(--ink)}
   .edu-focus{display:block;margin-top:3px;font-size:12.5px;font-weight:400;color:var(--meta)}
