@@ -24,8 +24,7 @@
   /* what's next: a dashed outline says "not here yet" without an empty page */
   .nx{
     margin:clamp(16px,2.2vw,32px) var(--gut) 0;
-    padding:clamp(28px,4.4vw,56px);
-    border:2px dashed var(--line);border-radius:24px;
+    padding:clamp(28px,4.4vw,56px) 0;
     display:flex;flex-direction:column;align-items:flex-start;
     gap:clamp(11px,1.3vw,17px);
   }
