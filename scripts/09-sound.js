@@ -19,7 +19,7 @@
       if(p && p.catch) p.catch(function(){ armed = false; });
     }catch(e){ armed = false; }
   }
-  ['pointerdown','keydown','touchstart'].forEach(function(e){
+  ['pointerdown','keydown','touchend'].forEach(function(e){
     addEventListener(e, arm, true);
   });
 })();
@@ -198,33 +198,40 @@
      before the visitor has interacted with the page, so after a refresh the
      toggle sat there claiming to be on while nothing played.
 
-     Waiting for play() to be reached is not enough either. On a pointer
-     device the first thing that reaches it is a hover, and hover events do
-     not grant user activation - so boot() built the context in a suspended
-     state and resume() was ignored. It only came back on the next real
-     click. Arm it on the first genuinely activating event instead. */
+     Waiting for play() to be reached is not enough either. Hovering and
+     scrolling do not grant user activation on any platform - deliberately,
+     so a page cannot sneak audio unlock into a passive gesture - and on
+     touch, neither does touchstart: the browser only knows a touch was a
+     tap, rather than the start of a scroll, once it ends. So this listens
+     on every plausible activating event, but only disarms once resume() has
+     actually landed - a touchend that turns out to have been a scroll, and
+     so does not unlock anything, leaves the listeners armed for the next
+     one instead of wasting the one shot it used to get. */
   if(on){
     (function(){
-      /* touchstart, not touchend: a tap that turns into a scroll should
-         still count, and on iOS it only reliably does at the start of the
-         gesture - by touchend the browser may no longer consider it live. */
-      var EVS = ['pointerdown', 'keydown', 'touchstart'];
-      function unlock(){
-        EVS.forEach(function(e){ removeEventListener(e, unlock, true); });
+      var EVS = ['pointerdown', 'keydown', 'touchend'];
+      function armed(){ return ctx && ctx.state === 'running'; }
+      function disarm(){
+        EVS.forEach(function(e){ removeEventListener(e, tryUnlock, true); });
+      }
+      function tryUnlock(){
+        if(armed()) return disarm();
         boot();
         if(!ctx) return;
-        if(ctx.state === 'suspended') ctx.resume();
-        /* resume() alone is not always enough on iOS - starting a real
-           (silent) buffer source synchronously inside the gesture is the
-           more reliable unlock, so do both. */
+        var p = ctx.resume();
+        if(p && p.then) p.then(function(){ if(armed()) disarm(); }).catch(function(){});
+        /* belt and braces: a real (silent) buffer source started
+           synchronously inside the gesture is the more reliable unlock on
+           iOS, where resume() alone does not always take. */
         try{
           var b = ctx.createBufferSource();
           b.buffer = ctx.createBuffer(1, 1, ctx.sampleRate);
           b.connect(ctx.destination);
           b.start(0);
         }catch(e){}
+        if(armed()) disarm();
       }
-      EVS.forEach(function(e){ addEventListener(e, unlock, true); });
+      EVS.forEach(function(e){ addEventListener(e, tryUnlock, true); });
     })();
   }
 
