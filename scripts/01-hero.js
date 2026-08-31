@@ -29,21 +29,26 @@
   var heroCta = document.querySelector('.hero-cta a');
   if(heroCta) heroCta.addEventListener('click', function(e){ e.stopPropagation(); });
   /* flipping mid-page is disorienting - wipe, swap, and return to the top.
-     The swipe gesture passes a target section instead: it already knows the
-     matched spot in the other view, and landing there loses the wipe's
-     usual "return to the top" only for that one entry point. */
+     Near the hero there is no wipe at all - the toggle's own lens/image swap
+     is the transition, and it is a good one, so a small smooth scroll to (0,0)
+     riding along with it goes unnoticed. Further down, the wipe curtain is
+     already the transition and already fully covers the screen - an animated
+     scroll-to-top running underneath it used to keep going after the curtain
+     lifted, so the page was visibly still scrolling once it could be seen
+     again. Jumping instantly there instead means the curtain stays the only
+     thing anyone sees move. */
   var wipe = document.getElementById('wipe');
   var reducedMo = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function land(target){
-    if(target) target.scrollIntoView();
-    else if(window.scrollY) window.scrollTo(0, 0);
-  }
-  function flip(target){
-    if(reducedMo || (window.scrollY < 40 && !target)){ toggle(); land(target); return; }
+  function flip(){
+    if(reducedMo || window.scrollY < 40){
+      toggle();
+      if(window.scrollY) window.scrollTo(0, 0);
+      return;
+    }
     wipe.classList.add('on');
     setTimeout(function(){
       toggle();
-      land(target);
+      window.scrollTo({top:0, left:0, behavior:'instant'});
       requestAnimationFrame(function(){ wipe.classList.remove('on'); });
     }, 230);
   }
