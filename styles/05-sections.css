@@ -512,9 +512,20 @@
   html[data-theme="dark"] .xp-pts li{color:var(--cream-dim)}
   html[data-theme="dark"] .xp-pts li.past{color:var(--pill-fg)}
   html[data-theme="dark"] .xp-pts li.past::before{background:var(--pill-fg)}
+  /* the base (unhovered, unexpanded) card was also hardcoded - a translucent
+     WHITE wash, rgba(255,255,255,.5), which is why the section going dark
+     around it still read as pale: every row sat on its own little patch of
+     white regardless. A translucent light overlay this faint reads as
+     "barely lighter than the dark surface" instead. */
+  html[data-theme="dark"] .xp-row{background:rgba(255,255,255,.05)}
   html[data-theme="dark"] .xp-row:hover,
   html[data-theme="dark"] .xp-row:focus-visible,
   html[data-theme="dark"] .xp-row[aria-expanded="true"]{
     background:var(--sec-hi);border-color:var(--pill-line);
   }
   html[data-theme="dark"] .proj:hover{background:var(--sec-hi)}
+  /* GitHub and OpenAI ship their marks as solid black on a transparent
+     background - correct on the light stack grid, invisible once that
+     grid goes dark. Flipping just these two rather than the whole grid,
+     since every other logo here already carries its own color. */
+  html[data-theme="dark"] .mono-lg{filter:invert(1) brightness(1.35)}
