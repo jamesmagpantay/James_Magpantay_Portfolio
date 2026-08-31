@@ -71,6 +71,39 @@
     kick();
   });
   host.addEventListener('mouseleave', function(){ tr = 0; kick(); });
+
+  /* same problem as the headline lens: touch has no hover, so a tap opened
+     the puck and nothing ever closed it. Follow the finger while it's down,
+     then close shortly after it lifts. */
+  var touchCloseT = null;
+  function scheduleTouchClose(){
+    clearTimeout(touchCloseT);
+    touchCloseT = setTimeout(function(){ tr = 0; kick(); }, 650);
+  }
+  function aimTouch(t){
+    var b = lens.getBoundingClientRect();
+    var z = lens.offsetWidth ? b.width / lens.offsetWidth : 1;
+    tx = (t.clientX - b.left) / z;
+    ty = (t.clientY - b.top) / z;
+    return b;
+  }
+  host.addEventListener('touchstart', function(e){
+    if(!e.touches.length) return;
+    clearTimeout(touchCloseT);
+    fit();
+    aimTouch(e.touches[0]);
+    cx = tx; cy = ty; cr = 0;
+    tr = Math.min(lens.offsetWidth * .13, 54);
+    kick();
+  }, {passive:true});
+  host.addEventListener('touchmove', function(e){
+    if(!e.touches.length) return;
+    var b = aimTouch(e.touches[0]);
+    tr = Math.min(b.width * .13, 54);
+    kick();
+  }, {passive:true});
+  host.addEventListener('touchend', scheduleTouchClose, {passive:true});
+  host.addEventListener('touchcancel', scheduleTouchClose, {passive:true});
 })();
 
 /* Idle demo: the chip taps itself at random, never less than 2s apart. */

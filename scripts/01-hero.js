@@ -86,6 +86,36 @@
   });
   wrap.addEventListener('mouseleave', function(){ tr = 0; kick(); });
 
+  /* touch has no hover, so mousemove/mouseleave never fire - a tap opened the
+     lens and nothing ever told it to close, leaving it stuck open until the
+     next tap somewhere else. Drive it from touch instead: follow the finger
+     while it's down, then close it shortly after it lifts. */
+  var touchCloseT = null;
+  function scheduleTouchClose(){
+    clearTimeout(touchCloseT);
+    touchCloseT = setTimeout(function(){ tr = 0; kick(); }, 650);
+  }
+  function aimTouch(t){
+    var b = wrap.getBoundingClientRect(), z = zoomOf(wrap);
+    tx = (t.clientX - b.left) / z;
+    ty = (t.clientY - b.top) / z;
+  }
+  wrap.addEventListener('touchstart', function(e){
+    if(!e.touches.length) return;
+    clearTimeout(touchCloseT);
+    aimTouch(e.touches[0]);
+    cx = tx; cy = ty; cr = 0;
+    tr = Math.min(wrap.offsetWidth * 0.15, 190);
+    kick();
+  }, {passive:true});
+  wrap.addEventListener('touchmove', function(e){
+    if(!e.touches.length) return;
+    aimTouch(e.touches[0]);
+    kick();
+  }, {passive:true});
+  wrap.addEventListener('touchend', scheduleTouchClose, {passive:true});
+  wrap.addEventListener('touchcancel', scheduleTouchClose, {passive:true});
+
   var ph = document.getElementById('ph');
   ph.addEventListener('click', function(e){
     e.stopPropagation();
