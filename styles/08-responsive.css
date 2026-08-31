@@ -97,13 +97,16 @@
 
   /* ============ below 860px: the bar carries the navigation ============ */
   @media (max-width:860px){
-    /* it can no longer wait for the hero to leave - it is the only way out */
-    .bar{translate:0 0;gap:10px}
+    /* it can no longer wait for the hero to leave - it is the only way out.
+       Left-aligned rather than space-between: the brand collapses to
+       nothing near the top, and flex-start is what lets the toggles slide
+       left to fill that space instead of stepping in a straight line. */
+    .bar{translate:0 0;justify-content:flex-start;gap:0}
     /* Sound, music and theme live here at this width. The bar is pinned, so
        they are one tap away at any scroll depth rather than only at the top
        of the page. The flip pill is the one thing that will not fit beside
        them - the corner badge and the menu sheet both carry that. */
-    .bar-right{display:flex;gap:8px}
+    .bar-right{display:flex;gap:8px;margin-right:10px}
     .bar-flip{display:none}
     .bar-right .sfx-btn,
     .bar-right .mus-btn,
@@ -115,20 +118,31 @@
        right below it (and the tab's own favicon makes a third). Drop the
        icon and let the wordmark carry the bar instead - same identity,
        no repeated glyph. */
-    .bar-brand{gap:0;font-size:13px}
+    .bar-brand{font-size:13px}
     .bar-brand .mark{display:none}
-    /* while the hero's own huge wordmark is still on screen, this one is
-       pure repetition - stay invisible until .bar.on fires, the same
-       IntersectionObserver flag desktop already uses to know the hero has
-       scrolled out of view */
+    /* While the hero's own huge wordmark is still on screen, this one is
+       pure repetition - collapsed away near the top, in step with .bar.on
+       (the same IntersectionObserver flag desktop already uses to know the
+       hero has scrolled out of view). Animating max-width rather than
+       display means the toggles right after it slide left to close the gap
+       as it shrinks, instead of jumping the moment it disappears - and
+       slide back right as it returns. */
     .bar-brand{
-      opacity:0;visibility:hidden;
-      transition:opacity .25s ease-out,visibility 0s linear .25s;
+      max-width:0;opacity:0;overflow:hidden;pointer-events:none;
+      margin-right:0;white-space:nowrap;
+      transition:max-width .4s cubic-bezier(.22,.61,.36,1),
+                 margin-right .4s cubic-bezier(.22,.61,.36,1),
+                 opacity .2s ease-out;
     }
     .bar.on .bar-brand{
-      opacity:1;visibility:visible;
-      transition:opacity .25s ease-out;
+      max-width:220px;opacity:1;pointer-events:auto;margin-right:10px;
+      transition:max-width .4s cubic-bezier(.22,.61,.36,1),
+                 margin-right .4s cubic-bezier(.22,.61,.36,1),
+                 opacity .3s ease-out .1s;
     }
+    /* pinned to the corner regardless of how much room the brand is taking -
+       the toggles between it and the brand are the ones that get to move */
+    .menu-btn{margin-left:auto}
     html.js .menu-btn{display:flex}
     /* without JS the menu button does nothing - fall back to the plain links */
     html:not(.js) .bar-nav{display:flex;flex-wrap:wrap;gap:8px 14px}
