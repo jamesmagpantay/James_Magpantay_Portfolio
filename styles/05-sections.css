@@ -191,10 +191,11 @@
                translate .22s ease-out,box-shadow .22s ease-out,
                padding var(--ex),grid-template-columns var(--ex);
   }
-  /* orange gutter wipes in on hover - movement reads as interactive */
+  /* gutter wipes in on hover and stays on once opened - a dark brown-black
+     rather than the orange accent, on both */
   .xp-row::before{
-    content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--orange);
-    scale:1 0;transform-origin:50% 50%;transition:scale .24s ease-out,background .22s ease-out;
+    content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:#171512;
+    scale:1 0;transform-origin:50% 50%;transition:scale .24s ease-out;
   }
   .xp-row:hover,.xp-row:focus-visible{
     background:#fff;border-color:#BFB9AC;translate:6px 0;
@@ -202,10 +203,6 @@
   }
   .xp-row:hover::before,.xp-row:focus-visible::before,
   .xp-row[aria-expanded="true"]::before{scale:1 1}
-  /* once opened, the bar settles to a dark brown-black instead of staying
-     orange - the row is already reading as "open", it doesn't need the
-     same cue that invited the click in the first place */
-  .xp-row[aria-expanded="true"]::before{background:#171512}
   .xp-row:focus-visible{outline:2px solid var(--orange);outline-offset:2px}
   /* the ask, spelled out and sitting in the reading path */
   /* the ask, spelled out - parked on the far right of the row */
