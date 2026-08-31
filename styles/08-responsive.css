@@ -64,6 +64,12 @@
   }
   /* the labels are the point in here - keep them past the 600px cut-off */
   .msheet-ctl .thm-lab,.msheet-ctl .mus-lab,.msheet-ctl .sfx-lab{display:inline-block!important}
+  /* explanatory, not detected - the page has no way to read the hardware
+     switch, so this is a plain heads-up rather than a live status */
+  .msheet-note{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;
+    color:var(--cream-dim);text-align:center;margin:2px 0 0;
+  }
   .msheet-cta{
     display:block;text-align:center;text-decoration:none;
     font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;

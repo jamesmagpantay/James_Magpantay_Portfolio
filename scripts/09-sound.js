@@ -372,44 +372,64 @@
   var MOBILE = matchMedia('(max-width:860px)');
   function vol(){ return MOBILE.matches ? 0.028 : 0.11; }
 
-  var el = {}, on = false, cur = null, ducked = 0, dead = false;
+  var on = false, cur = null, ducked = 0, dead = false;
 
-  /* Every level, fade and duck here runs through a Web Audio GainNode rather
-     than HTMLMediaElement.volume, because on iOS that property does nothing:
-     the audio session ignores it, and the track plays at full level whatever
-     you assign. It is also why the music used to tower over the sound
-     effects, which had working level control all along - they were already
-     going through gain.
+  /* Played through plain Web Audio buffer sources rather than <audio>
+     elements. The moment any HTMLMediaElement plays on iOS, Safari flips the
+     page's whole audio session into the "playback" category, which ignores
+     the hardware silent switch from then on for every sound on the page -
+     including the synthesised sfx above, which otherwise honour it fine on
+     their own. Fetching and decoding the track into an AudioBufferSourceNode
+     keeps the session in the "ambient" category throughout, so music and sfx
+     consistently respect the switch together instead of the sfx silently
+     unmuting the moment music starts.
 
-     Feature-detecting it does not work. Setting volume and reading it back
-     returns the value you just wrote, so the probe reports success while the
-     output stays loud. There is no reliable test, so there is no branch:
-     everything goes through gain, on every platform. */
-  var actx = null, gain = {};
-  function node(a){
-    if(!a._k) return null;
-    if(gain[a._k]) return gain[a._k];
-    try{
-      var AC = window.AudioContext || window.webkitAudioContext;
-      if(!AC) return null;
-      actx = actx || new AC();
-      var g = actx.createGain();
-      g.gain.value = 0;
-      /* one source per element, once only - a second call would throw */
-      actx.createMediaElementSource(a).connect(g);
-      g.connect(actx.destination);
-      gain[a._k] = g;
-      return g;
-    }catch(e){ return null; }
+     It also means level control was already solved: everything here runs
+     through a GainNode, same as the sfx module, rather than
+     HTMLMediaElement.volume, which iOS ignores outright. */
+  var actx = null, gainNodes = {}, buffers = {}, sources = {}, fadeRAF = {};
+
+  function ensureCtx(){
+    if(actx) return actx;
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if(!AC) return null;
+    actx = new AC();
+    return actx;
   }
-  function level(a){ var g = node(a); return g ? g.gain.value : a.volume; }
-  function setLevel(a, v){
-    var g = node(a);
-    if(g) g.gain.value = v;
-    else a.volume = v;
+  function gainFor(k){
+    var ctx = ensureCtx();
+    if(!ctx) return null;
+    if(gainNodes[k]) return gainNodes[k];
+    var g = ctx.createGain();
+    g.gain.value = 0;
+    g.connect(ctx.destination);
+    gainNodes[k] = g;
+    return g;
   }
-  /* audio routed through a suspended context is silent even though play()
-     resolved, so the context has to come up with the track */
+  function level(k){ var g = gainNodes[k]; return g ? g.gain.value : 0; }
+  function setLevel(k, v){ var g = gainFor(k); if(g) g.gain.value = v; }
+
+  /* fetched and decoded once per view, then reused for every subsequent
+     play - a buffer source is one-shot, so start()/swap() spin up a fresh
+     node against the same decoded buffer rather than re-fetching it */
+  function loadBuffer(k){
+    if(buffers[k]) return buffers[k];
+    var ctx = ensureCtx();
+    if(!ctx) return Promise.reject(new Error('no audio context'));
+    buffers[k] = fetch(bestSrc(SRC[k]))
+      .then(function(r){ if(!r.ok) throw new Error('fetch failed'); return r.arrayBuffer(); })
+      .then(function(data){ return ctx.decodeAudioData(data); })
+      .catch(function(err){
+        /* a missing or unplayable file should not leave the toggle lying */
+        delete buffers[k];
+        dead = true; on = false; paint();
+        throw err;
+      });
+    return buffers[k];
+  }
+
+  /* a context created or resumed outside a user gesture stays suspended,
+     so it has to be woken from one before the buffer is audible */
   function wake(){
     if(actx && actx.state === 'suspended') actx.resume();
   }
@@ -419,47 +439,52 @@
     addEventListener(e, function(){ if(on) wake(); }, true);
   });
 
-
   function view(){ return document.body.classList.contains('offline') ? 'off' : 'pro'; }
-  function make(k){
-    if(el[k]) return el[k];
-    var a = new Audio();
-    a.loop = true; a.preload = 'auto';
-    a._k = k;
-    setLevel(a, 0);
-    a.addEventListener('error', function(){
-      /* a missing or unplayable file should not leave the toggle lying */
-      dead = true; on = false; paint();
-    });
-    a.src = bestSrc(SRC[k]);              /* set last: nothing loads until now */
-    el[k] = a;
-    return a;
+
+  function stopSource(k){
+    var src = sources[k];
+    if(!src) return;
+    try{ src.stop(); }catch(e){}
+    try{ src.disconnect(); }catch(e){}
+    sources[k] = null;
   }
+  function playSource(k){
+    var ctx = ensureCtx();
+    if(!ctx) return;
+    gainFor(k);
+    loadBuffer(k).then(function(buffer){
+      stopSource(k);
+      var src = ctx.createBufferSource();
+      src.buffer = buffer;
+      src.loop = true;
+      src.connect(gainNodes[k]);
+      src.start(0);
+      sources[k] = src;
+    }).catch(function(){});
+  }
+
   function target(){ return vol() * (ducked > 0 ? .4 : 1); }
 
-  function fade(a, to, ms, done){
-    if(a._f){ cancelAnimationFrame(a._f); a._f = null; }
-    var from = level(a), t0 = performance.now();
+  function fade(k, to, ms, done){
+    if(fadeRAF[k]){ cancelAnimationFrame(fadeRAF[k]); fadeRAF[k] = null; }
+    var from = level(k), t0 = performance.now();
     (function step(t){
       var q = ms > 0 ? Math.min(1, (t - t0) / ms) : 1;
-      setLevel(a, Math.max(0, Math.min(1, from + (to - from) * q)));
-      if(q < 1) a._f = requestAnimationFrame(step);
-      else { a._f = null; if(done) done(); }
+      setLevel(k, Math.max(0, Math.min(1, from + (to - from) * q)));
+      if(q < 1) fadeRAF[k] = requestAnimationFrame(step);
+      else { fadeRAF[k] = null; if(done) done(); }
     })(t0);
   }
 
   function start(){
     cur = view();
-    var a = make(cur);
     wake();
-    var p = a.play();
-    if(p && p.catch) p.catch(function(){});
-    fade(a, target(), FADE_IN);
+    playSource(cur);
+    fade(cur, target(), FADE_IN);
   }
   function stop(){
-    Object.keys(el).forEach(function(k){
-      var a = el[k];
-      fade(a, 0, FADE_OUT, function(){ a.pause(); });
+    Object.keys(gainNodes).forEach(function(k){
+      fade(k, 0, FADE_OUT, function(){ stopSource(k); });
     });
   }
   /* the view changed under us - cross-fade so the flip carries the score with it */
@@ -467,13 +492,12 @@
     if(!on) return;
     var next = view();
     if(next === cur) return;
-    var old = cur ? el[cur] : null;
+    var old = cur;
     cur = next;
-    var a = make(next);
-    var p = a.play();
-    if(p && p.catch) p.catch(function(){});
-    fade(a, target(), XFADE);
-    if(old) fade(old, 0, XFADE, function(){ old.pause(); });
+    wake();
+    playSource(next);
+    fade(next, target(), XFADE);
+    if(old) fade(old, 0, XFADE, function(){ stopSource(old); });
   }
 
   function paint(){
@@ -504,7 +528,7 @@
   });
 
   (function(){
-    function relevel(){ if(on && cur && el[cur]) fade(el[cur], target(), 300); }
+    function relevel(){ if(on && cur) fade(cur, target(), 300); }
     if(MOBILE.addEventListener) MOBILE.addEventListener('change', relevel);
     else if(MOBILE.addListener) MOBILE.addListener(relevel);   /* older Safari */
   })();
@@ -515,34 +539,30 @@
      back under each discrete effect and comes straight back - short enough
      to read as the effect cutting through rather than as the music dipping. */
   document.addEventListener('sfxduck', function(){
-    if(!on || !cur || !el[cur]) return;
+    if(!on || !cur) return;
     ducked++;
-    fade(el[cur], target(), 70);
+    fade(cur, target(), 70);
     setTimeout(function(){
       ducked = Math.max(0, ducked - 1);
-      if(on && cur && el[cur]) fade(el[cur], target(), 320);
+      if(on && cur) fade(cur, target(), 320);
     }, 260);
   });
 
   /* the climax should still land - pull the music down under it, briefly */
   document.addEventListener('sfxclimax', function(){
-    if(!on || !cur || !el[cur]) return;
+    if(!on || !cur) return;
     ducked++;
-    fade(el[cur], target(), 120);
+    fade(cur, target(), 120);
     setTimeout(function(){
       ducked = Math.max(0, ducked - 1);
-      if(on && cur && el[cur]) fade(el[cur], target(), 400);
+      if(on && cur) fade(cur, target(), 400);
     }, 420);
   });
 
-  /* Returning visitor who had it on. Try to start - a visitor who has built
-     up enough engagement with this origin may be allowed to autoplay - but
-     arm the fallback FIRST, and unconditionally.
-
-     It used to be registered inside the rejection handler, which loses two
-     ways: the promise settles asynchronously, so anyone who clicks before it
-     rejects gets no listener and no music at all; and a browser that returns
-     nothing from play() never rejects, so the handler never ran. */
+  /* Returning visitor who had it on. Try to start immediately - a browser
+     that requires a gesture just leaves the context suspended, so nothing
+     is audible until the fallback below resumes it, but the source is
+     already running and ready the instant that happens. */
   var pref = false;
   try{ pref = localStorage.getItem(KEY) === '1'; }catch(err){}
   if(pref){
@@ -552,12 +572,13 @@
       EVS.forEach(function(e){ removeEventListener(e, kick, true); });
       wake();
       /* nothing to do if autoplay was allowed and it is already running */
-      if(on && (!el[cur] || el[cur].paused)) start();
+      if(on && !sources[cur]) start();
     };
     EVS.forEach(function(e){ addEventListener(e, kick, true); });
 
-    var a = make(cur), p = a.play();
-    if(p && p.then) p.then(function(){ fade(a, target(), FADE_IN); }).catch(function(){});
+    wake();
+    playSource(cur);
+    fade(cur, target(), FADE_IN);
   }
   paint();
 })();
