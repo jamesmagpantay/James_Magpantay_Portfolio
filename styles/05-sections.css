@@ -8,15 +8,19 @@
   /* education - three static cards, nothing to expand: unlike a work
      history, an institution's whole story is a couple of lines and a short
      list, already short enough to read at a glance */
+  /* Education specifically runs tighter than the section default - three
+     short static cards read better dense than airy, unlike the longer
+     work-history rows elsewhere on the page. */
+  #education .sec-head{margin-bottom:clamp(20px,3vh,32px)}
   .edu{
     display:grid;grid-template-columns:repeat(3,1fr);
-    gap:clamp(20px,2.4vw,32px);
+    gap:clamp(14px,1.6vw,22px);
   }
   @media (max-width:900px){.edu{grid-template-columns:1fr}}
   .edu-card{
-    display:flex;flex-direction:column;gap:clamp(14px,1.6vw,20px);
+    display:flex;flex-direction:column;gap:clamp(10px,1.1vw,14px);
     border:1px solid var(--line);border-radius:16px;
-    padding:clamp(20px,2.2vw,28px);
+    padding:clamp(16px,1.7vw,22px);
     transition:translate .32s cubic-bezier(.22,.61,.36,1),
                box-shadow .32s ease-out,border-color .32s ease-out;
   }
@@ -24,9 +28,9 @@
     translate:0 -6px;border-color:var(--line);
     box-shadow:0 20px 40px rgba(23,21,18,.14);
   }
-  .edu-head{display:flex;align-items:center;gap:clamp(14px,1.5vw,20px)}
+  .edu-head{display:flex;align-items:center;gap:clamp(12px,1.3vw,16px)}
   .edu-lg{
-    width:clamp(88px,8vw,124px);height:clamp(88px,8vw,124px);object-fit:contain;flex:none;
+    width:clamp(100px,9vw,136px);height:clamp(100px,9vw,136px);object-fit:contain;flex:none;
     transition:rotate .4s cubic-bezier(.22,.61,.36,1),scale .4s cubic-bezier(.22,.61,.36,1);
   }
   .edu-txt{display:flex;flex-direction:column;gap:5px;min-width:0}
@@ -35,7 +39,7 @@
      picture beside static type */
   .edu-txt h3{
     position:relative;padding-bottom:5px;
-    font-size:clamp(15px,1.35vw,19px);font-weight:700;letter-spacing:-.015em;line-height:1.15;
+    font-size:clamp(18px,1.75vw,24px);font-weight:700;letter-spacing:-.015em;line-height:1.15;
   }
   .edu-txt h3::after{
     content:"";position:absolute;left:0;bottom:0;width:100%;height:2px;
@@ -46,35 +50,25 @@
   @media (prefers-reduced-motion:reduce){
     .edu-txt h3::after{transition:none}
   }
-  .edu-when{font-family:var(--mono);font-size:11px;color:var(--meta);white-space:nowrap}
-  .edu-role{font-size:14px;font-weight:600;color:var(--ink)}
-  .edu-focus{display:block;margin-top:3px;font-size:12.5px;font-weight:400;color:var(--meta)}
-  .edu-pts{list-style:none;padding:0;display:flex;flex-direction:column;gap:9px}
+  .edu-when{font-family:var(--mono);font-size:12.5px;color:var(--meta);white-space:nowrap}
+  .edu-role{font-size:16px;font-weight:600;color:var(--ink)}
+  .edu-focus{display:block;margin-top:3px;font-size:13.5px;font-weight:400;color:var(--meta)}
+  .edu-pts{list-style:none;padding:0;display:flex;flex-direction:column;gap:7px}
   .edu-pts li{
     position:relative;padding-left:18px;max-width:56ch;
-    font-size:13.5px;line-height:1.7;color:#54514A;text-wrap:pretty;
+    font-size:15px;line-height:1.6;color:#54514A;text-wrap:pretty;
   }
   .edu-pts li::before{
-    content:"";position:absolute;left:2px;top:.65em;width:7px;height:2px;background:var(--orange);
+    content:"";position:absolute;left:2px;top:.6em;width:7px;height:2px;background:var(--orange);
   }
-  /* a unique gesture per card rather than one repeated hover - the point is
-     that each place shaped James differently, so the marks answer the
-     cursor differently too. */
-  /* PUP: leaning in, like tilting a screen to read it more closely */
-  .edu-card:nth-child(1):hover .edu-lg{rotate:-8deg;scale:1.08}
-  /* Gokongwei: a slow, warm pulse - the community that keeps showing up */
-  .edu-card:nth-child(2):hover .edu-lg{animation:edu-pulse 1.3s ease-in-out infinite}
-  @keyframes edu-pulse{0%,100%{scale:1}50%{scale:1.12}}
-  /* FEU Roosevelt: a proud little pop, for the one with the awards on it */
-  .edu-card:nth-child(3):hover .edu-lg{animation:edu-pop .55s cubic-bezier(.34,1.56,.64,1)}
-  @keyframes edu-pop{0%{scale:1}45%{scale:1.22}75%{scale:.94}100%{scale:1}}
+  /* one shared gesture across all three logos - leaning in, like tilting a
+     screen to read it more closely */
+  .edu-card:hover .edu-lg{rotate:-8deg;scale:1.08}
   @media (prefers-reduced-motion:reduce){
     .edu-card{transition:border-color .2s ease-out}
     .edu-card:hover{translate:0 0}
     .edu-lg{transition:none}
-    .edu-card:nth-child(1):hover .edu-lg{rotate:0deg;scale:1}
-    .edu-card:nth-child(2):hover .edu-lg,
-    .edu-card:nth-child(3):hover .edu-lg{animation:none}
+    .edu-card:hover .edu-lg{rotate:0deg;scale:1}
   }
 
   /* tech stack - bare logos, grouped; security leads at a larger size */
@@ -251,6 +245,17 @@
     font-size:20px;line-height:1;cursor:pointer;transition:background .18s ease-out;
   }
   .pm-close:hover{background:var(--ink);color:var(--light)}
+  /* --light stays a fixed light tone across the theme toggle by design (the
+     hero and its CV buttons rely on that) - which is exactly why this panel,
+     built on --light, never went dark with the rest of the page. It gets
+     its own light/dark pair here instead of borrowing that token. */
+  html[data-theme="dark"] .pm-panel{background:var(--sec-hi);border-color:var(--pill-line)}
+  html[data-theme="dark"] .pm-shot{background:var(--sec-bg)}
+  html[data-theme="dark"] .pm-body h3{color:var(--cream)}
+  html[data-theme="dark"] .pm-body p{color:var(--pill-fg)}
+  html[data-theme="dark"] .pm-body .fact{color:var(--cream);border-top-color:var(--pill-line)}
+  html[data-theme="dark"] .pm-close{background:var(--sec-hi);border-color:var(--pill-line);color:var(--cream)}
+  html[data-theme="dark"] .pm-close:hover{background:var(--orange);border-color:var(--orange);color:#fff}
   @media (max-width:900px){
     .pm-panel{width:94vw;height:auto;max-height:92vh;grid-template-columns:1fr;grid-template-rows:auto 1fr}
     .pm-shot{aspect-ratio:16/9}
@@ -266,7 +271,13 @@
        in here can be highlighted and pasted */
     -webkit-user-select:text;user-select:text;
     background:rgba(255,255,255,.5);border:1px solid var(--line);border-radius:16px;
-    display:grid;grid-template-columns:1fr 1.25fr;
+    /* minmax(0,…) rather than a bare fr: a plain fr track's implicit min
+       width is its content's min-content, so a long company name (or the
+       long "See all" description) was quietly widening that row's column
+       past its share of the grid - which is exactly why the divider .xp-right
+       draws on its own left edge landed at a different x per row instead of
+       lining up down the list. */
+    display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);
     gap:clamp(18px,2.6vw,52px);
     --pad:clamp(15px,1.5vw,20px);
     padding:var(--pad) clamp(78px,7vw,110px) var(--pad) clamp(16px,1.7vw,24px);
@@ -314,22 +325,47 @@
   .xp-cue .pm::before{width:52%;height:2.5px}
   .xp-cue .pm::after{width:2.5px;height:52%}
   .xp-row[aria-expanded="true"] .xp-cue .pm::after{rotate:90deg;opacity:0}
-  /* logo sits beside the company name, centred on it */
-  .xp-co{display:flex;align-items:center;gap:clamp(14px,1.3vw,20px)}
+  /* logo sits beside the company name, centred on it. It's an absolutely
+     positioned layer over .xp-co rather than a flex item, so opening the
+     row can slide it clear across the name and date - covering them like
+     a wipe - on its way to landing enlarged and centred in the compartment,
+     instead of just resizing in place. */
+  .xp-co{position:relative;display:flex;align-items:center;gap:clamp(14px,1.3vw,20px);min-height:clamp(42px,3.3vw,58px)}
   .xp-co .olg{
+    position:absolute;left:0;top:50%;translate:0 -50%;z-index:2;
     width:clamp(42px,3.3vw,58px);height:clamp(42px,3.3vw,58px);flex:none;
-    object-fit:cover;border-radius:12px;
-    transition:width var(--ex),height var(--ex),border-radius var(--ex);
+    object-fit:cover;border-radius:12px;box-shadow:0 6px 18px rgba(23,21,18,0);
+    transition:width var(--ex),height var(--ex),border-radius var(--ex),
+               left var(--ex),translate var(--ex),scale .22s ease-out,box-shadow var(--ex);
   }
-  .co-txt{display:flex;flex-direction:column;gap:7px;min-width:0}
+  .xp-row:hover .xp-co .olg,.xp-row:focus-visible .xp-co .olg{scale:1.28}
+  /* landing spot: dead centre of the compartment, bigger, with a little lift
+     now that it's sitting on top of (rather than beside) the name */
+  .xp-row[aria-expanded="true"] .xp-co .olg{
+    left:50%;translate:-50% -50%;scale:1;
+    width:clamp(88px,7.6vw,130px);height:clamp(88px,7.6vw,130px);border-radius:18px;
+    box-shadow:0 14px 32px rgba(23,21,18,.26);
+  }
+  .co-txt{
+    display:flex;flex-direction:column;gap:7px;min-width:0;
+    /* reserves the room the absolutely positioned logo would otherwise take
+       in flow, so collapsed rows still read as logo-then-name */
+    padding-left:calc(clamp(42px,3.3vw,58px) + clamp(14px,1.3vw,20px));
+    transition:opacity .3s ease-out;
+  }
+  /* the name and date fade out as the logo sweeps over them - "erased" by
+     the same thing that's about to sit in their place */
+  .xp-row[aria-expanded="true"] .co-txt{opacity:0;transition-duration:.2s}
   /* the name holds one line in both states - it resizes to fit the column
      instead of reflowing onto a second row mid-transition */
   .xp-co h3{
     font-family:var(--disp);font-weight:400;text-transform:uppercase;
     font-size:clamp(17px,1.7vw,26px);letter-spacing:.03em;line-height:.98;
-    color:var(--ink);transition:font-size var(--ex);
+    color:var(--ink);transition:font-size var(--ex),scale .22s ease-out;
+    transform-origin:left center;
     white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   }
+  .xp-row:hover .xp-co h3,.xp-row:focus-visible .xp-co h3{scale:1.16}
   .xp-co .span{
     font-family:var(--mono);font-size:clamp(12px,.85vw,14px);letter-spacing:0;color:var(--meta);
     white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
@@ -387,42 +423,24 @@
   }
   /* no bullets to show - the row still opens, it just grows */
   .xp-row.no-detail .xp-cue{display:none}
-  .xp-row[aria-expanded="true"]{background:#fff;border-color:#BFB9AC;grid-template-columns:.95fr 1.95fr}
+  .xp-row[aria-expanded="true"]{background:#fff;border-color:#BFB9AC;grid-template-columns:minmax(0,.95fr) minmax(0,1.95fr)}
   .xp-row[aria-expanded="true"] .xp-desc{grid-template-rows:1fr;opacity:1}
   .xp-row[aria-expanded="true"]{--pad:clamp(24px,2.8vw,38px)}
-  .xp-row[aria-expanded="true"] .olg{width:clamp(64px,5.4vw,92px);height:clamp(64px,5.4vw,92px);border-radius:14px}
-  .xp-row[aria-expanded="true"] .xp-co h3{font-size:clamp(13px,1.3vw,19px)}
-  .xp-row[aria-expanded="true"] .xp-co .span{font-size:clamp(10.5px,.78vw,12.5px)}
   .xp-row[aria-expanded="true"] .xp-role h4{font-size:clamp(21px,2.3vw,34px)}
   .xp-row[aria-expanded="true"] .xp-role li:not(:first-child) h4{font-size:clamp(15px,1.3vw,19px)}
   @media (max-width:900px){
     .xp-row{grid-template-columns:1fr;gap:16px;align-items:start}
     .xp-row[aria-expanded="true"]{grid-template-columns:1fr}
-    .xp-row[aria-expanded="true"] .xp-co h3{font-size:clamp(17px,1.7vw,26px)}
-    .xp-row[aria-expanded="true"] .xp-co .span{font-size:clamp(12px,.85vw,14px)}
     .xp-right{border-top:1px solid var(--line);padding:14px 0 0}
     .xp-right::before{display:none}
-    /* The one-line rule exists so the name cannot reflow mid-expand while the
-       column is resizing. Down here the column is a full-width 1fr in both
-       states, so there is nothing to protect against - and holding one line
-       only means "Department of Science and Technology" arrives as
-       "Department of Scienc...". Let both lines wrap. */
-    /* the name may wrap - it is the long one */
+    /* the name may wrap when collapsed - it is the long one, and down here
+       there is no expand-time column resize left to protect a single line
+       against (the name fades away instead of shrinking to fit) */
     .xp-co h3{
       white-space:normal;overflow:visible;text-overflow:clip;
       line-height:1.08;text-wrap:balance;
     }
-    /* the date must not. Expanding the row grows the logo from 42px to 64px,
-       which takes 22px off the text column - just enough to push the longest
-       of these ("Manila - Jul 2026 - Aug 2026 - 2 mos", 36 characters) onto a
-       second line. Down here the row is already full width, so the logo has
-       nothing to gain by growing: hold it, and trim the type a touch, and the
-       line fits in both states with room to spare. */
     .xp-co .span{font-size:clamp(11.5px,.85vw,14px)}
-    .xp-row[aria-expanded="true"] .xp-co .span{font-size:clamp(11.5px,.85vw,14px)}
-    .xp-row[aria-expanded="true"] .olg{
-      width:clamp(42px,3.3vw,58px);height:clamp(42px,3.3vw,58px);border-radius:12px;
-    }
   }
 
   /* the section heading opens every project at once */
@@ -471,13 +489,24 @@
   @media (max-width:860px){.skipto{bottom:clamp(34px,6vh,64px)}}
   @media (prefers-reduced-motion:reduce){.skipto.on svg{animation:none}}
   body.pa-open{overflow:hidden}
-  /* experience entries stack full width and arrive already open */
+  /* experience entries stack full width and arrive already open - clicking
+     one does nothing (no toggle handler on the clone, it's already at its
+     one state), but they keep the live list's hover feedback: cursor:default
+     rather than :none says "not clickable" without switching hover off too */
   .xa-list{display:flex;flex-direction:column;gap:clamp(10px,1.2vw,16px)}
-  .xa-list .xp-row{pointer-events:none;cursor:default;translate:0 0}
+  .xa-list .xp-row{cursor:default}
   .xa-list .xp-cue{display:none}
   .pa{
     position:fixed;inset:0;z-index:96;display:none;
     background:var(--card);overflow-y:auto;overscroll-behavior:contain;
+  }
+  /* this overlay lives outside any <section data-view="pro">, so it never
+     picked up that section's dark-mode --ink/--line/--meta recolor - role
+     titles inside the cloned .xp-row cards were rendering in the light
+     theme's dark ink, invisible against this modal's own dark background */
+  html[data-theme="dark"] .pa{
+    --ink:var(--cream); --light:var(--sec-bg);
+    --line:var(--pill-line); --meta:var(--pill-fg); --meta-strong:var(--cream-dim);
   }
   .pa.on{display:block;animation:pa-in .28s cubic-bezier(.16,1,.3,1)}
   @keyframes pa-in{from{opacity:0}}

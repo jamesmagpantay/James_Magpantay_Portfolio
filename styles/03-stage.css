@@ -1,5 +1,10 @@
   /* ---------- stage: cream panel + photo + stickers ---------- */
   .stage{position:relative;padding:0 0 clamp(28px,4vw,56px)}
+  /* the intro copy used to sit in normal flow under the headline and its
+     own height kept the panel clear of "SECURITY"'s baseline - now that it
+     rides beside the headline instead (out of flow, see .h-intro), that
+     clearance has to come from here directly */
+  @media (min-width:1000px){.stage{margin-top:clamp(105px,13.5vh,205px)}}
   .stage-panel{
     position:relative;background:var(--panel);
     border-radius:0 200px 0 0;
@@ -50,6 +55,33 @@
     .dl{flex-direction:column;gap:9px;top:73%}
     .dl a{padding:13px 20px}
   }
+
+  /* a quiet "scroll for more" floating under the CV buttons, in place of
+     the old fixed arrow - it rides the photo instead of the whole page.
+     No card behind it - just --cream, which flips white/dark with the
+     light/dark toggle itself (unlike --cue, which is view-scoped and can
+     land dark-on-dark in the off-clock + light combo). The photo under it
+     is dark clothing at this height in every crop, so the light-theme text
+     (dark ink) needs real contrast help - a blurred glow on filled letters
+     just reads as a solid white blob at this size, so a crisp text-stroke
+     outlines the glyphs instead; the thin-stroked arrow icon has no such
+     problem and can take a plain blur. Dark-theme text is already light on
+     dark cloth and only needs a soft shadow for a little depth. */
+  .scroll-hint{
+    position:absolute;left:50%;top:88%;translate:-50% 0;z-index:4;
+    display:flex;flex-direction:column;align-items:center;gap:8px;
+    font-family:var(--mono);font-size:16px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--cream);
+    pointer-events:none;
+  }
+  .scroll-hint svg{width:26px;height:36px;stroke:var(--cream);animation:scroll-hint-bob 1.6s ease-in-out infinite}
+  @keyframes scroll-hint-bob{0%,100%{translate:0 0}50%{translate:0 8px}}
+  html[data-theme="light"] .scroll-hint span{-webkit-text-stroke:.9px rgba(255,255,255,.95)}
+  html[data-theme="light"] .scroll-hint svg{filter:drop-shadow(0 0 2px #fff) drop-shadow(0 0 2px #fff)}
+  html[data-theme="dark"] .scroll-hint span{text-shadow:0 1px 4px rgba(0,0,0,.5)}
+  html[data-theme="dark"] .scroll-hint svg{filter:drop-shadow(0 1px 4px rgba(0,0,0,.5))}
+  @media (max-width:640px){.scroll-hint{top:88%;font-size:13px}.scroll-hint svg{width:20px;height:28px}}
+  @media (prefers-reduced-motion:reduce){.scroll-hint svg{animation:none}}
 
   /* liquid glass puck that tracks the cursor across the portrait */
   .ph-reveal{

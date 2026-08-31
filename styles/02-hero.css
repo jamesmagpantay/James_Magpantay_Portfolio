@@ -196,6 +196,35 @@
     .git-wrap{align-items:flex-start}
     .git-note{text-align:left}
   }
+  /* the on-view intro: a compact eyebrow/name/lede stack riding in the
+     headline's left margin, mirroring the hero CTA's slot on the right -
+     collapses to a centered block under the headline once the column
+     beside it gets too narrow to hold both without colliding */
+  .h-intro{display:flex;flex-direction:column;align-items:flex-start;text-align:left;max-width:620px}
+  .h-intro .h-eyebrow{
+    font-family:var(--mono);font-size:clamp(16px,1.5vw,22px);font-weight:500;
+    letter-spacing:.22em;text-transform:uppercase;color:var(--orange);
+    margin:0 0 14px;
+  }
+  .h-intro .h-name{
+    font-family:var(--body);font-weight:700;letter-spacing:-.01em;
+    font-size:clamp(31px,4vw,48px);line-height:1.15;white-space:nowrap;
+    color:var(--cream);margin:0 0 22px;
+  }
+  .h-intro .h-lede{
+    font-family:var(--body);font-size:clamp(18px,1.65vw,23px);line-height:1.55;
+    color:var(--cream-dim);margin:0;max-width:none;text-align:justify;text-justify:inter-word;
+  }
+  .h-intro .h-lede b{color:var(--cream);font-weight:600}
+  @media (min-width:1000px){
+    .h-wrap .h-intro{
+      position:absolute;left:clamp(0px,1.5vw,28px);top:50%;translate:0 -50%;z-index:6;
+    }
+  }
+  @media (max-width:999px){
+    .h-intro{align-items:center;text-align:center;max-width:520px;margin:clamp(18px,3vh,32px) auto 0}
+  }
+
   /* the off-clock intro runs longer, and a relaxed side can carry a wider measure */
   body.offline .h-cols p{max-width:52ch}
   @media (max-width:900px){.h-cols{grid-template-columns:1fr;gap:18px}.h-cols p{max-width:56ch}}

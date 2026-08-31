@@ -259,6 +259,14 @@
   }
   var HOVER = '.bar-nav a, .hero-top nav a, .git, .sticker, .bar-flip, .vbadge, .sfx-btn, .xp-row, .xp-cue, .proj, .tk, .ledger .row, .bar-brand, .f-links a, .dl a, .ph';
   document.querySelectorAll(HOVER).forEach(hover);
+  /* the "see all" overlays clone .xp-row/.proj/.ph cards well after this ran,
+     so the clones never got the listener above - 11-see-all.js calls this
+     once it's done building a box, to wire the same tick onto whatever just
+     landed in it (a plain querySelectorAll scoped to the box, so it's a
+     no-op on boxes that hold neither kind of card) */
+  window.wireHoverSound = function(root){
+    root.querySelectorAll('.xp-row, .proj, .ph').forEach(hover);
+  };
   var CLICK = '.git, .sticker, .bar-nav a, .hero-top nav a, .proj, .tk, .ledger .row, .f-links a, .dl a, .ph, .brand, .bar-brand';
   document.querySelectorAll(CLICK)
     .forEach(function(el){ el.addEventListener('click', function(){ play('click'); }); });
@@ -384,12 +392,6 @@
       play(el.classList.contains('on') ? 'open' : 'close');
     }).observe(el, {attributes:true, attributeFilter:['class']});
   });
-
-  /* the arrow lands after the flip sweep has finished, not on top of it */
-  var cue = document.getElementById('scue');
-  if(cue) new MutationObserver(function(){
-    if(cue.classList.contains('on')) setTimeout(function(){ play('land'); }, 420);
-  }).observe(cue, {attributes:true, attributeFilter:['class']});
 })();
 
 /* Soundtrack. Two loops, one per view: taut and atmospheric on the security

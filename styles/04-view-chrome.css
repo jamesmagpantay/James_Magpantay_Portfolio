@@ -147,7 +147,7 @@
   @media (max-width:760px){.hero-top .thm-btn{font-size:12px;padding:10px 15px}}
   @media (max-width:600px){.thm-btn .thm-lab{display:none}.thm-btn{padding:9px 11px}}
   .hero-top-right{display:flex;align-items:center;gap:clamp(18px,2.8vw,40px)}
-  .hero-top-left{display:flex;align-items:center;gap:clamp(14px,1.7vw,28px)}
+  .hero-top-left{display:flex;align-items:center;gap:clamp(10px,1.6vw,22px)}
   /* the hero control is the one people meet first - it wears the accent */
   .hero-top .sfx-btn{
     font-size:clamp(13px,1.15vw,17px);padding:12px 21px;gap:12px;
@@ -299,35 +299,3 @@
     .lead-go .sec-head h2,.lead-go .sec-head .meta{animation:none}
   }
 
-  /* ===== scroll cue: one big white arrow, raised after a view flip ===== */
-  .scue{
-    position:fixed;z-index:70;right:clamp(10px,2vw,30px);top:50%;
-    pointer-events:none;
-    opacity:0;translate:0 -50%;
-    transition:opacity .35s ease-out;
-  }
-  .scue.on{opacity:1}
-  .scue svg{
-    display:block;height:clamp(124px,21vh,224px);width:auto;
-    /* it rides over the dark hero and, once scrolled, light sections */
-    filter:drop-shadow(0 2px 10px rgba(0,0,0,.45));
-  }
-  .scue path{
-    stroke:var(--cue);stroke-width:5;fill:none;
-    stroke-linecap:round;stroke-linejoin:round;
-    vector-effect:non-scaling-stroke;
-  }
-  .scue.on svg{animation:scue-arrow 1.5s cubic-bezier(.5,0,.35,1) infinite}
-  @keyframes scue-arrow{
-    0%{translate:0 -16px;opacity:0}
-    30%{opacity:1}
-    70%{opacity:1}
-    100%{translate:0 20px;opacity:0}
-  }
-  @media (max-width:860px){
-    /* clear of the corner badge */
-    .scue{top:auto;bottom:calc(clamp(12px,2vw,24px) + 62px);translate:0 0}
-  }
-  @media (prefers-reduced-motion: reduce){
-    .scue.on svg{animation:none}
-  }

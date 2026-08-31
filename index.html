@@ -223,14 +223,8 @@ document.documentElement.setAttribute('data-theme', 'dark');
 
 <div class="wipe" id="wipe" aria-hidden="true"></div>
 
-<!-- Scroll cue: raised for a few seconds after a view flip so the swapped
-     page below the hero doesn't go unnoticed. -->
-<div class="scue" id="scue" aria-hidden="true">
-  <svg viewBox="0 0 40 150" aria-hidden="true">
-    <path d="M20 4 V140"/>
-    <path d="M5 121 L20 142 L35 121"/>
-  </svg>
-</div>
+<!-- Screen-reader announcement for a view flip - the visual arrow that used
+     to accompany it is gone, but the announcement still matters. -->
 <p class="sr-only" id="scue-live" role="status" aria-live="polite"></p>
 
 <div class="sheet">
@@ -239,7 +233,7 @@ document.documentElement.setAttribute('data-theme', 'dark');
   <section class="hero" aria-label="Introduction">
     <div class="hero-top">
       <div class="hero-top-left">
-      <span class="brand"><svg class="mark" viewBox="0 0 100 100" aria-hidden="true"><path fill-rule="evenodd" d="M20 0H80A20 20 0 0 1 100 20V80A20 20 0 0 1 80 100H0V20A20 20 0 0 1 20 0ZM41 26V74H12V61H28V26ZM49 74V26H62L68.5 44L75 26H88V74H75V50L68.5 62L62 50V74Z"/></svg>James Magpantay</span>
+      <span class="brand" aria-label="James Magpantay"><svg class="mark" viewBox="0 0 100 100" aria-hidden="true"><path fill-rule="evenodd" d="M20 0H80A20 20 0 0 1 100 20V80A20 20 0 0 1 80 100H0V20A20 20 0 0 1 20 0ZM41 26V74H12V61H28V26ZM49 74V26H62L68.5 44L75 26H88V74H75V50L68.5 62L62 50V74Z"/></svg></span>
       <button class="sfx-btn" type="button" aria-pressed="false" aria-label="Toggle interface sound">
         <svg class="sfx-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
     <span class="wave" aria-hidden="true"><i></i><i></i><i></i></span>
@@ -282,29 +276,19 @@ document.documentElement.setAttribute('data-theme', 'dark');
         <span id="t-james" hidden><span class="ln ol">James</span><span class="ln sd">Magpantay</span></span>
       </h1>
       <p class="hero-cta"><a href="https://mail.google.com/mail/u/0/?fs=1&amp;tf=cm&amp;to=jamess.a.magpantay@gmail.com" target="_blank" rel="noopener">Hire the<br>candidate →</a></p>
+      <div class="h-intro" id="cols-on">
+        <p class="h-eyebrow">Hi, I&rsquo;m</p>
+        <p class="h-name">James Randall A. Magpantay</p>
+        <p class="h-lede">A <b>BSIT student at PUP Manila</b> and a <b id="gk">Gokongwei Brothers Foundation scholar</b>, training for the security operations floor: SOC analysis, GRC, network security, and cloud security. Currently interning, competing, and certifying my way there.</p>
+      </div>
+      <div class="h-intro" id="cols-off" hidden>
+        <p class="h-eyebrow">Off the clock,</p>
+        <p class="h-name">James Randall A. Magpantay</p>
+        <p class="h-lede">Beyond the work, I like <b>the rooms where ideas get traded</b>: summits, meetups, and the occasional stage. Some of it is badges and org shirts and too much coffee with friends. Most of it is conversations that turn into people I&rsquo;d want to build something with.</p>
+      </div>
       <div class="h-reveal" id="lens" aria-hidden="true">
         <span class="rv h-line" id="rv-james"><span class="ln ol">James</span><span class="ln sd">Magpantay</span></span>
         <span class="rv h-line" id="rv-sec" hidden><span class="ln ol">Cyber</span><span class="ln sd">Security</span></span>
-      </div>
-    </div>
-
-    <div class="h-cols" id="cols-on">
-      <p>I'm a <b>BSIT student at PUP Manila</b> and a <b id="gk">Gokongwei Brothers Foundation scholar</b>, training for the security operations floor: SOC analysis, GRC, network security, and cloud security. Currently interning, competing, and certifying my way there.</p>
-      <div class="git-wrap">
-        <span class="git-line">
-          <a class="git" href="https://mail.google.com/mail/u/0/?fs=1&amp;tf=cm&amp;to=jamess.a.magpantay@gmail.com" target="_blank" rel="noopener">Get in touch →</a>
-        </span>
-        <span class="git-note">Click my photo to flip to James: more ways to reach me there</span>
-      </div>
-    </div>
-
-    <div class="h-cols" id="cols-off" hidden>
-      <p>Beyond the work, I like <b>the rooms where ideas get traded</b>: summits, meetups, and the occasional stage. Some of it is badges and org shirts and too much coffee with friends. Most of it is conversations that turn into people I'd want to build something with.</p>
-      <div class="git-wrap">
-        <span class="git-line">
-          <a class="git" href="https://www.facebook.com/jamesrandall.a.magpantay/" target="_blank" rel="noopener">Say hello →</a>
-        </span>
-        <span class="git-note">Click any sticker below to reach me there</span>
       </div>
     </div>
 
@@ -316,6 +300,10 @@ document.documentElement.setAttribute('data-theme', 'dark');
         <div class="dl">
           <a href="docs/James_Magpantay_CV.pdf" download>Download CV</a>
           <a href="docs/James_Magpantay_Resume.pdf" download>Download résumé</a>
+        </div>
+        <div class="scroll-hint" aria-hidden="true">
+          <span>Scroll</span>
+          <svg viewBox="0 0 16 24" width="16" height="24"><path d="M8 2v18M2 14l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
       </div>
       <div class="stage-panel">
@@ -513,7 +501,7 @@ document.documentElement.setAttribute('data-theme', 'dark');
         </div>
         <p class="edu-role">BS in Information Technology<span class="edu-focus">Specializing in cybersecurity and networking</span></p>
         <ul class="edu-pts">
-          <li>Steering my coursework and independent projects toward cybersecurity and network security. Made the President&rsquo;s Lister, AY 2024&ndash;2025.</li>
+          <li>Steering my coursework and independent projects toward cybersecurity and network security, with relevant coursework in Operating Systems, Network Administration, and Data Communications and Networking grounding the hands-on side: CCNA training, packet analysis, and infrastructure security work. Made the President&rsquo;s Lister, AY 2024&ndash;2025.</li>
         </ul>
       </article>
       <article class="edu-card">
@@ -526,7 +514,7 @@ document.documentElement.setAttribute('data-theme', 'dark');
         </div>
         <p class="edu-role">Scholarship recipient</p>
         <ul class="edu-pts">
-          <li>Part of a community of scholars who meet regularly to trade what we&rsquo;re building and push each other to keep upskilling.</li>
+          <li>As part of a community of scholars, I regularly share what I&rsquo;m working on, and push myself and others to keep learning and improving when we meet. That accountability carries over into my academics at PUP and keeps me motivated to aim higher. The scholarship also encourages us to give back, which is why I enjoy taking on mentoring, speaking, and other opportunities where I can share what I&rsquo;ve learned with others.</li>
         </ul>
       </article>
       <article class="edu-card">
@@ -539,7 +527,7 @@ document.documentElement.setAttribute('data-theme', 'dark');
         </div>
         <p class="edu-role">Senior High School <span class="edu-focus">STEM strand</span></p>
         <ul class="edu-pts">
-          <li>Graduated with high honors, Top 3 overall, and Best in Research and Innovation for my capstone work.</li>
+          <li>Graduated with High Honors, ranked Top 3 overall, and received Best in Research and Innovation for my research work. My two years in the STEM strand gave me an early foundation in research and hands-on building, where I learned to investigate problems, turn ideas into working solutions, and document the process. That same rhythm of investigate, build, and document continues to shape how I approach my security projects today.</li>
         </ul>
       </article>
     </div>
@@ -879,6 +867,7 @@ document.documentElement.setAttribute('data-theme', 'dark');
 
   <!-- ============ FOOTER ============ -->
   <footer id="contact">
+    <div class="f-bg" aria-hidden="true"></div>
     <div class="f-tile">
     <div class="f-intro">
       <p class="big"><a href="https://mail.google.com/mail/u/0/?fs=1&amp;tf=cm&amp;to=jamess.a.magpantay@gmail.com" target="_blank" rel="noopener">Hire the<br>candidate →</a></p>

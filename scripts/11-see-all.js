@@ -34,6 +34,9 @@
         if(c.hasAttribute('aria-expanded')) c.setAttribute('aria-expanded', 'true');
         box.appendChild(c);
       });
+      /* cloning drops event listeners along with everything else - the hover
+         tick from 09-sound.js has to be re-wired onto this batch by hand */
+      if(window.wireHoverSound) window.wireHoverSound(box);
     }
     function show(){
       build();

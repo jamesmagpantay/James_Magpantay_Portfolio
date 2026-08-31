@@ -25,22 +25,14 @@
   badge.addEventListener('click', flip);
 })();
 
-/* Scroll cue: the flip returns you to the top of a page whose whole body has
-   been replaced. This says, briefly, what changed and that there is more of it
-   below - then gets out of the way on the first scroll. */
+/* View-flip announcement: the flip returns you to the top of a page whose
+   whole body has been replaced - this tells screen readers, briefly, what
+   changed and that there is more of it below. (The visual arrow that used
+   to accompany this has been replaced by the "scroll" hint under the CV
+   buttons in the stage photo.) */
 (function(){
-  var cue = document.getElementById('scue'),
-      live = document.getElementById('scue-live');
-  if(!cue) return;
-
-  var timer = null;
-
-  function hide(){
-    cue.classList.remove('on');
-    clearTimeout(timer);
-    window.removeEventListener('scroll', onScroll);
-  }
-  function onScroll(){ if(window.scrollY > 90) hide(); }
+  var live = document.getElementById('scue-live');
+  if(!live) return;
 
   document.addEventListener('viewflip', function(e){
     var off = e.detail.offline;
@@ -49,17 +41,6 @@
     var n = nav ? nav.querySelectorAll('a').length : 0;
     live.textContent = (off ? 'Off the clock' : 'Security profile') + ' loaded - ' +
       n + (n === 1 ? ' section' : ' sections') + ' below. Scroll down.';
-
-    /* re-arm: restart the entrance even if a cue is already up */
-    clearTimeout(timer);
-    cue.classList.remove('on');
-    requestAnimationFrame(function(){
-      requestAnimationFrame(function(){
-        cue.classList.add('on');
-        window.addEventListener('scroll', onScroll, {passive:true});
-        timer = setTimeout(hide, 9000);
-      });
-    });
 
     lead(off);
   });
