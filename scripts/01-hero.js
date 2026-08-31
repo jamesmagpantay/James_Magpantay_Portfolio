@@ -55,7 +55,13 @@
     return stage ? stage.getBoundingClientRect().bottom > 0 : window.scrollY < 40;
   }
   function flip(){
-    if(reducedMo || nearHero()){
+    /* both views' heroes occupy the same rough shape - headline, stage,
+       stickers - just with different content in it, so there is nothing to
+       reset here: staying exactly where the swipe left off IS the "same
+       position" in the other view. Only once you are genuinely past the
+       hero, into a page whose structure no longer matches, is a reset owed. */
+    if(nearHero()){ toggle(); return; }
+    if(reducedMo){
       toggle();
       if(window.scrollY) window.scrollTo(0, 0);
       return;
