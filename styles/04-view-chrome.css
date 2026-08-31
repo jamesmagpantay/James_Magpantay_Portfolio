@@ -243,6 +243,17 @@
        should too */
     .bar.flipping{border-color:var(--orange)}
   }
+  /* narrower desktop windows shed width in stages rather than clipping
+     anything: the percentage readout goes first since --p already drives
+     the thin progress line under the bar without it, then the control
+     labels collapse to icon-only if it is still tight. */
+  @media (min-width:861px) and (max-width:1100px){
+    .bar .sprog{display:none}
+  }
+  @media (min-width:861px) and (max-width:980px){
+    .bar .sfx-lab,.bar .mus-lab,.bar .thm-lab{display:none}
+    .bar .sfx-btn,.bar .mus-btn,.bar .thm-btn{padding:9px 11px}
+  }
 
   /* corner badge: the same answer, kept in reach on small screens */
   .vbadge{
