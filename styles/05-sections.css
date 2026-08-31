@@ -501,3 +501,20 @@
   }
   .pa-close:hover{background:var(--orange);border-color:var(--orange);color:#fff}
   @media (max-width:700px){.pa-grid{grid-template-columns:1fr}}
+
+  /* Security dark mode: the handful of colors above that were written as
+     literal hex rather than a token, so they never picked up the section
+     recolor further up this file - card copy, past-role bullets, and the
+     hover/expanded surfaces that were hardcoded white. */
+  html[data-theme="dark"] .edu-pts li,
+  html[data-theme="dark"] .proj p{color:var(--pill-fg)}
+  html[data-theme="dark"] .xp-role li:not(:first-child) h4{color:var(--cream-dim)}
+  html[data-theme="dark"] .xp-pts li{color:var(--cream-dim)}
+  html[data-theme="dark"] .xp-pts li.past{color:var(--pill-fg)}
+  html[data-theme="dark"] .xp-pts li.past::before{background:var(--pill-fg)}
+  html[data-theme="dark"] .xp-row:hover,
+  html[data-theme="dark"] .xp-row:focus-visible,
+  html[data-theme="dark"] .xp-row[aria-expanded="true"]{
+    background:var(--sec-hi);border-color:var(--pill-line);
+  }
+  html[data-theme="dark"] .proj:hover{background:var(--sec-hi)}

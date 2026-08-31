@@ -165,3 +165,13 @@
     white-space:nowrap;scrollbar-width:none;-ms-overflow-style:none;
   }
   .aud-credit::-webkit-scrollbar{display:none}
+
+  /* Security dark mode: the summary copy and the contact form's fields
+     were written assuming a light card behind them */
+  html[data-theme="dark"] .off p{color:var(--pill-fg)}
+  html[data-theme="dark"] .cform input,
+  html[data-theme="dark"] .cform textarea{
+    background:var(--sec-hi);color:var(--cream);border-color:var(--pill-line);
+  }
+  html[data-theme="dark"] .cform input::placeholder,
+  html[data-theme="dark"] .cform textarea::placeholder{color:var(--pill-fg)}

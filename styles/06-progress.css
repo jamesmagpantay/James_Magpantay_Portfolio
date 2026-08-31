@@ -67,3 +67,6 @@
   }
   .sec-cta a:hover{color:var(--orange)}
   .sec-cta a:hover::after{scale:1 1}
+
+  /* Security dark mode: the "what's next" copy was written for a light card */
+  html[data-theme="dark"] .nx p{color:var(--pill-fg)}

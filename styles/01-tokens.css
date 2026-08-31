@@ -26,6 +26,13 @@
     --thumb:#5C554A; --thumb-hi:#7E7566; --rail:#C4793F; --lens-hi:#241F19; --cue:var(--orange);
     --chip-bg:#EFE9DC; --chip-fg:#171512;
     --meta:#605C54; --meta-strong:#494640;
+    /* --card/--ink/--light stay put above - the hero, its stickers, and the
+       CV buttons already read correctly against them regardless of this
+       toggle, and changing those values here would take the sections below
+       with them, dragging the hero along for a fix it does not need. The
+       sections under the hero get their own dark surface instead, scoped
+       to just them further down this file. */
+    --sec-bg:#221E19; --sec-hi:#2D2620;
     --rad:16px; --mo:.25s; --mo-ease:cubic-bezier(.32,.72,0,1);
   }
   html[data-theme="light"]{                /* SECURITY - LIGHT: cool, technical */
@@ -102,3 +109,17 @@
   html{scrollbar-color:var(--thumb) var(--card);scrollbar-width:thin}
 
   .sheet{margin:0 auto;background:var(--light);overflow:hidden}
+
+  /* Security dark mode, sections only: every <section data-view="pro"> is
+     one of the ones under the hero (Education through the footer's own
+     "what's next" strip) - the hero itself has no data-view attribute, so
+     it and its stickers are untouched, and off-the-clock's data-view="off"
+     sections already flip correctly on their own and are untouched too.
+     Redefining --ink/--light/--line/--meta here means every component
+     inside that already reads those tokens - card borders, body copy,
+     eyebrow labels - goes dark for free, without hunting down each one. */
+  html[data-theme="dark"] section[data-view="pro"]{
+    background:var(--sec-bg);color:var(--cream);
+    --ink:var(--cream); --light:var(--sec-bg);
+    --line:var(--pill-line); --meta:var(--pill-fg); --meta-strong:var(--cream-dim);
+  }
