@@ -32,7 +32,7 @@
        with them, dragging the hero along for a fix it does not need. The
        sections under the hero get their own dark surface instead, scoped
        to just them further down this file. */
-    --sec-bg:#221E19; --sec-hi:#2D2620;
+    --sec-bg:#171512; --sec-hi:#221E19;
     --rad:16px; --mo:.25s; --mo-ease:cubic-bezier(.32,.72,0,1);
   }
   html[data-theme="light"]{                /* SECURITY - LIGHT: cool, technical */
