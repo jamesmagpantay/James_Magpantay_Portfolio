@@ -74,21 +74,31 @@
   /* a beamed pair of quavers - at 15px a single note with a flag turns to
      mush, while two noteheads under a beam stay legible. It matters more
      than it used to: below 600px these buttons lose their labels and the
-     icon is the only thing naming them. */
-  .mus-ico{width:15px;height:15px;flex:none;overflow:visible}
+     icon is the only thing naming them. Off is the note; on swaps to a
+     spinning disc, so the icon itself carries the "it's playing" state
+     rather than relying on the label alone. */
+  .mus-ico,.mus-disc{width:15px;height:15px;flex:none;overflow:visible}
   .mus-ico path{
     fill:none;stroke:currentColor;stroke-width:2;
     stroke-linecap:round;stroke-linejoin:round;
   }
   .mus-ico circle{fill:currentColor;stroke:none}
-  /* a note does not spin the way a record did - let it keep time instead */
-  .mus-btn[aria-pressed="true"] .mus-ico{animation:mus-bob 1.5s ease-in-out infinite}
-  @keyframes mus-bob{0%,100%{translate:0 0}50%{translate:0 -2.5px}}
+  .mus-disc{display:none}
+  .mus-disc circle{fill:none;stroke:currentColor}
+  .mus-disc .mus-disc-rim{stroke-width:1.6}
+  .mus-disc .mus-disc-groove{stroke-width:1;opacity:.5}
+  .mus-disc .mus-disc-hub{fill:currentColor;stroke:none}
+  .mus-btn[aria-pressed="true"] .mus-ico{display:none}
+  .mus-btn[aria-pressed="true"] .mus-disc{display:block;animation:mus-spin 2.4s linear infinite}
+  @keyframes mus-spin{to{transform:rotate(360deg)}}
+  @media (prefers-reduced-motion: reduce){
+    .mus-btn[aria-pressed="true"] .mus-disc{animation:none}
+  }
   .hero-top .mus-btn{
     font-size:clamp(13px,1.15vw,17px);padding:12px 21px;gap:12px;
     border:2px solid var(--orange);color:var(--cream);
   }
-  .hero-top .mus-ico{width:19px;height:19px}
+  .hero-top .mus-ico,.hero-top .mus-disc{width:19px;height:19px}
   .hero-top .mus-btn:hover,
   .hero-top .mus-btn[aria-pressed="true"]{background:var(--orange);color:#fff;border-color:var(--orange)}
   @media (max-width:760px){.hero-top .mus-btn{font-size:12px;padding:10px 15px}}
