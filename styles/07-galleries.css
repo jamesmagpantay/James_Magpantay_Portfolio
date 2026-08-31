@@ -90,7 +90,12 @@
   /* footer */
   footer{
     background:var(--card);color:var(--cream);
-    margin-top:clamp(56px,9vh,110px);padding:clamp(56px,9vh,100px) var(--gut) 0;
+    /* the gap before the footer used to be margin-top *and* its own
+       padding-top doing almost the same job - the margin half sat outside
+       footer's own dark box, in space that belonged to neither element's
+       background, so it showed through as a stray light bar once the
+       section above went dark. The padding alone is enough. */
+    padding:clamp(56px,9vh,100px) var(--gut) 0;
     /* the tile itself: a soft settle-and-fade, every time it crosses into
        view - not just the first, so scrolling back down to it later still
        finds it arriving rather than sitting there already-on */
