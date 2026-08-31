@@ -42,10 +42,21 @@
      be seen again. Jumping instantly there instead means the curtain stays
      the only thing anyone sees move. */
   var wipe = document.getElementById('wipe');
-  var pupMark = document.querySelector('.pup-mark');
+  /* .pup-mark is the logo tile beside the headline on desktop; below 900px
+     it is display:none and a second copy, .git-marks, rides beside the CTA
+     instead - and that copy exists twice besides, once per view, with only
+     one ever actually on screen at a time (the other's ancestor is
+     [hidden]). Whichever of these is genuinely rendered right now - checked
+     via offsetParent, which is null for anything display:none - is the one
+     worth measuring; a mark nobody can see says nothing about where the
+     hero actually ends. */
+  var heroMarks = [].slice.call(document.querySelectorAll('.pup-mark, .git-marks'));
   var reducedMo = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   function nearHero(){
-    return pupMark ? pupMark.getBoundingClientRect().bottom > 0 : window.scrollY < 40;
+    for(var i = 0; i < heroMarks.length; i++){
+      if(heroMarks[i].offsetParent !== null) return heroMarks[i].getBoundingClientRect().bottom > 0;
+    }
+    return window.scrollY < 40;
   }
   function flip(){
     if(reducedMo || nearHero()){
