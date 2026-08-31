@@ -90,6 +90,10 @@
   /* footer */
   footer{
     background:var(--card);color:var(--cream);
+    /* a quiet seam at the boundary, now that the section above and the
+       footer can land on the same background tone with nothing else
+       marking where one ends and the other begins */
+    border-top:1px solid var(--pill-line);
     /* the gap before the footer used to be margin-top *and* its own
        padding-top doing almost the same job - the margin half sat outside
        footer's own dark box, in space that belonged to neither element's
@@ -180,3 +184,8 @@
   }
   html[data-theme="dark"] .cform input::placeholder,
   html[data-theme="dark"] .cform textarea::placeholder{color:var(--pill-fg)}
+  /* footer sits on --card everywhere else, which is correct there - but in
+     security dark mode the section right above it now shares that exact
+     tone, so a step lighter here gives the seam a second, independent cue
+     beyond just the rule above */
+  html[data-theme="dark"] footer{background:var(--sec-hi)}
