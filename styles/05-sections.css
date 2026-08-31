@@ -282,7 +282,12 @@
     text-wrap:pretty;
   }
   .xp-pts li::before{
-    content:"";position:absolute;left:2px;top:.62em;width:9px;height:2px;background:var(--orange);
+    content:"";position:absolute;left:2px;top:.62em;width:9px;height:2px;
+    /* these bullets only ever show once a row is opened, sitting on the
+       cream-panel background the expanded row switches to - the orange
+       accent read as too loud there, so it's the security view's own dark
+       card tone instead, fixed rather than following the current theme */
+    background:#171512;
   }
   /* An earlier role gets its own note, stepped back the same way its title is
      in the list above: smaller, quieter, a shorter measure, and a grey rule
