@@ -19,7 +19,7 @@
       if(p && p.catch) p.catch(function(){ armed = false; });
     }catch(e){ armed = false; }
   }
-  ['pointerdown','keydown','touchend'].forEach(function(e){
+  ['pointerdown','keydown','touchstart'].forEach(function(e){
     addEventListener(e, arm, true);
   });
 })();
@@ -205,11 +205,24 @@
      click. Arm it on the first genuinely activating event instead. */
   if(on){
     (function(){
-      var EVS = ['pointerdown', 'keydown', 'touchend'];
+      /* touchstart, not touchend: a tap that turns into a scroll should
+         still count, and on iOS it only reliably does at the start of the
+         gesture - by touchend the browser may no longer consider it live. */
+      var EVS = ['pointerdown', 'keydown', 'touchstart'];
       function unlock(){
         EVS.forEach(function(e){ removeEventListener(e, unlock, true); });
         boot();
-        if(ctx && ctx.state === 'suspended') ctx.resume();
+        if(!ctx) return;
+        if(ctx.state === 'suspended') ctx.resume();
+        /* resume() alone is not always enough on iOS - starting a real
+           (silent) buffer source synchronously inside the gesture is the
+           more reliable unlock, so do both. */
+        try{
+          var b = ctx.createBufferSource();
+          b.buffer = ctx.createBuffer(1, 1, ctx.sampleRate);
+          b.connect(ctx.destination);
+          b.start(0);
+        }catch(e){}
       }
       EVS.forEach(function(e){ addEventListener(e, unlock, true); });
     })();
