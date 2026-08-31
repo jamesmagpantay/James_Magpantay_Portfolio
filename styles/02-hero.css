@@ -47,40 +47,6 @@
     .hero-top-right{display:none}
   }
 
-  /* school + scholarship marks - centred on the headline, out of flow so the
-     portrait stays put; the right edge lands on the "G" of Gokongwei below,
-     measured at runtime into --gkx */
-  .pup-mark{
-    position:absolute;top:50%;translate:0 -50%;z-index:4;pointer-events:none;
-    /* the marks themselves take the cursor so they can respond to hover;
-       a click still passes up to the headline and flips the view */
-    left:auto;
-    /* --gko nudges the pair past the measured "G" */
-    --gko:clamp(62px,6.4vw,128px);
-    right:calc(100% - (var(--gkx,calc(var(--amid) + 300px)) + var(--gko)));
-    display:flex;align-items:center;gap:clamp(10px,1.1vw,20px);
-  }
-  .pup-mark img{
-    height:clamp(108px,10.4vw,186px);width:auto;pointer-events:auto;
-    filter:drop-shadow(0 6px 16px rgba(0,0,0,.45));
-  }
-  /* the seal sits a touch above the scholarship mark, which carries a caption
-     under it - lifting it optically levels the pair */
-  .pup-mark > img{translate:0 calc(-1 * clamp(7px,.9vw,16px))}
-  /* the scholarship: symbol only, with the name set as live type so it stays
-     crisp at any size instead of relying on the logo’s baked-in wordmark */
-  .pup-mark .mk{display:flex;flex-direction:column;align-items:center;gap:clamp(8px,.8vw,13px)}
-  /* the mark is landscape (240×214) while the seal is square, so equal
-     heights make it read wider - step it back to match optically */
-  .pup-mark .mk img{height:clamp(88px,8.5vw,152px)}
-  .mk-cap{
-    font-family:var(--mono);font-size:clamp(8.5px,.62vw,11px);
-    letter-spacing:.13em;text-transform:uppercase;line-height:1.5;
-    text-align:center;color:var(--cream-dim);text-wrap:balance;
-  }
-  .mk-cap b{display:block;font-weight:400;color:var(--cream)}
-  @media (max-width:900px){.pup-mark{display:none}}
-
   .h-wrap{position:relative;z-index:0;margin-bottom:clamp(6px,1.4vh,18px);cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;translate:0 clamp(8px,2.2vw,38px)}
   @media (max-width:900px){.h-wrap{translate:0 0}}
   .h-wrap:focus-visible{outline:2px solid var(--orange);outline-offset:8px}
@@ -205,34 +171,8 @@
     padding-bottom:4px;white-space:nowrap;transition:color .18s ease-out,border-color .18s ease-out;
   }
   .git:hover{color:var(--orange);border-color:var(--orange)}
-  /* the school marks live beside the headline on desktop (.pup-mark) - below
-     900px that spot disappears, so they ride level with the CTA instead,
-     pinned to its right, rather than dropping off the page entirely. */
   .git-line{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-  .git-marks{display:none}
-  .git-marks .mk-cap-short{display:none}
-  @media (max-width:900px){
-    .git-line{width:100%;justify-content:space-between}
-    .git-marks{display:flex;align-items:center;gap:clamp(14px,4vw,24px);flex:none}
-    .git-marks img{width:auto;filter:drop-shadow(0 3px 8px rgba(0,0,0,.35))}
-    /* same lockup as the desktop headline mark: seal, then scholarship mark
-       with its caption underneath - just scaled for the row it sits in here.
-       The mark's own image is shorter than the seal, but the caption under
-       it pulls the whole .mk block's visual centre down - so centering the
-       two containers left the seal reading low. Lift the seal the same way
-       the desktop headline mark does, scaled to this row's size. */
-    .git-marks > img{height:clamp(64px,20vw,110px);translate:0 calc(-1 * clamp(4px,1.8vw,10px))}
-    .git-marks .mk{display:flex;flex-direction:column;align-items:center;gap:6px}
-    .git-marks .mk img{height:clamp(52px,16vw,90px)}
-    .git-marks .mk-cap{font-size:clamp(9px,2.4vw,11px);white-space:nowrap}
-  }
-  /* the two-line caption ("Gokongwei Brothers Foundation" / "Scholar") is
-     already the compact form - below 480px it still crowds the note beside
-     it, so it drops to the short name instead of wrapping onto a third line */
-  @media (max-width:480px){
-    .git-marks .mk-cap-full{display:none}
-    .git-marks .mk-cap-short{display:block}
-  }
+  @media (max-width:900px){.git-line{width:100%;justify-content:space-between}}
   /* attribution for the CC BY soundtrack - required, so it stays visible */
   .aud-credit{
     display:block;margin-top:10px;max-width:66ch;

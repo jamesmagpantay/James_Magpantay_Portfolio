@@ -5,6 +5,35 @@
   .sec-head .meta{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--meta)}
   .sec-head .meta.big{font-size:clamp(14px,1.3vw,21px);letter-spacing:.07em;color:var(--meta-strong)}
 
+  /* education - three static cards, nothing to expand: unlike a work
+     history, an institution's whole story is a couple of lines and a short
+     list, already short enough to read at a glance */
+  .edu{
+    display:grid;grid-template-columns:repeat(3,1fr);
+    gap:clamp(20px,2.4vw,32px);
+  }
+  @media (max-width:900px){.edu{grid-template-columns:1fr}}
+  .edu-card{
+    display:flex;flex-direction:column;gap:clamp(14px,1.6vw,20px);
+    border:1px solid var(--line);border-radius:16px;
+    padding:clamp(20px,2.2vw,28px);
+  }
+  .edu-head{display:flex;align-items:center;gap:clamp(14px,1.5vw,20px)}
+  .edu-lg{width:clamp(46px,4vw,60px);height:clamp(46px,4vw,60px);object-fit:contain;flex:none}
+  .edu-txt{display:flex;flex-direction:column;gap:5px;min-width:0}
+  .edu-txt h3{font-size:clamp(15px,1.35vw,19px);font-weight:700;letter-spacing:-.015em;line-height:1.15}
+  .edu-when{font-family:var(--mono);font-size:11px;color:var(--meta);white-space:nowrap}
+  .edu-role{font-size:14px;font-weight:600;color:var(--ink)}
+  .edu-focus{display:block;margin-top:3px;font-size:12.5px;font-weight:400;color:var(--meta)}
+  .edu-pts{list-style:none;padding:0;display:flex;flex-direction:column;gap:9px}
+  .edu-pts li{
+    position:relative;padding-left:18px;
+    font-size:13px;line-height:1.6;color:#54514A;
+  }
+  .edu-pts li::before{
+    content:"";position:absolute;left:2px;top:.6em;width:7px;height:2px;background:var(--orange);
+  }
+
   /* tech stack - bare logos, grouped; security leads at a larger size */
   .tk-groups{display:flex;flex-direction:column;gap:clamp(24px,2.6vw,42px)}
   .tkg-h{

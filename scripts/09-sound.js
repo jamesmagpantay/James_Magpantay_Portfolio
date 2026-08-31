@@ -282,11 +282,6 @@
     hw.addEventListener('pointerleave', function(){ clearTimeout(hwT); });
   }
 
-  /* ---- the marks answer to the cursor ---- */
-  document.querySelectorAll('.pup-mark img').forEach(function(el){
-    el.addEventListener('pointerenter', function(){ play('key'); });
-  });
-
   /* ---- "Hire the candidate": a roll that accelerates while you hover, and
      the slam when you commit. The roll is dwell-gated so sweeping past the
      link never starts it. ---- */
