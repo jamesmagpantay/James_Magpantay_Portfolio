@@ -232,14 +232,13 @@
   }, {passive:true});
 })();
 
-/* The footer CTA gets a one-time entrance the first time it scrolls into
-   view, rather than replaying on every visit to the bottom of the page. */
+/* The footer tile replays its entrance every time it crosses into view -
+   toggled both ways rather than a one-shot, so scrolling back down to it
+   later still finds it arriving. */
 (function(){
-  var el = document.getElementById('fintro');
+  var el = document.getElementById('contact');
   if(!el) return;
-  new IntersectionObserver(function(e, obs){
-    if(!e[0].isIntersecting) return;
-    el.classList.add('on');
-    obs.disconnect();
+  new IntersectionObserver(function(e){
+    el.classList.toggle('on', e[0].isIntersecting);
   }, {rootMargin:'0px 0px -10% 0px'}).observe(el);
 })();
