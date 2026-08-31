@@ -202,6 +202,48 @@
     transition:translate .34s cubic-bezier(.32,.72,0,1),border-color .45s ease-out;
   }
 
+  /* Desktop only: the bar floats as a self-width pill clear of both edges,
+     rather than spanning full-bleed with a single bottom rule - mobile
+     keeps the edge-to-edge bar untouched, since there is no spare width
+     there for anything to float in. The "where am I" job that the side
+     rail used to do moves in here too: a sliding highlight tracks the
+     current section behind the nav links themselves, segmented-control
+     style, instead of a separate dot trail down the side of the page. */
+  @media (min-width:861px){
+    .bar{
+      left:50%;right:auto;top:16px;
+      translate:-50% -140%;
+      width:max-content;max-width:min(94vw,1180px);
+      justify-content:flex-start;gap:clamp(18px,2.2vw,32px);
+      padding:8px 14px 8px 20px;
+      border:1px solid var(--bar-line);
+      border-radius:999px;
+      box-shadow:0 16px 40px rgba(0,0,0,.28);
+    }
+    .bar.on{translate:-50% 0}
+    .bar-nav{position:relative;gap:2px;flex:none}
+    .bar-nav a{
+      position:relative;z-index:1;padding:9px 15px;border-radius:999px;
+      white-space:nowrap;
+    }
+    .bar-brand,.bar-right{flex:none}
+    .bar-nav a[aria-current="true"]{color:#fff}
+    .bar-nav a[aria-current="true"]:hover{color:#fff}
+    .bar-nav-glow{
+      position:absolute;top:0;bottom:0;left:0;z-index:0;
+      width:0;border-radius:999px;background:var(--orange);
+      opacity:0;
+      transition:transform .42s cubic-bezier(.22,.61,.36,1),
+                 width .42s cubic-bezier(.22,.61,.36,1),opacity .25s ease-out;
+    }
+    .bar-nav-glow.on{opacity:1}
+    @media (prefers-reduced-motion:reduce){.bar-nav-glow{transition:opacity .25s ease-out}}
+    /* the flip pulse used to ride the one bottom rule the full-bleed bar
+       had - now that the pill has an edge all the way round, the pulse
+       should too */
+    .bar.flipping{border-color:var(--orange)}
+  }
+
   /* corner badge: the same answer, kept in reach on small screens */
   .vbadge{
     position:fixed;right:clamp(12px,2vw,24px);bottom:clamp(12px,2vw,24px);z-index:60;

@@ -66,33 +66,25 @@
 })();
 
 /* Scroll progress. One handler writes --p on <html>; the bar rule, the
-   readout, the rail fill and the skip pill all read it. The rail's dots come
-   from whichever nav is showing, so they follow the view without a second list. */
+   readout and the skip pill all read it. The desktop bar nav's sliding
+   highlight - which section is current - comes from the same handler,
+   built fresh against whichever nav is showing so it follows the view
+   without a second list. */
 (function(){
   var root = document.documentElement,
-      out  = document.getElementById('sprog'),
-      rail = document.getElementById('srail');
-  var targets = [], dots = [], ticking = false;
+      out  = document.getElementById('sprog');
+  var links = [], targets = [], glow = null, ticking = false;
 
-  function buildRail(){
-    if(!rail) return;
+  function buildNav(){
     var nav = document.querySelector('.bar-nav[data-view="' +
               (document.body.classList.contains('offline') ? 'off' : 'pro') + '"]');
-    rail.innerHTML = ''; targets = []; dots = [];
+    links = []; targets = []; glow = null;
     if(!nav) return;
+    glow = nav.querySelector('.bar-nav-glow');
     [].forEach.call(nav.querySelectorAll('a'), function(a){
       var sec = document.querySelector(a.getAttribute('href'));
       if(!sec) return;
-      var b = document.createElement('button');
-      b.type = 'button'; b.className = 'sdot';
-      b.setAttribute('aria-label', 'Jump to ' + a.textContent.trim());
-      b.innerHTML = '<span>' + a.textContent.trim() + '</span>';
-      b.addEventListener('click', function(){
-        if(window.sfx) window.sfx.play('click');
-        sec.scrollIntoView();
-      });
-      rail.appendChild(b);
-      targets.push(sec); dots.push(b);
+      links.push(a); targets.push(sec);
     });
   }
 
@@ -102,14 +94,22 @@
     var p = h > 0 ? Math.min(1, Math.max(0, window.scrollY / h)) : 0;
     root.style.setProperty('--p', p.toFixed(4));
     if(out) out.textContent = Math.round(p * 100) + '%';
-    if(rail){
-      rail.classList.toggle('on', window.scrollY > 300);
-      /* the section whose top has most recently passed the middle of the screen */
-      var mid = window.innerHeight * .45, active = -1;
-      targets.forEach(function(sec, i){
-        if(sec.getBoundingClientRect().top <= mid) active = i;
-      });
-      dots.forEach(function(d, i){ d.setAttribute('aria-current', i === active ? 'true' : 'false'); });
+
+    /* the section whose top has most recently passed the middle of the screen */
+    var mid = window.innerHeight * .45, active = -1;
+    targets.forEach(function(sec, i){
+      if(sec.getBoundingClientRect().top <= mid) active = i;
+    });
+    links.forEach(function(a, i){ a.setAttribute('aria-current', i === active ? 'true' : 'false'); });
+    if(glow){
+      if(active === -1){
+        glow.classList.remove('on');
+      } else {
+        var a = links[active];
+        glow.classList.add('on');
+        glow.style.transform = 'translateX(' + a.offsetLeft + 'px)';
+        glow.style.width = a.offsetWidth + 'px';
+      }
     }
   }
   function onScroll(){
@@ -120,9 +120,9 @@
   addEventListener('scroll', onScroll, {passive:true});
   addEventListener('resize', onScroll);
   document.addEventListener('viewflip', function(){
-    requestAnimationFrame(function(){ buildRail(); paint(); });
+    requestAnimationFrame(function(){ buildNav(); paint(); });
   });
-  buildRail();
+  buildNav();
   paint();
 })();
 

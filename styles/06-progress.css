@@ -13,41 +13,6 @@
   }
   @media (max-width:600px){.sprog{display:none}}
 
-  /* the rail: which section, and how much is left */
-  .srail{
-    position:fixed;right:clamp(10px,1.5vw,22px);top:50%;translate:0 -50%;z-index:61;
-    display:flex;flex-direction:column;align-items:center;gap:clamp(11px,1.1vw,16px);
-    opacity:0;pointer-events:none;transition:opacity .3s ease-out;
-  }
-  .srail.on{opacity:1;pointer-events:auto}
-  /* the scroll cue owns this edge while it is up */
-  #scue.on ~ .srail{opacity:0;pointer-events:none}
-  .srail::before,.srail::after{
-    content:"";position:absolute;left:50%;translate:-50% 0;width:2px;border-radius:2px;
-  }
-  .srail::before{top:-12px;bottom:-12px;background:var(--pill-quiet)}
-  .srail::after{
-    top:-12px;height:calc(100% + 24px);background:var(--rail);
-    transform-origin:top center;scale:1 var(--p,0);
-  }
-  .sdot{
-    position:relative;z-index:1;width:9px;height:9px;padding:0;flex:none;cursor:pointer;
-    border:2px solid var(--pill-line);border-radius:50%;background:var(--card);
-    transition:scale .34s cubic-bezier(.22,.61,.36,1),background .3s ease-out,border-color .3s ease-out;
-  }
-  .sdot:hover,.sdot:focus-visible{border-color:var(--rail);scale:1.2}
-  .sdot[aria-current="true"]{background:var(--rail);border-color:var(--rail);scale:1.3}
-  .sdot span{
-    position:absolute;right:calc(100% + 12px);top:50%;translate:0 -50%;
-    font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
-    white-space:nowrap;color:var(--cream);background:var(--card);
-    border:1px solid var(--pill-line);border-radius:99px;padding:5px 10px;
-    opacity:0;pointer-events:none;transition:opacity .18s ease-out;
-  }
-  .sdot:hover span,.sdot:focus-visible span{opacity:1}
-  .sdot span{transition:opacity .28s ease-out}
-  @media (max-width:900px){.srail{display:none}}
-
   /* the skip pill fills as you go, so it carries progress too */
   .skipto::before{
     content:"";position:absolute;inset:0;border-radius:99px;pointer-events:none;
