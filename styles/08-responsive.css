@@ -110,10 +110,13 @@
     .bar-right .thm-btn{
       min-height:44px;min-width:44px;justify-content:center;padding:10px;
     }
-    /* the mark alone identifies the bar here - the wordmark is on the hero
-       directly below it, at four times the size */
-    .bar-brand{font-size:0;gap:0}
-    .bar-brand .mark{width:26px;height:26px}
+    /* the bar is pinned from the very top here, not just after scrolling -
+       so the mark used to double up with the identical one in the hero
+       right below it (and the tab's own favicon makes a third). Drop the
+       icon and let the wordmark carry the bar instead - same identity,
+       no repeated glyph. */
+    .bar-brand{gap:0;font-size:13px}
+    .bar-brand .mark{display:none}
     html.js .menu-btn{display:flex}
     /* without JS the menu button does nothing - fall back to the plain links */
     html:not(.js) .bar-nav{display:flex;flex-wrap:wrap;gap:8px 14px}
@@ -292,8 +295,7 @@
   @media (max-width:420px){
     #set-certs,#set-social{grid-template-columns:repeat(2,minmax(0,1fr))}
     .stage-photo,body.offline .stage-photo{width:min(74vw,240px)}
-    .bar-brand{font-size:0;gap:0}
-    .bar-brand .mark{width:26px;height:26px}
+    .bar-brand{font-size:11.5px}
     .h-line .ol{letter-spacing:.09em}
     .proj{width:86vw}
   }
