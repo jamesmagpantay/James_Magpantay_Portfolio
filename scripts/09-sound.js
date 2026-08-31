@@ -25,10 +25,9 @@
 })();
 
 /* Interface sound. Everything is synthesised in the Web Audio API - no files to
-   host, and every character of it is a number you can tune. Five sounds, off by
-   default, remembered per visitor. */
+   host, and every character of it is a number you can tune. Five sounds, on
+   by default on every load. */
 (function(){
-  var KEY = 'sfx-on';
   var btns = [].slice.call(document.querySelectorAll('.sfx-btn'));
   if(!btns.length) return;
   /* Reduced-motion visitors still get silence and no control. Touch devices
@@ -40,8 +39,8 @@
     btns.forEach(function(b){ b.hidden = true; }); return;
   }
 
-  var on = false;
-  try{ on = localStorage.getItem(KEY) === '1'; }catch(e){}
+  /* on by default, every load - not remembered across reloads */
+  var on = true;
 
   var ctx = null, master = null, noise = null;
   function boot(){
@@ -189,7 +188,6 @@
       /* never let a toggle bubble into a parent that acts on clicks */
       e.stopPropagation();
       on = !on;
-      try{ localStorage.setItem(KEY, on ? '1' : '0'); }catch(e){}
       paint();
       if(on) play('click');
     });
@@ -368,10 +366,9 @@
 })();
 
 /* Soundtrack. Two loops, one per view: taut and atmospheric on the security
-   side, warm and jazzy off the clock. Off by default, lazy-loaded, faded
-   rather than cut, and ducked under the CTA slam. */
+   side, warm and jazzy off the clock. Off by default on every load,
+   lazy-loaded, faded rather than cut, and ducked under the CTA slam. */
 (function(){
-  var KEY = 'music-on';
   var btns = [].slice.call(document.querySelectorAll('.mus-btn'));
   if(!btns.length) return;
 
@@ -531,7 +528,6 @@
       e.stopPropagation();
       if(dead) return;
       on = !on;
-      try{ localStorage.setItem(KEY, on ? '1' : '0'); }catch(err){}
       paint();
       /* The same key the theme and sound pills answer with. This is a
          separate IIFE from the sound module, so its play() is not in scope
@@ -577,27 +573,6 @@
     }, 420);
   });
 
-  /* Returning visitor who had it on. Try to start immediately - a browser
-     that requires a gesture just leaves the context suspended, so nothing
-     is audible until the fallback below resumes it, but the source is
-     already running and ready the instant that happens. */
-  var pref = false;
-  try{ pref = localStorage.getItem(KEY) === '1'; }catch(err){}
-  if(pref){
-    on = true; cur = view();
-    var EVS = ['pointerdown', 'keydown', 'touchend'];
-    var kick = function(){
-      EVS.forEach(function(e){ removeEventListener(e, kick, true); });
-      wake();
-      /* nothing to do if autoplay was allowed and it is already running */
-      if(on && !sources[cur]) start();
-    };
-    EVS.forEach(function(e){ addEventListener(e, kick, true); });
-
-    wake();
-    playSource(cur);
-    fade(cur, target(), FADE_IN);
-  }
   paint();
 })();
 
