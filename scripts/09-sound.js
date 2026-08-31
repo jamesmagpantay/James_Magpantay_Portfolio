@@ -8,16 +8,19 @@
    very first gesture to hold the session in that category from the start. */
 (function(){
   var SILENCE = 'data:audio/wav;base64,UklGRtQEAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YbAEAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIA=';
-  var armed = false;
+  /* Checked fresh on every gesture rather than latched once "armed" and
+     forgotten: a tab put in the background for a long stretch can have its
+     audio paused out from under it by the OS or the browser itself, and a
+     stale "already armed" flag would then leave it silent forever, with no
+     gesture left able to tell the difference from never having started. */
+  var clip = null;
   function arm(){
-    if(armed) return;
-    armed = true;
+    if(clip && !clip.paused) return;
     try{
-      var a = new Audio(SILENCE);
-      a.loop = true;
-      var p = a.play();
-      if(p && p.catch) p.catch(function(){ armed = false; });
-    }catch(e){ armed = false; }
+      if(!clip){ clip = new Audio(SILENCE); clip.loop = true; }
+      var p = clip.play();
+      if(p && p.catch) p.catch(function(){});
+    }catch(e){}
   }
   ['pointerdown','keydown','touchend'].forEach(function(e){
     addEventListener(e, arm, true);
@@ -44,6 +47,12 @@
 
   var ctx = null, master = null, noise = null;
   function boot(){
+    /* a tab backgrounded long enough can have the browser close its audio
+       context out from under it to free the hardware - ctx is still a
+       truthy reference at that point, just a dead one, so it has to be
+       checked rather than merely tested for existence, or nothing here
+       ever rebuilds and every sound stays silent for the rest of the visit */
+    if(ctx && ctx.state === 'closed'){ ctx = null; master = null; noise = null; }
     if(ctx) return;
     var AC = window.AudioContext || window.webkitAudioContext;
     if(!AC) return;
@@ -428,6 +437,13 @@
   var actx = null, gainNodes = {}, buffers = {}, sources = {}, fadeRAF = {};
 
   function ensureCtx(){
+    /* same recovery as the sfx module: a long spell backgrounded can get
+       this context closed by the browser, and everything cached against it
+       - its gain nodes, its decoded buffers - dies with it and has to be
+       rebuilt against a fresh one rather than reused. */
+    if(actx && actx.state === 'closed'){
+      actx = null; gainNodes = {}; buffers = {}; sources = {};
+    }
     if(actx) return actx;
     var AC = window.AudioContext || window.webkitAudioContext;
     if(!AC) return null;
