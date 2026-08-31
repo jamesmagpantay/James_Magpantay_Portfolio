@@ -257,7 +257,7 @@
       play('tick');
     });
   }
-  var HOVER = '.bar-nav a, .hero-top nav a, .git, .sticker, .bar-flip, .vbadge, .sfx-btn, .xp-row, .xp-cue, .proj, .tk, .ledger .row, .bar-brand, .f-links a, .dl a, .ph';
+  var HOVER = '.bar-nav a, .hero-top nav a, .git, .sticker, .bar-flip, .vbadge, .sfx-btn, .xp-row, .xp-cue, .proj, .tk, .ledger .row, .bar-brand, .f-links a, .dl a, .ph, .scroll-hint';
   document.querySelectorAll(HOVER).forEach(hover);
   /* the "see all" overlays clone .xp-row/.proj/.ph cards well after this ran,
      so the clones never got the listener above - 11-see-all.js calls this
@@ -267,7 +267,7 @@
   window.wireHoverSound = function(root){
     root.querySelectorAll('.xp-row, .proj, .ph').forEach(hover);
   };
-  var CLICK = '.git, .sticker, .bar-nav a, .hero-top nav a, .proj, .tk, .ledger .row, .f-links a, .dl a, .ph, .brand, .bar-brand';
+  var CLICK = '.git, .sticker, .bar-nav a, .hero-top nav a, .proj, .tk, .ledger .row, .f-links a, .dl a, .ph, .brand, .bar-brand, .scroll-hint';
   document.querySelectorAll(CLICK)
     .forEach(function(el){ el.addEventListener('click', function(){ play('click'); }); });
   /* the headline CTAs and project cards get the heavier key */

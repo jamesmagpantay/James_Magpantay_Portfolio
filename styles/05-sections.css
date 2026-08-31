@@ -239,6 +239,24 @@
     letter-spacing:-.01em;line-height:1.35;color:var(--ink);
   }
   .pm-body .fact::before{content:"»";color:var(--orange);font-size:1.15em;line-height:1}
+  /* repo / live-demo actions - a project without one yet (most of them,
+     until the real URLs are in) shows the button greyed out and inert
+     rather than missing, so the row still reads as "code + demo" */
+  .pm-links{display:flex;flex-wrap:wrap;gap:12px;margin-top:4px}
+  .pm-link{
+    display:inline-flex;align-items:center;gap:9px;
+    font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--ink);text-decoration:none;
+    border:1.5px solid var(--ink);border-radius:99px;padding:11px 20px;
+    transition:background .18s ease-out,color .18s ease-out,translate .18s ease-out,opacity .18s ease-out;
+  }
+  .pm-link svg{width:17px;height:17px;flex:none}
+  .pm-link:hover{background:var(--ink);color:var(--light);translate:0 -2px}
+  html[data-theme="dark"] .pm-link{color:var(--cream);border-color:var(--pill-line)}
+  html[data-theme="dark"] .pm-link:hover{background:var(--orange);border-color:var(--orange);color:#fff}
+  .pm-link-disabled{
+    opacity:.4;cursor:default;border-style:dashed;pointer-events:none;
+  }
   .pm-close{
     position:absolute;top:14px;right:14px;width:42px;height:42px;border-radius:50%;
     border:1.5px solid var(--line);background:#fff;color:var(--ink);

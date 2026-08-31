@@ -20,7 +20,22 @@
   if(!pm) return;
   var img=document.getElementById('pm-img'),
       ttl=document.getElementById('pm-title'), copy=document.getElementById('pm-copy'),
-      fact=document.getElementById('pm-fact');
+      fact=document.getElementById('pm-fact'),
+      repoLink=document.getElementById('pm-repo'), demoLink=document.getElementById('pm-demo');
+
+  /* repo/demo are optional per project and not all are filled in yet - a
+     card without one shows the button greyed out and inert rather than
+     hiding it outright, so the row still reads as "code + demo" while the
+     real links get added */
+  function setLink(a, url){
+    if(url){
+      a.href = url; a.removeAttribute('aria-disabled'); a.removeAttribute('tabindex');
+      a.classList.remove('pm-link-disabled');
+    }else{
+      a.removeAttribute('href'); a.setAttribute('aria-disabled', 'true'); a.tabIndex = -1;
+      a.classList.add('pm-link-disabled');
+    }
+  }
 
   document.querySelectorAll('.proj').forEach(function(card){
     card.addEventListener('click', function(e){
@@ -33,6 +48,8 @@
       ttl.innerHTML    = h.innerHTML;
       copy.textContent = card.querySelector('p').textContent;
       fact.textContent = card.querySelector('.fact').textContent;
+      setLink(repoLink, card.dataset.repo);
+      setLink(demoLink, card.dataset.demo);
       document.body.classList.add('pm-open');
       pm.classList.add('on');
     });

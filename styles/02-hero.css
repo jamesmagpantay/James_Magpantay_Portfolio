@@ -224,6 +224,21 @@
   @media (max-width:999px){
     .h-intro{align-items:center;text-align:center;max-width:520px;margin:clamp(18px,3vh,32px) auto 0}
   }
+  /* the desktop sizes have a fixed px floor (they only need to shrink until
+     the column beside the headline runs out, not all the way to a phone) -
+     down here nothing is beside it any more, so the intro gets its own,
+     much smaller scale instead of clipping past the edge of the screen */
+  @media (max-width:600px){
+    .h-intro{max-width:92vw;padding-inline:4vw}
+    .h-intro .h-eyebrow{font-size:clamp(11px,3vw,14px);margin-bottom:8px}
+    .h-intro .h-name{font-size:clamp(19px,6.4vw,26px);margin-bottom:12px}
+    .h-intro .h-lede{font-size:clamp(13.5px,3.6vw,16px);line-height:1.5}
+  }
+  /* on the very narrowest phones even that can be tight for the full name -
+     let it wrap rather than clip or keep shrinking past legibility */
+  @media (max-width:380px){
+    .h-intro .h-name{white-space:normal;text-wrap:balance}
+  }
 
   /* the off-clock intro runs longer, and a relaxed side can carry a wider measure */
   body.offline .h-cols p{max-width:52ch}

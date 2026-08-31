@@ -71,9 +71,12 @@
     position:absolute;left:50%;top:88%;translate:-50% 0;z-index:4;
     display:flex;flex-direction:column;align-items:center;gap:8px;
     font-family:var(--mono);font-size:16px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
-    color:var(--cream);
-    pointer-events:none;
+    color:var(--cream);text-decoration:none;cursor:pointer;pointer-events:auto;
+    transition:translate .18s ease-out;
   }
+  /* a real link now (jumps to the "hire the candidate" footer), so it earns
+     a little press-forward on hover instead of just sitting there */
+  .scroll-hint:hover{translate:-50% 4px}
   .scroll-hint svg{width:26px;height:36px;stroke:var(--cream);animation:scroll-hint-bob 1.6s ease-in-out infinite}
   @keyframes scroll-hint-bob{0%,100%{translate:0 0}50%{translate:0 8px}}
   html[data-theme="light"] .scroll-hint span{-webkit-text-stroke:.9px rgba(255,255,255,.95)}
