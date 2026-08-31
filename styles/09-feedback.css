@@ -81,19 +81,20 @@
   /* ---------- first-visit heads-up: sound survives the silent switch ---------- */
   .snote{
     position:fixed;left:50%;top:14px;z-index:150;translate:-50% -140%;
-    display:flex;align-items:center;gap:12px;max-width:min(90vw,420px);
+    display:flex;align-items:center;gap:14px;width:max-content;max-width:92vw;
     background:var(--card);color:var(--cream);
     border:1.5px solid var(--pill-line);border-left:3px solid var(--orange);
-    border-radius:14px;padding:12px 10px 12px 15px;
+    border-radius:16px;padding:15px 12px 15px 19px;
     box-shadow:0 14px 34px rgba(0,0,0,.38);
-    font-family:var(--mono);font-size:11.5px;letter-spacing:.05em;line-height:1.5;
+    font-family:var(--mono);font-size:13.5px;letter-spacing:.05em;line-height:1.5;
+    white-space:nowrap;
     opacity:0;pointer-events:none;
     transition:translate .38s cubic-bezier(.16,1,.3,1),opacity .3s ease-out;
   }
   .snote.on{opacity:1;pointer-events:auto;translate:-50% 0}
   .snote-close{
-    flex:none;width:26px;height:26px;border-radius:50%;
-    display:grid;place-items:center;font-size:17px;line-height:1;
+    flex:none;width:30px;height:30px;border-radius:50%;
+    display:grid;place-items:center;font-size:19px;line-height:1;
     background:transparent;color:var(--cream-dim);border:0;cursor:pointer;
     transition:background .18s ease-out,color .18s ease-out;
   }
