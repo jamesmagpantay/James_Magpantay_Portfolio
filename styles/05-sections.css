@@ -121,12 +121,17 @@
   .row .lg{width:clamp(76px,7vw,104px);height:clamp(60px,5.4vw,80px);object-fit:contain}
   /* ISC2 CC and CCNA carry dark text and outlines on a transparent
      background, invisible against a dark section - they get a light card
-     behind them so the text stays readable in dark mode. Applied in both
-     modes rather than dark only, so the artwork itself is not sized
-     differently (inset by the card's padding) depending on the theme - a
-     visible size jump when toggling was worse than the card showing,
-     invisibly, on the already-light page in light mode. */
-  .chip-lg{background:#fff;border-radius:10px;padding:6px;box-sizing:border-box}
+     behind them so the text stays readable in dark mode. The padding is
+     applied in both modes rather than dark only, so the artwork itself is
+     not sized differently (inset by the card's padding) depending on the
+     theme - a visible size jump when toggling was worse than the card
+     showing in light mode. The background defaults to --light, the same
+     token the section's own light-mode background already is, so the card
+     matches it exactly instead of an approximate literal white; dark mode
+     swaps in an explicit light color, since --light is repointed dark
+     there for everything else in the section. */
+  .chip-lg{background:var(--light);border-radius:10px;padding:6px;box-sizing:border-box}
+  html[data-theme="dark"] .chip-lg{background:#fff}
   .row h3{font-size:clamp(17px,2vw,22px);font-weight:700;letter-spacing:-.01em}
   .row .via{font-size:13px;color:var(--meta)}
   .row .yr{font-family:var(--mono);font-size:11px;color:var(--meta);white-space:nowrap}
