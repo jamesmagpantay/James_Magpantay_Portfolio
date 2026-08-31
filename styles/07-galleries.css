@@ -101,7 +101,7 @@
        section above went dark. The padding alone is enough. */
     padding:clamp(56px,9vh,100px) var(--gut) 0;
   }
-  /* the tile itself: a soft settle-and-fade, every time it crosses into
+  /* the tile itself: a simple rise-and-fade, every time it crosses into
      view - not just the first, so scrolling back down to it later still
      finds it arriving rather than sitting there already-on. This animates
      on a wrapper around the content, not on <footer> itself - opacity on
@@ -109,10 +109,10 @@
      lighter page behind it mid-transition instead of just fading the
      content in over an already-solid dark footer. */
   .f-tile{
-    opacity:0;scale:.97;
-    transition:opacity .7s cubic-bezier(.16,1,.3,1),scale .7s cubic-bezier(.16,1,.3,1);
+    opacity:0;translate:0 30px;
+    transition:opacity .7s cubic-bezier(.16,1,.3,1),translate .7s cubic-bezier(.16,1,.3,1);
   }
-  footer.on .f-tile{opacity:1;scale:1}
+  footer.on .f-tile{opacity:1;translate:0 0}
   /* the CTA text follows a beat behind the tile itself, so the two read as
      one arrival staged in two steps rather than everything landing at once */
   .f-intro{
