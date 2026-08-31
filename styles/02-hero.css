@@ -213,7 +213,13 @@
   @media (max-width:900px){
     .git-line{width:100%;justify-content:space-between}
     .git-marks{display:flex;align-items:center;gap:clamp(14px,4vw,24px)}
-    .git-marks img{height:clamp(64px,20vw,110px);width:auto;filter:drop-shadow(0 3px 8px rgba(0,0,0,.35))}
+    .git-marks img{width:auto;filter:drop-shadow(0 3px 8px rgba(0,0,0,.35))}
+    /* same lockup as the desktop headline mark: seal, then scholarship mark
+       with its caption underneath - just scaled for the row it sits in here */
+    .git-marks > img{height:clamp(64px,20vw,110px)}
+    .git-marks .mk{display:flex;flex-direction:column;align-items:center;gap:6px}
+    .git-marks .mk img{height:clamp(52px,16vw,90px)}
+    .git-marks .mk-cap{font-size:clamp(9px,2.4vw,11px)}
   }
   /* attribution for the CC BY soundtrack - required, so it stays visible */
   .aud-credit{
