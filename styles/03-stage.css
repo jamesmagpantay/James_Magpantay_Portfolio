@@ -39,8 +39,12 @@
     box-shadow:0 8px 20px rgba(23,21,18,.28);
     transition:background .18s ease-out,color .18s ease-out,translate .18s ease-out;
   }
-  .dl a:first-child{background:var(--ink);color:var(--light)}
-  .dl a:last-child{background:var(--chip-bg);color:var(--chip-fg)}
+  .dl a{background:var(--ink);color:var(--light)}
+  /* over the blazer photo, --ink swings light-on-dark or dark-on-light
+     depending on the theme toggle, and either way sits too close to the
+     photo's own tone to read as a button. A fixed, lighter warm brown
+     stays legible against it regardless of theme. */
+  body.offline .dl a{background:#5C4B37;border-color:#5C4B37;color:#F1E7D6}
   .dl a:hover{background:var(--orange);color:#fff;border-color:var(--orange);translate:0 -3px}
   @media (max-width:640px){
     .dl{flex-direction:column;gap:9px;top:73%}
