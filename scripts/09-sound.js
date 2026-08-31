@@ -213,6 +213,9 @@
       function armed(){ return ctx && ctx.state === 'running'; }
       function disarm(){
         EVS.forEach(function(e){ removeEventListener(e, tryUnlock, true); });
+        /* the first-visit banner is waiting to hear this, so it can clear
+           itself the moment sound genuinely works rather than on a timer */
+        document.dispatchEvent(new CustomEvent('sfxunlocked'));
       }
       function tryUnlock(){
         if(armed()) return disarm();
@@ -596,25 +599,25 @@
   paint();
 })();
 
-/* First-visit heads-up, once per visitor: the silent-mode bypass above is a
-   surprise the first time it happens, so it gets a beat at the top of the
-   page instead of waiting to be found tucked into the mobile menu. */
+/* Sound-on heads-up, every load: sfx defaults on but stays silent until a
+   real tap unlocks it (a browser restriction, not a bug - see the sfx
+   unlock above), so this says so at the top of the page each time rather
+   than only on someone's first-ever visit. It clears itself the moment that
+   tap actually lands - sfxunlocked fires right when it does - instead of
+   sitting on a timer, so it never lingers once its own job is done; the
+   timeout below is only a fallback for a visitor who never triggers it at
+   all (reduced motion hides the sfx toggle entirely, for one). */
 (function(){
   if(!matchMedia('(max-width:860px)').matches) return;
   var el = document.getElementById('snote');
   if(!el) return;
-  var KEY = 'snote-seen';
-  var seen = false;
-  try{ seen = localStorage.getItem(KEY) === '1'; }catch(e){}
-  if(seen) return;
-  try{ localStorage.setItem(KEY, '1'); }catch(e){}
 
   function show(){
     requestAnimationFrame(function(){ el.classList.add('on'); });
-    var t = setTimeout(hide, 6000);
-    el.querySelector('.snote-close').addEventListener('click', function(){
-      clearTimeout(t); hide();
-    });
+    var t = setTimeout(hide, 8000);
+    function clear(){ clearTimeout(t); hide(); }
+    el.querySelector('.snote-close').addEventListener('click', clear);
+    document.addEventListener('sfxunlocked', clear);
   }
   function hide(){ el.classList.remove('on'); }
   /* after the curtain has actually lifted, not underneath it */
