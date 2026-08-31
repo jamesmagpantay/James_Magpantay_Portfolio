@@ -20,7 +20,11 @@
     btn.tabIndex = next ? 0 : -1;
     if(next){
       var to = next === 'up' ? 'Rooms I show up in' : 'Off the clock';
-      lab.textContent = to;
+      /* the vbadge corner toggle already shows "Off the clock" on screen at
+         this scroll depth - keep the visible label generic so the two
+         fixed bottom elements never repeat the same words, and save the
+         destination name for the accessible label instead */
+      lab.textContent = next === 'up' ? 'Back up' : 'Next';
       btn.setAttribute('aria-label', 'Jump to ' + to);
     }
   }
