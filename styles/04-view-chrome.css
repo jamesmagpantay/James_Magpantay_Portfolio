@@ -213,20 +213,19 @@
     .bar{
       left:50%;right:auto;top:16px;
       translate:-50% -140%;
-      width:max-content;max-width:min(94vw,1180px);
-      justify-content:flex-start;gap:clamp(18px,2.2vw,32px);
-      padding:8px 14px 8px 20px;
+      width:max-content;max-width:97vw;
+      justify-content:flex-start;gap:clamp(14px,1.8vw,28px);
+      padding:8px 12px 8px 20px;
       border:1px solid var(--bar-line);
       border-radius:999px;
       box-shadow:0 16px 40px rgba(0,0,0,.28);
     }
     .bar.on{translate:-50% 0}
-    .bar-nav{position:relative;gap:2px;flex:none}
+    .bar-nav{position:relative;gap:2px}
     .bar-nav a{
-      position:relative;z-index:1;padding:9px 15px;border-radius:999px;
+      position:relative;z-index:1;padding:9px 14px;border-radius:999px;
       white-space:nowrap;
     }
-    .bar-brand,.bar-right{flex:none}
     .bar-nav a[aria-current="true"]{color:#fff}
     .bar-nav a[aria-current="true"]:hover{color:#fff}
     .bar-nav-glow{
@@ -242,15 +241,15 @@
        had - now that the pill has an edge all the way round, the pulse
        should too */
     .bar.flipping{border-color:var(--orange)}
-  }
-  /* narrower desktop windows shed width in stages rather than clipping
-     anything: the percentage readout goes first since --p already drives
-     the thin progress line under the bar without it, then the control
-     labels collapse to icon-only if it is still tight. */
-  @media (min-width:861px) and (max-width:1100px){
+
+    /* Everything the bar carries - brand, five-item nav, percentage
+       readout, three labelled toggles, the flip control - measures out
+       comfortably wider than a centered pill can afford on an ordinary
+       laptop screen, brief before any narrow-window fallback ever gets a
+       chance to apply. So the readout and the toggle labels are icon-only
+       by default here, not just below some narrow threshold: the bar needs
+       the room on a normal screen already, not only a small one. */
     .bar .sprog{display:none}
-  }
-  @media (min-width:861px) and (max-width:980px){
     .bar .sfx-lab,.bar .mus-lab,.bar .thm-lab{display:none}
     .bar .sfx-btn,.bar .mus-btn,.bar .thm-btn{padding:9px 11px}
   }
