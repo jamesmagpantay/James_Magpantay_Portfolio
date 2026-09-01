@@ -281,6 +281,14 @@ document.documentElement.setAttribute('data-theme', 'dark');
   <span data-view="off" hidden>Off the clock</span>
 </button>
 
+<!-- one-time nudge pointing at the badge above, mobile only - see
+     scripts/07-view-chrome.js. Shown once ever per browser, cancelled
+     early the moment the badge is actually used. -->
+<div class="vhint" id="vhint" role="status">
+  <span>Tap to see the other side</span>
+  <button class="vhint-close" type="button" aria-label="Dismiss">&times;</button>
+</div>
+
 <div class="wipe" id="wipe" aria-hidden="true"></div>
 
 <!-- Site guide: a scripted chat head, not a live AI - it matches keywords

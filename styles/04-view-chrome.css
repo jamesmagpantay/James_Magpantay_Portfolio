@@ -287,17 +287,69 @@
      - aria-label="Switch view" on the button covers the accessible name. */
   .vbadge{
     position:fixed;left:clamp(12px,2vw,24px);bottom:clamp(12px,2vw,24px);z-index:60;
-    width:46px;height:46px;padding:0;gap:0;justify-content:center;
-    background:var(--bar-bg);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
-    box-shadow:0 10px 26px rgba(0,0,0,.35);
+    width:76px;height:76px;padding:0;gap:0;justify-content:center;
+    /* brand orange, not the subdued glass pill every other chrome control
+       uses - the same color language as Bean's own launcher, so this reads
+       as a second thing worth noticing in the corner rather than a faint
+       utility icon (James: "make it more noticable"). border-color is kept
+       transparent rather than removed outright so the shared .bar-flip,
+       .vbadge hover rule below still has something to transition from. */
+    background:var(--orange);border-color:transparent;color:#fff;
+    box-shadow:0 10px 28px rgba(0,0,0,.4),inset 0 0 0 1px rgba(255,255,255,.18);
     opacity:0;pointer-events:none;translate:0 12px;
     transition:opacity .28s ease-out,translate .28s cubic-bezier(.32,.72,0,1),
-               border-color .18s ease-out,background .18s ease-out,color .18s ease-out;
+               border-color .18s ease-out,background .18s ease-out,color .18s ease-out,filter .18s ease-out;
   }
   .vbadge.on{opacity:1;pointer-events:auto;translate:0 0}
-  .vbadge-ico{width:19px;height:19px;flex:none}
+  /* the shared .bar-flip,.vbadge hover rule sets the same orange background
+     this already rests at, so hovering would otherwise show no feedback at
+     all - a slight darken stands in for the color change that rule can't
+     provide here. */
+  .vbadge:hover{filter:brightness(.9)}
+  .vbadge-ico{width:28px;height:28px;flex:none}
   .vbadge .dot,.vbadge span[data-view]{display:none}
   @media (min-width:861px){.vbadge{display:none}}
+  /* matches Bean's own phone-width shrink (.asst-launch, 76px -> 58px
+     under 420px, styles/11-assistant.css) so the two stay the same size
+     at every width, not just above 420px */
+  @media (max-width:420px){
+    .vbadge{width:58px;height:58px}
+    .vbadge-ico{width:22px;height:22px}
+  }
+
+  /* one-time nudge pointing at the badge above (see scripts/07-view-chrome.js
+     for the show/hide logic) - same small-callout language as .snote below,
+     just anchored to the opposite corner and pointing down at what it's
+     about instead of sitting standalone near the top. bottom offset mirrors
+     .vbadge's own left/bottom + its height + a gap, at each of the two
+     breakpoints .vbadge itself uses, so it always sits just above the badge
+     rather than needing separate tuning. */
+  .vhint{
+    position:fixed;left:clamp(12px,2vw,24px);
+    bottom:calc(clamp(12px,2vw,24px) + 76px + 14px);z-index:60;
+    display:flex;align-items:center;gap:10px;width:max-content;max-width:min(240px,calc(100vw - 48px));
+    background:var(--bar-bg);color:var(--cream);
+    -webkit-backdrop-filter:blur(16px) saturate(1.6);backdrop-filter:blur(16px) saturate(1.6);
+    border:1.5px solid var(--pill-line);border-left:3px solid var(--orange);
+    border-radius:14px;padding:12px 10px 12px 14px;
+    box-shadow:0 14px 34px rgba(0,0,0,.38);
+    font-family:var(--mono);font-size:12.5px;letter-spacing:.04em;line-height:1.45;
+    opacity:0;pointer-events:none;translate:0 8px;
+    transition:opacity .3s ease-out,translate .3s cubic-bezier(.32,.72,0,1);
+  }
+  .vhint.on{opacity:1;pointer-events:auto;translate:0 0}
+  .vhint-close{
+    flex:none;width:24px;height:24px;border-radius:50%;
+    display:grid;place-items:center;font-size:16px;line-height:1;
+    background:transparent;color:var(--cream-dim);border:0;cursor:pointer;
+    transition:background .18s ease-out,color .18s ease-out;
+  }
+  .vhint-close:hover{background:var(--orange);color:#fff}
+  @media (min-width:861px){.vhint{display:none}}
+  @media (max-width:420px){
+    .vhint{bottom:calc(clamp(12px,2vw,24px) + 58px + 14px)}
+  }
+  @media (prefers-reduced-motion:reduce){.vhint{transition:opacity .01s linear}}
   /* the flip itself: a short wipe so the change is never missed */
   .wipe{
     position:fixed;inset:0;z-index:95;background:var(--card);
