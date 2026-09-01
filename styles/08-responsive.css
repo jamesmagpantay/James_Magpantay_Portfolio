@@ -191,11 +191,11 @@
     .stage{
       display:flex;flex-direction:column;align-items:center;
       gap:0;padding-bottom:0;
-      /* James: the negative pull-up here used to run the photo straight
-         into the last line of the intro paragraph above it, on real
-         phones. A small positive gap instead, just enough clearance for
-         the text to finish before the figure starts. */
-      margin-top:clamp(20px,4vw,40px);
+      /* James: pulled up until his hair just about grazes the last line
+         of the intro paragraph above it, without actually overlapping
+         the text - too aggressive a pull-up here used to run the photo
+         straight into that last line on real phones. */
+      margin-top:clamp(-40px,-4vw,-16px);
       /* how far the cut-out's hard bottom crop is dissolved away into the
          tile it stands on */
       --sink:clamp(40px,10vw,80px);
