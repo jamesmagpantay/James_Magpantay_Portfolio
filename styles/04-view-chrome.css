@@ -51,24 +51,30 @@
   }
   .sfx-btn:hover{border-color:var(--orange);color:var(--cream)}
   .sfx-btn[aria-pressed="true"]{color:var(--cream);border-color:#5A554C}
-  /* off is the muted-speaker glyph any OS volume control uses, so the icon
-     alone reads as "silent" even where the label is hidden; on swaps to the
-     live level meter, same as the music note swapping for its spinning disc */
+  /* one speaker glyph either way - off wears the muted X any OS volume
+     control uses, on swaps that for a pair of signal arcs that pulse
+     outward, so the icon itself carries the "it's on" state rather than
+     relying on the label alone. */
   .sfx-ico{width:15px;height:15px;flex:none;overflow:visible}
-  .sfx-ico path{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-  .sfx-ico line{stroke:currentColor;stroke-width:2;stroke-linecap:round}
-  .sfx-btn[aria-pressed="true"] .sfx-ico{display:none}
-  .sfx-btn .wave{display:none;align-items:flex-end;gap:2px;height:11px}
-  .sfx-btn .wave i{width:2px;height:3px;background:currentColor;border-radius:1px}
-  .sfx-btn[aria-pressed="true"] .wave{display:flex}
-  .sfx-btn[aria-pressed="true"] .wave i{animation:sfx-w .9s ease-in-out infinite}
-  .sfx-btn[aria-pressed="true"] .wave i:nth-child(2){animation-delay:.15s}
-  .sfx-btn[aria-pressed="true"] .wave i:nth-child(3){animation-delay:.3s}
-  @keyframes sfx-w{0%,100%{height:3px}50%{height:11px}}
+  .sfx-ico path,.sfx-ico line{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .sfx-ico .sfx-signal{display:none}
+  .sfx-btn[aria-pressed="true"] .sfx-ico .sfx-mute{display:none}
+  .sfx-btn[aria-pressed="true"] .sfx-ico .sfx-signal{display:inline}
+  .sfx-btn[aria-pressed="true"] .sfx-wave1{animation:sfx-radiate .9s ease-in-out infinite}
+  .sfx-btn[aria-pressed="true"] .sfx-wave2{animation:sfx-radiate .9s ease-in-out infinite .15s}
+  @keyframes sfx-radiate{0%,100%{opacity:.3}50%{opacity:1}}
+  @media (prefers-reduced-motion: reduce){
+    .sfx-btn[aria-pressed="true"] .sfx-wave1,
+    .sfx-btn[aria-pressed="true"] .sfx-wave2{animation:none;opacity:1}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .sfx-btn[aria-pressed="true"] .sfx-ico{animation:none}
+  }
   /* the control stays on touch: most of the set is wired to clicks, not
      hovers, so a phone still gets the taps, the flips and the modals */
-  /* music pill: same shell as the sound pill, but a turning record instead of
-     a level meter - two different things should not wear one icon */
+  /* music pill: same shell as the sound pill, but the note itself bobs in
+     place once playing rather than swapping to a second icon - one glyph
+     that just starts moving reads as simpler than two icons trading off */
   .mus-btn{
     display:flex;align-items:center;gap:9px;cursor:pointer;white-space:nowrap;
     font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
@@ -82,31 +88,42 @@
   /* a beamed pair of quavers - at 15px a single note with a flag turns to
      mush, while two noteheads under a beam stay legible. It matters more
      than it used to: below 600px these buttons lose their labels and the
-     icon is the only thing naming them. Off is the note; on swaps to a
-     spinning disc, so the icon itself carries the "it's playing" state
-     rather than relying on the label alone. */
-  .mus-ico,.mus-disc{width:15px;height:15px;flex:none;overflow:visible}
+     icon is the only thing naming them. */
+  .mus-ico{width:15px;height:15px;flex:none;overflow:visible}
   .mus-ico path{
     fill:none;stroke:currentColor;stroke-width:2;
     stroke-linecap:round;stroke-linejoin:round;
   }
   .mus-ico circle{fill:currentColor;stroke:none}
-  .mus-disc{display:none}
-  .mus-disc circle{fill:none;stroke:currentColor}
-  .mus-disc .mus-disc-rim{stroke-width:1.6}
-  .mus-disc .mus-disc-groove{stroke-width:1;opacity:.5}
-  .mus-disc .mus-disc-hub{fill:currentColor;stroke:none}
-  .mus-btn[aria-pressed="true"] .mus-ico{display:none}
-  .mus-btn[aria-pressed="true"] .mus-disc{display:block;animation:mus-spin 2.4s linear infinite}
-  @keyframes mus-spin{to{transform:rotate(360deg)}}
+  /* the same note, dancing rather than just nodding once it's actually
+     playing - a bouncy overshoot easing on the whole glyph plus each
+     notehead pulsing on its own offbeat, so it reads as keeping time
+     rather than one flat up-down loop. The icon itself carries the
+     "it's on" state rather than relying on the label alone. */
+  .mus-btn[aria-pressed="true"] .mus-ico{
+    animation:mus-bob .55s cubic-bezier(.34,1.56,.64,1) infinite;
+    transform-origin:9px 20px;
+  }
+  @keyframes mus-bob{
+    0%,100%{translate:0 0;rotate:0deg}
+    30%{translate:0 -3.5px;rotate:-9deg}
+    62%{translate:0 .5px;rotate:6deg}
+  }
+  .mus-btn[aria-pressed="true"] .mus-ico circle{
+    animation:mus-pulse .55s ease-in-out infinite;
+    transform-origin:center;
+  }
+  .mus-btn[aria-pressed="true"] .mus-ico circle:nth-of-type(2){animation-delay:.16s}
+  @keyframes mus-pulse{0%,100%{scale:1}50%{scale:1.22}}
   @media (prefers-reduced-motion: reduce){
-    .mus-btn[aria-pressed="true"] .mus-disc{animation:none}
+    .mus-btn[aria-pressed="true"] .mus-ico,
+    .mus-btn[aria-pressed="true"] .mus-ico circle{animation:none}
   }
   .hero-top .mus-btn{
-    font-size:clamp(13px,1.15vw,17px);padding:12px 21px;gap:12px;
+    font-size:clamp(12.5px,1.05vw,16px);padding:11px 19px;gap:11px;
     border:2px solid var(--orange);color:var(--cream);
   }
-  .hero-top .mus-ico,.hero-top .mus-disc{width:19px;height:19px}
+  .hero-top .mus-ico{width:18px;height:18px}
   .hero-top .mus-btn:hover,
   .hero-top .mus-btn[aria-pressed="true"]{background:var(--orange);color:#fff;border-color:var(--orange)}
   @media (max-width:760px){.hero-top .mus-btn{font-size:12px;padding:10px 15px}}
@@ -139,10 +156,10 @@
   html[data-theme="dark"] .thm-ico .i-sun{display:none}
   html[data-theme="light"] .thm-ico .i-moon{display:none}
   .hero-top .thm-btn{
-    font-size:clamp(13px,1.15vw,17px);padding:12px 21px;gap:12px;
+    font-size:clamp(12.5px,1.05vw,16px);padding:11px 19px;gap:11px;
     border:2px solid var(--orange);color:var(--cream);
   }
-  .hero-top .thm-ico{width:19px;height:19px}
+  .hero-top .thm-ico{width:18px;height:18px}
   .hero-top .thm-btn:hover{background:var(--orange);color:#fff}
   @media (max-width:760px){.hero-top .thm-btn{font-size:12px;padding:10px 15px}}
   @media (max-width:600px){.thm-btn .thm-lab{display:none}.thm-btn{padding:9px 11px}}
@@ -150,18 +167,12 @@
   .hero-top-left{display:flex;align-items:center;gap:clamp(10px,1.6vw,22px)}
   /* the hero control is the one people meet first - it wears the accent */
   .hero-top .sfx-btn{
-    font-size:clamp(13px,1.15vw,17px);padding:12px 21px;gap:12px;
+    font-size:clamp(12.5px,1.05vw,16px);padding:11px 19px;gap:11px;
     border:2px solid var(--orange);color:var(--cream);
   }
-  .hero-top .sfx-ico{width:19px;height:19px}
-  .hero-top .sfx-btn .wave{height:15px}
-  .hero-top .sfx-btn .wave i{width:3px;background:var(--orange)}
-  .hero-top .sfx-btn[aria-pressed="true"] .wave i{animation-name:sfx-wh}
-  @keyframes sfx-wh{0%,100%{height:4px}50%{height:15px}}
+  .hero-top .sfx-ico{width:18px;height:18px}
   .hero-top .sfx-btn:hover,
   .hero-top .sfx-btn[aria-pressed="true"]{background:var(--orange);color:#fff;border-color:var(--orange)}
-  .hero-top .sfx-btn:hover .wave i,
-  .hero-top .sfx-btn[aria-pressed="true"] .wave i{background:#fff}
   /* three soft pulses on arrival, then it stops asking */
   .hero-top .sfx-btn[aria-pressed="false"]{animation:sfx-pulse 2.2s ease-out 1.4s 3}
   @keyframes sfx-pulse{

@@ -21,12 +21,14 @@
     display:flex;flex-direction:column;gap:clamp(10px,1.1vw,14px);
     border:1px solid var(--line);border-radius:16px;
     padding:clamp(16px,1.7vw,22px);
-    transition:translate .32s cubic-bezier(.22,.61,.36,1),
+    transition:translate .32s cubic-bezier(.22,.61,.36,1),scale .32s cubic-bezier(.22,.61,.36,1),
                box-shadow .32s ease-out,border-color .32s ease-out;
   }
   .edu-card:hover{
-    translate:0 -6px;border-color:var(--line);
+    translate:0 -6px;scale:1.035;border-color:var(--line);
     box-shadow:0 20px 40px rgba(23,21,18,.14);
+    /* the whole tile grows over its grid neighbours rather than under them */
+    position:relative;z-index:1;
   }
   .edu-head{display:flex;align-items:center;gap:clamp(12px,1.3vw,16px)}
   .edu-lg{
@@ -66,7 +68,7 @@
   .edu-card:hover .edu-lg{rotate:-8deg;scale:1.08}
   @media (prefers-reduced-motion:reduce){
     .edu-card{transition:border-color .2s ease-out}
-    .edu-card:hover{translate:0 0}
+    .edu-card:hover{translate:0 0;scale:1}
     .edu-lg{transition:none}
     .edu-card:hover .edu-lg{rotate:0deg;scale:1}
   }
@@ -86,6 +88,9 @@
     grid-template-columns:repeat(auto-fill,minmax(calc(var(--sz) * 1.35 + 22px),1fr));
   }
   .tkg-main .tks{--sz:clamp(56px,5.2vw,84px)}
+  /* games - one flat size for every group, no featured row, just bigger
+     across the board than the tech stack's default */
+  #games .tks{--sz:clamp(64px,5.8vw,96px)}
   .tk{
     display:flex;flex-direction:column;align-items:center;gap:9px;text-align:center;
     transition:translate .18s ease-out;
@@ -99,6 +104,12 @@
   }
   .tk-n{font-size:clamp(12px,.92vw,14px);font-weight:700;letter-spacing:-.01em;line-height:1.2}
   .tkg-main .tk-n{font-size:clamp(14px,1.15vw,18px)}
+  /* the reverse of .chip-lg further down (the cert ledger's light card) -
+     a pale or white-on-transparent mark (a game or show logo cut for a
+     dark splash screen, say) needs a dark backdrop to read at all against
+     this page's light theme, not a light one. Shared with the ledger
+     below, not scoped to .tk, so either can reach for it. */
+  .chip-dk{background:#15130f;border-radius:10px;padding:6px;box-sizing:border-box}
 
   /* certification ledger */
   .ledger{
@@ -112,7 +123,23 @@
     align-items:center;
     border-bottom:1px solid var(--line);padding:clamp(18px,1.8vw,24px) 0;
   }
-  .row .lg{width:clamp(76px,7vw,104px);height:clamp(60px,5.4vw,80px);object-fit:contain}
+  /* --k lifts the naturally small marks the same way the tech-stack and
+     games grids already do, so a padded wordmark and a full-bleed poster
+     read as the same size instead of whichever fills its box more */
+  .row .lg{width:clamp(76px,7vw,104px);height:clamp(60px,5.4vw,80px);object-fit:contain;scale:var(--k,1)}
+  /* the one row that isn't sharing the two-column grid with anything -
+     the favorite gets the full width to itself, and a poster sized to
+     match, well ahead of the other two posters below it. Scoped to the
+     movies ledger only - the cert ledger has more than one earned row
+     and those are meant to stay in the two-column grid. */
+  #movies .row.earned{grid-column:1 / -1}
+  .row .lg.lg-feat{
+    width:clamp(130px,11.5vw,186px);height:clamp(186px,16.5vw,266px);
+    border-radius:6px;object-fit:cover;scale:1;
+  }
+  @media (max-width:640px){
+    .row .lg.lg-feat{width:clamp(100px,26vw,140px);height:clamp(144px,37vw,200px)}
+  }
   /* ISC2 CC and CCNA carry dark text and outlines on a transparent
      background, invisible against a dark section - they get a light card
      behind them so the text stays readable in dark mode. The padding is

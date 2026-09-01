@@ -1,0 +1,217 @@
+  /* ===== ambient sky layer: stars/shooting stars in dark, birds in light =====
+     Fixed over the whole page so it reads top-to-bottom as you scroll,
+     rather than scoped to one section. The one place it must not draw is
+     over the portrait photo - 15-sky.js tracks .stage-photo's live
+     viewport position and writes it into --hole-x/--hole-y/--hole-rx/ry,
+     which the mask below punches into a soft-edged hole so the photo
+     reads as sitting in front of the sky rather than having stars drawn
+     on him. Screen/multiply-style blending isn't relied on for that -
+     the mask is exact and works regardless of what's behind it. Pure
+     decoration throughout: no pointer-events, fully stilled under
+     prefers-reduced-motion. */
+  .sky-fx{
+    position:fixed;inset:0;z-index:3;pointer-events:none;overflow:hidden;
+    -webkit-mask-image:radial-gradient(ellipse var(--hole-rx,0px) var(--hole-ry,0px) at var(--hole-x,-999px) var(--hole-y,-999px),transparent 0%,transparent 82%,black 100%);
+    mask-image:radial-gradient(ellipse var(--hole-rx,0px) var(--hole-ry,0px) at var(--hole-x,-999px) var(--hole-y,-999px),transparent 0%,transparent 82%,black 100%);
+  }
+
+  /* ---------- stars (dark theme only) ---------- */
+  .sky-stars{
+    position:absolute;inset:-10% -10%;
+    background-repeat:repeat;
+    mix-blend-mode:screen;opacity:0;
+    transition:opacity 1.6s ease-out;
+  }
+  html[data-theme="dark"] .sky-stars{opacity:.85}
+  .sky-stars.s-a{
+    background-image:
+      radial-gradient(1.6px 1.6px at 8% 12%,#fff,transparent),
+      radial-gradient(1.2px 1.2px at 22% 68%,#fff,transparent),
+      radial-gradient(1.4px 1.4px at 38% 24%,#fff,transparent),
+      radial-gradient(1px 1px at 52% 82%,#fff,transparent),
+      radial-gradient(1.6px 1.6px at 66% 14%,#fff,transparent),
+      radial-gradient(1.1px 1.1px at 78% 56%,#fff,transparent),
+      radial-gradient(1.3px 1.3px at 90% 30%,#fff,transparent),
+      radial-gradient(1px 1px at 12% 90%,#fff,transparent),
+      radial-gradient(1.4px 1.4px at 46% 48%,#fff,transparent),
+      radial-gradient(1.2px 1.2px at 84% 82%,#fff,transparent);
+    background-size:340px 340px;
+  }
+  /* the twinkle keyframes set their own opacity each frame, which would
+     keep overriding the plain opacity:0 above for as long as the
+     animation runs - so the animation itself only runs in dark theme,
+     rather than trying to fight it with a higher-specificity opacity */
+  html[data-theme="dark"] .sky-stars.s-a{animation:sky-twinkle-a 6s ease-in-out infinite}
+  .sky-stars.s-b{
+    background-image:
+      radial-gradient(1px 1px at 15% 40%,#fff,transparent),
+      radial-gradient(1.3px 1.3px at 30% 88%,#fff,transparent),
+      radial-gradient(1px 1px at 44% 10%,#fff,transparent),
+      radial-gradient(1.2px 1.2px at 60% 62%,#fff,transparent),
+      radial-gradient(1px 1px at 72% 92%,#fff,transparent),
+      radial-gradient(1.4px 1.4px at 88% 20%,#fff,transparent),
+      radial-gradient(1px 1px at 96% 70%,#fff,transparent),
+      radial-gradient(1.2px 1.2px at 5% 62%,#fff,transparent);
+    background-size:410px 410px;
+  }
+  html[data-theme="dark"] .sky-stars.s-b{animation:sky-twinkle-b 7.5s ease-in-out infinite 1.2s}
+  @keyframes sky-twinkle-a{0%,100%{opacity:.55}50%{opacity:1}}
+  @keyframes sky-twinkle-b{0%,100%{opacity:.35}50%{opacity:.85}}
+
+  /* ---------- shooting stars (dark theme only) ---------- */
+  .sky-shoot{
+    position:absolute;top:-4%;left:var(--x,10%);
+    width:110px;height:2px;border-radius:2px;
+    background:linear-gradient(90deg,#fff,rgba(255,255,255,0));
+    opacity:0;mix-blend-mode:screen;display:none;
+    rotate:32deg;transform-origin:0 0;
+    animation:sky-shoot 26s linear infinite;
+  }
+  html[data-theme="dark"] .sky-shoot{display:block}
+  @keyframes sky-shoot{
+    0%{opacity:0;translate:0 0}
+    2%{opacity:1}
+    10%{opacity:0;translate:70vw 70vh}
+    100%{opacity:0;translate:70vw 70vh}
+  }
+  .sky-shoot.sh1{--x:6%;animation-delay:0s}
+  .sky-shoot.sh2{--x:38%;animation-delay:9s}
+  .sky-shoot.sh3{--x:66%;animation-delay:17s}
+  .sky-shoot.sh4{--x:82%;animation-delay:4.5s;width:80px}
+
+  /* burst: fresh load, refresh, and a mode change all fire a denser, faster
+     round of shooting stars/birds (toggled by JS adding this class for a
+     few seconds) before it settles back into the slow idle cycle above -
+     each half scoped to its own theme so a mode change never leaves the
+     wrong one lit for those few seconds */
+  html[data-theme="dark"] .sky-fx.burst .sky-shoot{animation-duration:2.2s;animation-delay:var(--bd,0s)}
+  .sky-fx.burst .sky-shoot.sh1{--bd:0s}
+  .sky-fx.burst .sky-shoot.sh2{--bd:.35s}
+  .sky-fx.burst .sky-shoot.sh3{--bd:.7s}
+  .sky-fx.burst .sky-shoot.sh4{--bd:1.05s}
+  html[data-theme="dark"] .sky-fx.burst .sky-stars{opacity:1}
+
+  /* ---------- birds (light theme only) ---------- */
+  .sky-birds{position:absolute;inset:0;color:rgba(21,23,26,.45);display:none}
+  html[data-theme="light"] .sky-birds{display:block}
+  .bird{
+    position:absolute;width:clamp(26px,3.2vw,40px);height:auto;
+    opacity:0;
+    animation-name:sky-fly,sky-flap;
+    animation-timing-function:linear,ease-in-out;
+    animation-iteration-count:infinite,infinite;
+    transform-origin:50% 50%;
+  }
+  /* four flight paths - up-right (default), a mirrored up-left, a shallow
+     near-horizontal one, and a steep near-vertical climb - so the birds
+     read as actually going different places, not one shape recolored.
+     dir-b reuses the flap keyframes but flipped, so it stays mirrored
+     through the whole wingbeat instead of un-flipping every other frame. */
+  .bird.dir-b{animation-name:sky-fly-b,sky-flap-b}
+  .bird.dir-c{animation-name:sky-fly-c,sky-flap}
+  .bird.dir-d{animation-name:sky-fly-d,sky-flap}
+  @keyframes sky-fly{
+    0%{opacity:0;translate:-10vw 0}
+    6%{opacity:.75}
+    50%{opacity:.75}
+    54%{opacity:0}
+    100%{opacity:0;translate:80vw -60vh}
+  }
+  @keyframes sky-fly-b{
+    0%{opacity:0;translate:110vw 0}
+    6%{opacity:.75}
+    50%{opacity:.75}
+    54%{opacity:0}
+    100%{opacity:0;translate:15vw -55vh}
+  }
+  @keyframes sky-fly-c{
+    0%{opacity:0;translate:-10vw 6vh}
+    6%{opacity:.7}
+    50%{opacity:.7}
+    54%{opacity:0}
+    100%{opacity:0;translate:95vw -14vh}
+  }
+  @keyframes sky-fly-d{
+    0%{opacity:0;translate:22vw 18vh}
+    6%{opacity:.7}
+    50%{opacity:.7}
+    54%{opacity:0}
+    100%{opacity:0;translate:38vw -74vh}
+  }
+  @keyframes sky-flap{0%,100%{scale:1 1}50%{scale:1 .55}}
+  @keyframes sky-flap-b{0%,100%{scale:-1 1}50%{scale:-1 .55}}
+
+  /* sizes span a much wider range than before - tiny (far/background birds)
+     up to oversized (close/foreground ones) - so the flock reads as birds
+     at different distances, not one silhouette repeated at similar scale */
+  /* flock 1: cluster, up-right, fast - a wingbeat apart, not side by side,
+     so they read as a small group in loose formation */
+  .bird.b1 {top:93%;left:2%; animation-delay:0s,  0s;  width:clamp(30px,3.8vw,46px);animation-duration:15s,.44s}
+  .bird.b2 {top:90%;left:0%; animation-delay:.3s,.11s;width:clamp(16px,2vw,24px);  animation-duration:15s,.4s}
+  .bird.b3 {top:96%;left:4%; animation-delay:.6s,.22s;width:clamp(24px,3vw,36px);  animation-duration:15s,.5s}
+  .bird.b17{top:88%;left:-2%;animation-delay:.9s,.33s;width:clamp(13px,1.6vw,19px);animation-duration:15s,.36s}
+  /* flock 2: cluster, mirrored up-left, medium speed */
+  .bird.b4 {top:52%;left:96%;animation-delay:3s,  .06s;width:clamp(28px,3.5vw,42px);animation-duration:21s,.46s}
+  .bird.b5 {top:49%;left:99%;animation-delay:3.3s,.17s;width:clamp(15px,1.9vw,22px);animation-duration:21s,.42s}
+  .bird.b6 {top:55%;left:94%;animation-delay:3.6s,.28s;width:clamp(21px,2.6vw,31px);animation-duration:21s,.52s}
+  .bird.b18{top:58%;left:101%;animation-delay:3.9s,.39s;width:clamp(35px,4.4vw,52px);animation-duration:21s,.58s}
+  /* flock 3: cluster, steep climb, slow */
+  .bird.b7 {top:34%;left:20%;animation-delay:8s,  .09s;width:clamp(38px,4.8vw,56px);animation-duration:32s,.6s}
+  .bird.b8 {top:38%;left:24%;animation-delay:8.4s,.2s; width:clamp(17px,2.1vw,25px);animation-duration:32s,.5s}
+  .bird.b19{top:30%;left:16%;animation-delay:8.8s,.31s;width:clamp(25px,3.1vw,37px);animation-duration:32s,.55s}
+  /* solo birds: mixed directions, speeds, distances, sizes - a new one
+     lifts off every couple of seconds instead of every few tens of
+     seconds, sized anywhere from a distant speck to an oversized close one */
+  .bird.b9 {top:15%;animation-delay:1s,   .08s;width:clamp(32px,4vw,48px);animation-duration:26s,.5s}
+  .bird.b10{top:5%; animation-delay:6s,   .18s;width:clamp(14px,1.7vw,20px);animation-duration:12s,.36s}
+  .bird.b11{top:70%;animation-delay:10s,  .27s;width:clamp(27px,3.3vw,40px);animation-duration:24s,.48s}
+  .bird.b12{top:80%;animation-delay:14s,  .05s;width:clamp(12px,1.5vw,17px);animation-duration:30s,.55s}
+  .bird.b13{top:45%;animation-delay:18s,  .15s;width:clamp(40px,5vw,58px);animation-duration:16s,.4s}
+  .bird.b14{top:25%;animation-delay:21s,  .24s;width:clamp(18px,2.2vw,26px);animation-duration:21s,.44s}
+  .bird.b15{top:88%;animation-delay:5s,   .12s;width:clamp(33px,4.1vw,49px);animation-duration:15s,.38s}
+  .bird.b16{top:60%;animation-delay:12s,  .3s; width:clamp(20px,2.5vw,29px);animation-duration:19s,.46s}
+  .bird.b20{top:10%;animation-delay:2.5s, .14s;width:clamp(29px,3.6vw,43px);animation-duration:18s,.42s}
+  .bird.b21{top:78%;animation-delay:16s,  .21s;width:clamp(15px,1.9vw,22px);animation-duration:27s,.5s}
+  .bird.b22{top:35%;animation-delay:23s,  .09s;width:clamp(36px,4.5vw,53px);animation-duration:22s,.52s}
+  .bird.b23{top:65%;animation-delay:19.5s,.26s;width:clamp(19px,2.4vw,28px);animation-duration:29s,.44s}
+  .bird.b24{top:8%; animation-delay:9.5s, .17s;width:clamp(26px,3.2vw,39px);animation-duration:14s,.4s}
+  .bird.b25{top:18%;animation-delay:1.8s, .19s;width:clamp(31px,3.9vw,47px);animation-duration:25s,.48s}
+  .bird.b26{top:83%;animation-delay:7.5s, .22s;width:clamp(13px,1.6vw,18px);animation-duration:20s,.38s}
+  .bird.b27{top:42%;animation-delay:11.5s,.06s;width:clamp(37px,4.6vw,54px);animation-duration:13s,.42s}
+  .bird.b28{top:56%;animation-delay:15.5s,.28s;width:clamp(20px,2.5vw,29px);animation-duration:28s,.5s}
+  .bird.b29{top:72%;animation-delay:4.6s, .11s;width:clamp(23px,2.9vw,34px);animation-duration:18s,.4s}
+  .bird.b30{top:12%;animation-delay:20s,  .33s;width:clamp(16px,2vw,23px);animation-duration:24s,.36s}
+  .bird.b31{top:95%;animation-delay:17s,  .04s;width:clamp(41px,5.2vw,60px);animation-duration:17s,.56s}
+  .bird.b32{top:29%;animation-delay:24.5s,.15s;width:clamp(19px,2.4vw,27px);animation-duration:23s,.44s}
+  html[data-theme="light"] .sky-fx.burst .bird{animation-duration:9s,.5s}
+
+  /* ---------- sunlit dust motes (light theme only) ---------- */
+  /* the light theme's twinkle - warm-toned instead of starlight-white, and
+     no screen blend this time (the backdrop is already light, so a blend
+     built for reading against dark surfaces would just vanish) */
+  .sky-dust{
+    position:absolute;inset:-10% -10%;
+    background-repeat:repeat;opacity:0;
+    background-image:
+      radial-gradient(1.3px 1.3px at 12% 22%,rgba(150,120,40,.55),transparent),
+      radial-gradient(1px 1px at 30% 68%,rgba(150,120,40,.45),transparent),
+      radial-gradient(1.4px 1.4px at 48% 14%,rgba(150,120,40,.5),transparent),
+      radial-gradient(1px 1px at 62% 80%,rgba(150,120,40,.4),transparent),
+      radial-gradient(1.2px 1.2px at 78% 36%,rgba(150,120,40,.5),transparent),
+      radial-gradient(1px 1px at 90% 62%,rgba(150,120,40,.4),transparent),
+      radial-gradient(1.3px 1.3px at 6% 88%,rgba(150,120,40,.45),transparent);
+    background-size:300px 300px;
+    transition:opacity 1.6s ease-out;
+  }
+  html[data-theme="light"] .sky-dust{opacity:.5}
+  html[data-theme="light"] .sky-dust{animation:sky-dust-twinkle 5.5s ease-in-out infinite}
+  @keyframes sky-dust-twinkle{0%,100%{opacity:.3}50%{opacity:.6}}
+  html[data-theme="light"] .sky-fx.burst .sky-dust{opacity:.75}
+
+  @media (prefers-reduced-motion:reduce){
+    .sky-stars,.sky-shoot,.bird,.sky-dust{animation:none!important}
+    html[data-theme="dark"] .sky-stars{opacity:.5}
+    html[data-theme="light"] .sky-dust{opacity:.35}
+    .sky-shoot{opacity:0!important}
+    .bird{opacity:0!important}
+  }

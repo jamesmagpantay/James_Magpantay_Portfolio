@@ -131,6 +131,87 @@
     s.start(t, Math.random() * .4); s.stop(t + dur + .05);
   }
 
+  /* Actual pitch, not filtered noise - the one deliberate break from "no
+     oscillators anywhere" above. A cricket or bird call is a real tone
+     with a real pitch contour; noise through a bandpass can sweep but
+     never rings like one, so this is the only path that can pass for the
+     real thing. Used only by the two calls below it, never by UI sfx. */
+  function tone(t, f0, f1, dur, peak, kind){
+    var o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = kind || 'sine';
+    o.frequency.setValueAtTime(f0 * vary(), t);
+    if(f1) o.frequency.exponentialRampToValueAtTime(f1 * vary(), t + dur);
+    g.gain.setValueAtTime(.0001, t);
+    g.gain.exponentialRampToValueAtTime(peak, t + dur * .25);
+    g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+    o.connect(g); g.connect(master);
+    o.start(t); o.stop(t + dur + .02);
+  }
+  /* a cricket call is a fast trill at one near-constant pitch, not a sweep -
+     a short train of 3-6 clicks a few milliseconds apart */
+  function cricket(at){
+    var base = 4000 + Math.random() * 700, n = 3 + (Math.random() * 4 | 0), t = at;
+    for(var i = 0; i < n; i++){
+      tone(t, base + Math.random() * 80, null, .016 + Math.random() * .008,
+           .11 + Math.random() * .05, 'triangle');
+      t += .024 + Math.random() * .012;
+    }
+  }
+  /* A plain exponential sweep reads as a synth blip, not a bird - a real
+     whistle flutters. This is a sine under a fast, shallow vibrato (birds
+     sit around 25-40Hz) with a soft breath of noise on the attack, the
+     little chiff you hear before the pitch of a real tweet settles in. */
+  function warble(t, f0, f1, dur, peak){
+    var o = ctx.createOscillator(), lfo = ctx.createOscillator(),
+        lfoGain = ctx.createGain(), g = ctx.createGain(),
+        n = ctx.createBufferSource(), nf = ctx.createBiquadFilter(), ng = ctx.createGain();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(f0 * vary(), t);
+    if(f1) o.frequency.exponentialRampToValueAtTime(f1 * vary(), t + dur);
+    lfo.type = 'sine'; lfo.frequency.value = 26 + Math.random() * 14;
+    lfoGain.gain.value = f0 * .045;
+    lfo.connect(lfoGain); lfoGain.connect(o.frequency);
+    g.gain.setValueAtTime(.0001, t);
+    g.gain.exponentialRampToValueAtTime(peak, t + dur * .22);
+    g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+    o.connect(g); g.connect(master);
+    n.buffer = noise;
+    nf.type = 'bandpass'; nf.frequency.value = f0; nf.Q.value = 3;
+    ng.gain.setValueAtTime(.0001, t);
+    ng.gain.exponentialRampToValueAtTime(peak * .35, t + .006);
+    ng.gain.exponentialRampToValueAtTime(.0001, t + .03);
+    n.connect(nf); nf.connect(ng); ng.connect(master);
+    o.start(t); lfo.start(t); n.start(t, Math.random() * .4);
+    o.stop(t + dur + .04); lfo.stop(t + dur + .04); n.stop(t + .06);
+  }
+  /* three different species rather than one repeated shape: a rising
+     tweet, a dip-then-rise warble, and a fast three-note trill - picked
+     at random so the birds don't all sound like the same one bird */
+  function bird(at){
+    var kind = Math.random();
+    if(kind < .4){
+      /* rising tweet, sometimes answered by a second, softer one */
+      var f0 = 2000 + Math.random() * 700, f1 = f0 + 900 + Math.random() * 800;
+      warble(at, f0, f1, .10 + Math.random() * .05, .20 + Math.random() * .08);
+      if(Math.random() < .6){
+        warble(at + .12 + Math.random() * .05, f1 * .92, f0 * 1.08,
+               .08 + Math.random() * .04, .15 + Math.random() * .06);
+      }
+    } else if(kind < .7){
+      /* dip then rise - a single note that bends down before climbing out */
+      var mid = 1900 + Math.random() * 500, peak2 = mid + 1400 + Math.random() * 600;
+      warble(at, mid + 500, mid, .06, .14 + Math.random() * .05);
+      warble(at + .06, mid, peak2, .11 + Math.random() * .05, .19 + Math.random() * .07);
+    } else {
+      /* fast three-note trill, climbing */
+      var base = 2200 + Math.random() * 500, t = at;
+      for(var i = 0; i < 3; i++){
+        warble(t, base + i * 260, base + i * 260 + 180, .055 + Math.random() * .02,
+               .15 + Math.random() * .06);
+        t += .07 + Math.random() * .02;
+      }
+    }
+  }
   /* five keys off the same board - alphas differ slightly, as they do in life */
   var KEYS = [
     {cut:3600, r1:205, r2:820,  dur:.055, peak:.90},
@@ -165,7 +246,23 @@
     revealPro: function(){ thock({cut:2500, r1:158, r2:600, dur:.10, peak:.46}); shimmer(.42, 430, 2800, .17); },
     revealOff: function(){ thock({cut:2100, r1:132, r2:470, dur:.12, peak:.46}); shimmer(.50, 320, 1700, .19); },
     flip:  function(){ thock({cut:2600, r1:132, r2:480, dur:.115, peak:1.0});
-                       thock({cut:3400, r1:240, r2:900, dur:.045, peak:.40}, ctx.currentTime + .075); }
+                       thock({cut:3400, r1:240, r2:900, dur:.045, peak:.40}, ctx.currentTime + .075); },
+    /* the theme toggle's entrance ambiance - a one-shot wash, not a loop,
+       so it plays through once and is gone rather than lingering. Night is
+       a low dusk drone under a couple of cricket trills, staggered so they
+       don't all trip at once like a real patch of them wouldn't; morning
+       is the same drone inverted - brighter, rising - under a few birds
+       calling back and forth. */
+    night: function(){
+      shimmer(2.4, 820, 130, .15);
+      var n = 2 + (Math.random() * 2 | 0);
+      for(var i = 0; i < n; i++) cricket(ctx.currentTime + .25 + Math.random() * 1.7);
+    },
+    morning: function(){
+      shimmer(1.9, 480, 2300, .13);
+      var n = 2 + (Math.random() * 2 | 0);
+      for(var i = 0; i < n; i++) bird(ctx.currentTime + .12 + Math.random() * 1.4);
+    }
   };
   /* Which sounds pull the music down under them. Deliberately not the whole
      set: the scroll detent fires up to nine times a second and the key sounds
@@ -173,7 +270,7 @@
      would leave the music pumping continuously. Only discrete, meaningful
      events - the ones you are meant to notice - get to interrupt it. */
   var DUCK = {click:1, big:1, open:1, close:1, land:1, flip:1,
-              revealPro:1, revealOff:1};
+              revealPro:1, revealOff:1, night:1, morning:1};
 
   function play(name, arg){
     if(!on) return;
@@ -257,7 +354,7 @@
       play('tick');
     });
   }
-  var HOVER = '.bar-nav a, .hero-top nav a, .git, .sticker, .bar-flip, .vbadge, .sfx-btn, .xp-row, .xp-cue, .proj, .tk, .ledger .row, .bar-brand, .f-links a, .dl a, .ph, .scroll-hint';
+  var HOVER = '.bar-nav a, .hero-top nav a, .git, .sticker, .bar-flip, .vbadge, .sfx-btn, .mus-btn, .thm-btn, .xp-row, .xp-cue, .proj, .tk, .ledger .row, .edu-card, .bar-brand, .f-links a, .dl a, .ph, .scroll-hint';
   document.querySelectorAll(HOVER).forEach(hover);
   /* the "see all" overlays clone .xp-row/.proj/.ph cards well after this ran,
      so the clones never got the listener above - 11-see-all.js calls this
@@ -267,7 +364,7 @@
   window.wireHoverSound = function(root){
     root.querySelectorAll('.xp-row, .proj, .ph').forEach(hover);
   };
-  var CLICK = '.git, .sticker, .bar-nav a, .hero-top nav a, .proj, .tk, .ledger .row, .f-links a, .dl a, .ph, .brand, .bar-brand, .scroll-hint';
+  var CLICK = '.git, .sticker, .bar-nav a, .hero-top nav a, .proj, .tk, .ledger .row, .edu-card, .f-links a, .dl a, .ph, .brand, .bar-brand, .scroll-hint';
   document.querySelectorAll(CLICK)
     .forEach(function(el){ el.addEventListener('click', function(){ play('click'); }); });
   /* the headline CTAs and project cards get the heavier key */

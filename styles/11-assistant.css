@@ -1,0 +1,413 @@
+  /* ---- Site guide: a chat head docked bottom-right, in reach the whole
+     scroll like the corner badge, but never in its way. Everything here
+     reads var() tokens only, so it re-themes for free across dark/light
+     and the security/off-the-clock flip - no separate palette to maintain. ---- */
+
+  .asst{position:fixed;right:clamp(16px,2vw,28px);bottom:clamp(16px,2vw,28px);z-index:70;
+    font-family:var(--body);}
+  /* below 861px the corner view-badge docks in the same spot once the hero
+     has scrolled past - lift the guide clear of it rather than chase its
+     own show/hide timing */
+  @media (max-width:860px){
+    .asst{bottom:calc(clamp(16px,2vw,28px) + 66px)}
+  }
+
+  /* the quip: a little callout that trails the chathead while it's being
+     dragged or thrown, positioned in real viewport pixels by JS every
+     frame (positionQuip()) rather than pinned to .asst's own box the way
+     .asst-bubble is - it has to keep up with wherever the ball currently
+     is, which during a throw is nowhere near the corner. Never receives
+     pointer events, and stays out of the way entirely (`display:none`
+     under the hood via [hidden]-style toggling) once nothing's showing. */
+  .asst-quip{
+    position:fixed;left:0;top:0;z-index:75;pointer-events:none;
+    translate:-50% -100%;
+    background:var(--bar-bg);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+    border:1px solid var(--bar-line);border-radius:12px;padding:6px 11px;
+    font-family:var(--mono);font-size:12px;font-weight:700;color:var(--cream);
+    white-space:nowrap;box-shadow:0 6px 18px rgba(0,0,0,.3);
+    opacity:0;scale:.7;
+    transition:opacity .15s ease-out,scale .15s cubic-bezier(.34,1.56,.64,1);
+  }
+  .asst-quip.on{opacity:1;scale:1}
+  @media (prefers-reduced-motion:reduce){
+    .asst-quip{transition:opacity .1s linear}
+  }
+
+  /* the whole button is the thing that roams (see JS) - a bouncy overshoot
+     easing on the way there and back so each hop reads as a little leap
+     rather than a slide. It always returns to translate:0/rotate:0 before
+     the bubble or panel opens, since both are positioned relative to this
+     element's home spot, not wherever it's currently wandered off to. */
+  .asst-launch{
+    position:relative;width:76px;height:76px;border-radius:50%;padding:0;
+    background:var(--orange);box-shadow:0 12px 30px rgba(0,0,0,.4),inset 0 0 0 1px rgba(255,255,255,.18);
+    border:none;cursor:pointer;touch-action:none;
+    transition:box-shadow .18s var(--mo-ease),
+      translate .85s cubic-bezier(.34,1.56,.64,1),
+      rotate .95s cubic-bezier(.34,1.56,.64,1) .04s,
+      scale .5s cubic-bezier(.34,1.56,.64,1);
+  }
+  @media (prefers-reduced-motion:reduce){
+    .asst-launch{transition:box-shadow .18s var(--mo-ease)}
+  }
+  /* a grab cursor on hover is the standard "this is draggable" signal -
+     :active below still wins once you're actually holding him down */
+  .asst-launch:hover{box-shadow:0 16px 34px rgba(0,0,0,.45),inset 0 0 0 1px rgba(255,255,255,.25);cursor:grab}
+  .asst-launch:hover .asst-mk{rotate:-6deg;scale:1.06}
+  .asst.open .asst-launch{box-shadow:0 12px 30px rgba(0,0,0,.4),inset 0 0 0 2px #fff}
+  /* while being dragged or mid-throw, JS drives translate/rotate/scale every
+     frame directly - the eased transition above would fight that and lag
+     a frame behind the cursor, so this cuts it out entirely for those two
+     properties (box-shadow keeps its own transition). Removed the moment
+     the throw settles or a plain click/tap is recognised as not a drag. */
+  .asst-launch.no-glide{transition:box-shadow .18s var(--mo-ease),scale .18s var(--mo-ease)}
+  .asst-launch:active{cursor:grabbing}
+
+  /* the warp: a cartoon squash-and-stretch on the circle itself each time it
+     roams (see JS), not just a moving dot. JS picks -x or -y depending on
+     whether that hop is more horizontal or vertical, so the stretch reads
+     as aligned with the direction it's actually travelling rather than a
+     generic wobble. One-shot per hop - JS removes and re-adds the class
+     (forcing a reflow between) so it retriggers every time, the same
+     pattern as .pop above. */
+  .asst-launch.warp-x{animation:asstWarpX .85s cubic-bezier(.3,0,.2,1) 1}
+  .asst-launch.warp-y{animation:asstWarpY .85s cubic-bezier(.3,0,.2,1) 1}
+  @keyframes asstWarpX{
+    0%{scale:1 1;border-radius:50%}
+    14%{scale:1.38 .68;border-radius:60% 40% 40% 60% / 68% 68% 32% 32%}
+    32%{scale:.78 1.22;border-radius:38% 62% 62% 38% / 46% 46% 54% 54%}
+    55%{scale:1.16 .88;border-radius:54% 46% 46% 54% / 58% 58% 42% 42%}
+    78%{scale:.94 1.06;border-radius:50%}
+    100%{scale:1 1;border-radius:50%}
+  }
+  @keyframes asstWarpY{
+    0%{scale:1 1;border-radius:50%}
+    14%{scale:.68 1.38;border-radius:68% 68% 32% 32% / 60% 40% 40% 60%}
+    32%{scale:1.22 .78;border-radius:46% 46% 54% 54% / 38% 62% 62% 38%}
+    55%{scale:.88 1.16;border-radius:58% 58% 42% 42% / 54% 46% 46% 54%}
+    78%{scale:1.06 .94;border-radius:50%}
+    100%{scale:1 1;border-radius:50%}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .asst-launch.warp-x,.asst-launch.warp-y{animation:none}
+  }
+
+  /* the basketball bounce: a hard, fast squash on every floor/wall impact
+     while he's being thrown (see JS physics loop) - quicker and flatter
+     than the warp above, because an impact reads differently from a leap. */
+  .asst-launch.bounce{animation:asstBounce .3s cubic-bezier(.3,0,.3,1) 1}
+  @keyframes asstBounce{
+    0%{scale:1 1}
+    32%{scale:1.3 .6}
+    62%{scale:.88 1.12}
+    100%{scale:1 1}
+  }
+  /* the "tug": a quick, small rotate-only shake fired occasionally while
+     idle (see roam()/startBob() in JS) as a passive "you can grab me" cue -
+     distinct from .warp-x/.warp-y (a squash-and-stretch tied to an actual
+     hop) and .bounce (a hard impact squash), this one never touches scale
+     or position, just a little shake in place, closer to how a physical
+     object gets nudged when someone's about to pick it up. */
+  .asst-launch.tug{animation:asstTug .5s cubic-bezier(.3,0,.3,1) 1}
+  @keyframes asstTug{
+    0%{rotate:0deg}
+    20%{rotate:-8deg}
+    45%{rotate:6deg}
+    70%{rotate:-4deg}
+    100%{rotate:0deg}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .asst-launch.bounce{animation:none}
+    .asst-launch.tug{animation:none}
+  }
+
+  /* the mark itself: the header's JM logotype, blown up, and split into its
+     two letters so each can move on its own - a small asynchronous double
+     act rather than one static badge. Both hop and tilt continuously, on
+     their own out-of-sync timers, so there is always something moving even
+     with nobody's cursor anywhere near it. Reduced motion cuts every one of
+     these to a plain, still logo. */
+  .asst-mk{
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    pointer-events:none;
+  }
+  .asst-mk svg{width:46px;height:46px;overflow:visible;display:block}
+  .asst-mk.sm svg{width:28px;height:28px}
+  .asst-mk .ltr{fill:#fff;transform-box:fill-box;transform-origin:50% 100%}
+  @media (prefers-reduced-motion:reduce){
+    .asst-mk .ltr{animation:none!important}
+  }
+
+  /* ===== moods =====
+     JS drives which one is active by swapping a class on .asst - idle
+     drifts it toward curious then sleepy, an answer or the panel opening
+     perks it up, and a shrug follows a question it couldn't match. Every
+     mood is its own keyframe shape, not just a faster/slower version of
+     one motion, so each genuinely reads as a different temperament rather
+     than the same loop sped up. */
+
+  /* welcoming: the resting state - alert, easy, out-of-sync hops */
+  .asst.mood-welcoming .ltr.j{animation:asstHopJ 3.2s ease-in-out infinite}
+  .asst.mood-welcoming .ltr.m{animation:asstHopM 2.8s ease-in-out infinite .35s}
+  @keyframes asstHopJ{
+    0%,100%{translate:0 0;rotate:0deg}
+    8%{translate:0 -3px;rotate:-3deg}
+    18%{translate:0 0;rotate:2deg}
+    30%{translate:0 -10px;rotate:-7deg}
+    42%{translate:0 0;rotate:4deg}
+    55%{translate:0 -2px;rotate:0deg}
+    72%{translate:0 -5px;rotate:-2deg}
+    88%{translate:0 0}
+  }
+  @keyframes asstHopM{
+    0%,100%{translate:0 0;rotate:0deg}
+    14%{translate:0 -4px;rotate:3deg}
+    26%{translate:0 0;rotate:-2deg}
+    40%{translate:0 -11px;rotate:6deg}
+    52%{translate:0 0;rotate:-3deg}
+    66%{translate:0 -2px;rotate:0deg}
+    82%{translate:0 -6px;rotate:2deg}
+    94%{translate:0 0}
+  }
+
+  /* excited: greeting a visitor, or the panel just opened - bigger, quicker,
+     a real double-hop rather than a single bounce */
+  .asst.mood-excited .ltr.j{animation:asstHopJ-excited 1.05s ease-in-out infinite}
+  .asst.mood-excited .ltr.m{animation:asstHopM-excited .9s ease-in-out infinite .12s}
+  @keyframes asstHopJ-excited{
+    0%,100%{translate:0 0;rotate:0deg}
+    12%{translate:0 -15px;rotate:-11deg}
+    26%{translate:0 -1px;rotate:7deg}
+    40%{translate:0 -17px;rotate:-10deg}
+    55%{translate:0 0;rotate:5deg}
+    72%{translate:0 -8px;rotate:-4deg}
+    88%{translate:0 0;rotate:1deg}
+  }
+  @keyframes asstHopM-excited{
+    0%,100%{translate:0 0;rotate:0deg}
+    18%{translate:0 -17px;rotate:9deg}
+    32%{translate:0 -1px;rotate:-8deg}
+    46%{translate:0 -14px;rotate:8deg}
+    62%{translate:0 0;rotate:-5deg}
+    80%{translate:0 -6px;rotate:3deg}
+  }
+
+  /* cheeky: a quick satisfied bounce after answering something - fires as a
+     short, finite burst (see JS), not a loop */
+  .asst.mood-cheeky .ltr.j{animation:asstHopJ-cheeky .85s ease-in-out 2}
+  .asst.mood-cheeky .ltr.m{animation:asstHopM-cheeky .75s ease-in-out 2 .08s}
+  @keyframes asstHopJ-cheeky{
+    0%,100%{translate:0 0;rotate:0deg}
+    18%{translate:0 -13px;rotate:-15deg}
+    36%{translate:0 2px;rotate:9deg}
+    54%{translate:0 -6px;rotate:-6deg}
+    72%{translate:0 0;rotate:3deg}
+  }
+  @keyframes asstHopM-cheeky{
+    0%,100%{translate:0 0;rotate:0deg}
+    22%{translate:0 -11px;rotate:12deg}
+    42%{translate:0 2px;rotate:-8deg}
+    62%{translate:0 -5px;rotate:5deg}
+    80%{translate:0 0;rotate:-2deg}
+  }
+
+  /* curious: a slow, wondering head-tilt - more rotation than lift, a shrug
+     when a typed question doesn't match anything as much as an idle drift */
+  .asst.mood-curious .ltr.j{animation:asstHopJ-curious 2.6s ease-in-out infinite}
+  .asst.mood-curious .ltr.m{animation:asstHopM-curious 2.3s ease-in-out infinite .3s}
+  @keyframes asstHopJ-curious{
+    0%,100%{translate:0 0;rotate:0deg}
+    22%{translate:0 -2px;rotate:-15deg}
+    48%{translate:0 -4px;rotate:11deg}
+    74%{translate:0 -1px;rotate:-7deg}
+    90%{translate:0 0;rotate:3deg}
+  }
+  @keyframes asstHopM-curious{
+    0%,100%{translate:0 0;rotate:0deg}
+    28%{translate:0 -3px;rotate:12deg}
+    54%{translate:0 -1px;rotate:-10deg}
+    78%{translate:0 -2px;rotate:6deg}
+    92%{translate:0 0;rotate:-2deg}
+  }
+
+  /* sleepy: after a long stretch with nobody touching the page - slow,
+     small, and drooping toward each other rather than lifting up */
+  .asst.mood-sleepy .ltr.j{animation:asstHopJ-sleepy 4.6s ease-in-out infinite}
+  .asst.mood-sleepy .ltr.m{animation:asstHopM-sleepy 5s ease-in-out infinite .7s}
+  .asst.mood-sleepy .asst-launch{filter:saturate(.72) brightness(.9)}
+  @keyframes asstHopJ-sleepy{
+    0%,78%,100%{translate:0 1px;rotate:3deg}
+    42%{translate:0 4px;rotate:8deg}
+    60%{translate:0 2px;rotate:2deg}
+  }
+  @keyframes asstHopM-sleepy{
+    0%,78%,100%{translate:0 1px;rotate:-3deg}
+    42%{translate:0 5px;rotate:-9deg}
+    60%{translate:0 2px;rotate:-2deg}
+  }
+
+  /* angry: one of two reactions to being picked up and thrown (see JS
+     drag-throw physics) - a fast, tight, aggravated shake, mostly rotation
+     rather than lift, with a hotter glow standing in for a scowl since
+     there's no face to actually scowl with. The other reaction reuses
+     `cheeky` (already built) for the happy case - not every throw needs a
+     bespoke mood, just the one that reads as a genuinely different
+     temperament. */
+  .asst.mood-angry .ltr.j{animation:asstHopJ-angry .34s ease-in-out infinite}
+  .asst.mood-angry .ltr.m{animation:asstHopM-angry .3s ease-in-out infinite .05s}
+  .asst.mood-angry .asst-launch{
+    box-shadow:0 12px 30px rgba(200,40,20,.5),inset 0 0 0 2px rgba(255,110,70,.65);
+  }
+  @keyframes asstHopJ-angry{
+    0%,100%{translate:0 0;rotate:0deg}
+    25%{translate:0 -2px;rotate:-11deg}
+    50%{translate:0 0;rotate:9deg}
+    75%{translate:0 -1px;rotate:-7deg}
+  }
+  @keyframes asstHopM-angry{
+    0%,100%{translate:0 0;rotate:0deg}
+    25%{translate:0 -2px;rotate:10deg}
+    50%{translate:0 0;rotate:-9deg}
+    75%{translate:0 -1px;rotate:6deg}
+  }
+
+  /* every mood gets a little more urgent under the cursor, without
+     switching to a different shape - excluded while the click-pop below is
+     mid-flight so a hovered click still gets its full quick snap */
+  .asst-launch:hover .asst-mk:not(.pop) .ltr{animation-duration:.85s!important}
+
+  /* a satisfied little squash-and-stretch pop each time the panel opens or
+     closes, layered on top of whatever mood is currently playing - JS adds
+     this class for one animation cycle, then removes it so nothing is ever
+     left stuck on it. */
+  .asst-mk.pop .ltr{animation-name:asstPop;animation-duration:.38s;
+    animation-timing-function:var(--mo-ease);animation-iteration-count:1}
+  @keyframes asstPop{0%{scale:1}35%{scale:.82 1.16}65%{scale:1.1 .9}100%{scale:1}}
+
+  .asst-dot{
+    position:absolute;right:2px;bottom:2px;width:16px;height:16px;border-radius:50%;
+    background:var(--green);border:2px solid var(--card);
+  }
+  .asst-badge{
+    position:absolute;left:-3px;top:-3px;min-width:19px;height:19px;padding:0 4px;
+    border-radius:10px;background:var(--card);color:var(--cream);border:1px solid var(--bar-line);
+    font-family:var(--mono);font-size:10px;line-height:17px;text-align:center;
+    animation:asstBadgeIn .32s var(--mo-ease);
+  }
+  @keyframes asstBadgeIn{0%{scale:0}70%{scale:1.2}100%{scale:1}}
+  @media (prefers-reduced-motion:reduce){.asst-badge{animation:none}}
+
+  /* the little greeting speech-bubble that shows once, unprompted. Text
+     color reads var(--cream) rather than var(--ink) - this bubble sits on
+     var(--bar-bg), the same dark-in-dark-mode/light-in-light-mode chrome
+     surface as the sticky bar, and --ink is tuned for the light cream
+     panels elsewhere on the site, not this surface (that mismatch is what
+     made the text unreadable in dark mode and washed-out in light mode). */
+  .asst-bubble{
+    position:absolute;right:84px;bottom:14px;
+    width:max-content;max-width:min(280px,calc(100vw - 120px));
+    background:var(--bar-bg);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+    border:1px solid var(--bar-line);border-radius:14px;padding:10px 32px 10px 14px;
+    box-shadow:0 10px 26px rgba(0,0,0,.3);
+    font-size:13px;line-height:1.45;color:var(--cream);
+  }
+  .asst-bubble p{margin:0}
+  .asst-bubble-close{
+    position:absolute;right:6px;top:6px;width:18px;height:18px;border-radius:50%;
+    background:none;border:none;color:var(--cream-dim);font-size:14px;line-height:1;cursor:pointer;
+  }
+  .asst-bubble-close:hover{color:var(--cream)}
+
+  .asst-panel{
+    position:absolute;right:0;bottom:88px;width:min(360px,86vw);
+    height:min(480px,68vh);display:flex;flex-direction:column;
+    background:var(--bar-bg);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+    border:1px solid var(--bar-line);border-radius:var(--rad);
+    box-shadow:0 18px 46px rgba(0,0,0,.4);overflow:hidden;
+    transform-origin:bottom right;
+    opacity:0;translate:0 10px;scale:.98;pointer-events:none;
+    transition:opacity .2s var(--mo-ease),translate .2s var(--mo-ease),scale .2s var(--mo-ease);
+  }
+  .asst.open .asst-panel{opacity:1;translate:0 0;scale:1;pointer-events:auto}
+  @media (prefers-reduced-motion:reduce){.asst-panel{transition:opacity .12s linear}}
+
+  .asst-head{
+    display:flex;align-items:center;gap:10px;padding:12px 14px;
+    border-bottom:1px solid var(--bar-line);flex:none;
+  }
+  .asst-head .asst-mk.sm{position:relative;inset:auto;width:34px;height:34px;flex:none;
+    background:var(--orange);border-radius:50%;display:flex;align-items:center;justify-content:center}
+  .asst-head-txt{flex:1;min-width:0}
+  .asst-head-txt h2{font-family:var(--mono);font-size:12px;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--cream);margin:0}
+  .asst-head-txt p{font-size:11px;color:var(--cream-dim);margin:2px 0 0}
+  .asst-close{background:none;border:none;color:var(--cream-dim);font-size:20px;line-height:1;
+    cursor:pointer;padding:4px 6px;border-radius:6px}
+  .asst-close:hover{color:var(--cream);background:var(--pill-quiet)}
+
+  .asst-log{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+  .asst-log::-webkit-scrollbar{width:8px}
+  .asst-log::-webkit-scrollbar-thumb{background:var(--thumb);border-radius:4px}
+
+  .amsg{max-width:88%;font-size:17px;line-height:1.5}
+  .amsg p{margin:0 0 6px}
+  .amsg p:last-child{margin-bottom:0}
+  /* .amsg-bot sits on var(--panel), the light cream/gray card that stays
+     light in both themes (same surface the CV stage panel uses), so
+     var(--ink) is the right pairing there - the bug was reading
+     var(--chip-fg) instead, a token meant for var(--chip-bg), not this. */
+  .amsg-bot{align-self:flex-start;background:var(--panel);color:var(--ink);
+    border-radius:14px 14px 14px 4px;padding:9px 12px}
+  .amsg-user{align-self:flex-end;background:var(--orange);color:#fff;
+    border-radius:14px 14px 4px 14px;padding:9px 12px}
+  .amsg-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .amsg-actions button{
+    font-family:var(--mono);font-size:13px;letter-spacing:.02em;
+    background:var(--card);color:var(--cream);border:1px solid var(--bar-line);
+    border-radius:999px;padding:6px 11px;cursor:pointer;transition:border-color .15s ease-out;
+  }
+  .amsg-actions button:hover{border-color:var(--orange)}
+
+  /* one row, always - every topic gets a quick-reply button (see
+     QUICK_CHIPS in JS), scrolling sideways instead of wrapping, closer to
+     the suggestion strip in a real texting app than a menu of buttons. The
+     mask fades the trailing edge so it reads as "more this way" rather
+     than a hard cut - not scroll-position-aware, but a constant hint at
+     the low end of the row beats no hint at all. */
+  .asst-chips{
+    flex:none;display:flex;flex-wrap:nowrap;gap:6px;padding:10px 14px;
+    border-top:1px solid var(--bar-line);
+    overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;
+    scrollbar-width:none;cursor:grab;user-select:none;
+    -webkit-mask-image:linear-gradient(to right,#000 calc(100% - 28px),transparent);
+    mask-image:linear-gradient(to right,#000 calc(100% - 28px),transparent);
+  }
+  .asst-chips::-webkit-scrollbar{display:none}
+  /* cursor-drag to scroll, same pattern as .proj-rail: touch already
+     scrolls natively, this is for mouse users on desktop (see JS) */
+  .asst-chips.dragging{cursor:grabbing}
+  .asst-chips.dragging button{pointer-events:none}
+  .asst-chips button{
+    flex:none;white-space:nowrap;
+    font-family:var(--mono);font-size:13px;letter-spacing:.02em;
+    background:var(--pill-quiet);color:var(--pill-fg);border:1px solid var(--pill-line);
+    border-radius:999px;padding:6px 11px;cursor:pointer;transition:color .15s ease-out,border-color .15s ease-out;
+  }
+  .asst-chips button:hover{color:var(--cream);border-color:var(--orange)}
+
+  .asst-form{flex:none;display:flex;gap:8px;padding:12px 14px;border-top:1px solid var(--bar-line)}
+  .asst-form input{
+    flex:1;min-width:0;background:var(--card);color:var(--cream);
+    border:1px solid var(--bar-line);border-radius:10px;padding:9px 11px;font:inherit;font-size:15px;
+  }
+  .asst-form input::placeholder{color:var(--cream-dim)}
+  .asst-form input:focus-visible{outline:2px solid var(--orange);outline-offset:1px}
+  .asst-form button{
+    flex:none;width:36px;height:36px;border-radius:10px;background:var(--orange);color:#fff;
+    border:none;font-size:16px;cursor:pointer;
+  }
+
+  @media (max-width:420px){
+    .asst-panel{width:92vw}
+  }

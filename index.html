@@ -31,6 +31,8 @@ document.documentElement.setAttribute('data-theme', 'dark');
 <link rel="stylesheet" href="styles/07-galleries.css">
 <link rel="stylesheet" href="styles/08-responsive.css">
 <link rel="stylesheet" href="styles/09-feedback.css">
+<link rel="stylesheet" href="styles/10-sky.css">
+<link rel="stylesheet" href="styles/11-assistant.css">
 <script defer src="scripts/01-hero.js"></script>
 <script defer src="scripts/02-projects.js"></script>
 <script defer src="scripts/03-experience.js"></script>
@@ -44,8 +46,65 @@ document.documentElement.setAttribute('data-theme', 'dark');
 <script defer src="scripts/12-navigation.js"></script>
 <script defer src="scripts/13-a11y.js"></script>
 <script defer src="scripts/14-feedback.js"></script>
+<script defer src="scripts/15-sky.js"></script>
+<script defer src="scripts/16-assistant.js"></script>
 </head>
 <body>
+
+<!-- Ambient sky layer: stars/shooting stars over the dark theme, birds over
+     the light one. Fixed over the whole page (masked around the portrait
+     photo by 15-sky.js, so it reads as being behind him rather than
+     drawn on top of him) rather than scoped to one section. Purely
+     decorative: inert to input, invisible to assistive tech. -->
+<div class="sky-fx" id="skyfx" aria-hidden="true">
+  <div class="sky-stars s-a"></div>
+  <div class="sky-stars s-b"></div>
+  <div class="sky-shoot sh1"></div>
+  <div class="sky-shoot sh2"></div>
+  <div class="sky-shoot sh3"></div>
+  <div class="sky-shoot sh4"></div>
+  <div class="sky-birds">
+    <!-- flock 1: cluster, up-right, fast -->
+    <svg class="bird b1 dir-a" viewBox="0 0 60 24" aria-hidden="true"><path d="M2 12 Q15 -4 30 12 Q45 -4 58 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+    <svg class="bird b2 dir-a" viewBox="0 0 60 24" aria-hidden="true"><path d="M2 12 Q15 -4 30 12 Q45 -4 58 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+    <svg class="bird b3 dir-a" viewBox="0 0 60 24" aria-hidden="true"><path d="M2 12 Q15 -4 30 12 Q45 -4 58 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+    <svg class="bird b17 dir-a" viewBox="0 0 60 24" aria-hidden="true"><path d="M2 12 Q15 -4 30 12 Q45 -4 58 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+    <!-- flock 2: cluster, up-left (mirrored), medium speed -->
+    <svg class="bird b4 dir-b" viewBox="0 0 60 24" aria-hidden="true"><path d="M2 12 Q15 -4 30 12 Q45 -4 58 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+    <svg class="bird b5 dir-b" viewBox="0 0 60 24" aria-hidden="true"><path d="M2 12 Q15 -4 30 12 Q45 -4 58 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+    <svg class="bird b6 dir-b" viewBox="0 0 60 24" aria-hidden="true"><path d="M2 12 Q15 -4 30 12 Q45 -4 58 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+    <svg class="bird b18 dir-b" viewBox="0 0 60 24" aria-hidden="true"><path d="M2 12 Q15 -4 30 12 Q45 -4 58 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+    <!-- flock 3: cluster, steep climb, slow -->
+    <svg class="bird b7 dir-d" viewBox="0 0 60 24" aria-hidden="true"><path d="M2 12 Q15 -4 30 12 Q45 -4 58 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+    <svg class="bird b8 dir-d" viewBox="0 0 60 24" aria-hidden="true"><path d="M2 12 Q15 -4 30 12 Q45 -4 58 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+    <svg class="bird b19 dir-d" viewBox="0 0 60 24" aria-hidden="true"><path d="M2 12 Q15 -4 30 12 Q45 -4 58 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+    <!-- solo birds: mixed directions, speeds, distances, sizes -->
+    <svg class="bird b9 dir-c" viewBox="0 0 60 24" aria-hidden="true"><path d="M2 12 Q15 -4 30 12 Q45 -4 58 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+    <svg class="bird b10 dir-a" viewBox="0 0 60 24" aria-hidden="true"><path d="M2 12 Q15 -4 30 12 Q45 -4 58 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+    <svg class="bird b11 dir-b" viewBox="0 0 60 24" aria-hidden="true"><path d="M2 12 Q15 -4 30 12 Q45 -4 58 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+    <svg class="bird b12 dir-c" viewBox="0 0 60 24" aria-hidden="true"><path d="M2 12 Q15 -4 30 12 Q45 -4 58 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+    <svg class="bird b13 dir-d" viewBox="0 0 60 24" aria-hidden="true"><path d="M2 12 Q15 -4 30 12 Q45 -4 58 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+    <svg class="bird b14 dir-a" viewBox="0 0 60 24" aria-hidden="true"><path d="M2 12 Q15 -4 30 12 Q45 -4 58 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+    <svg class="bird b15 dir-b" viewBox="0 0 60 24" aria-hidden="true"><path d="M2 12 Q15 -4 30 12 Q45 -4 58 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+    <svg class="bird b16 dir-c" viewBox="0 0 60 24" aria-hidden="true"><path d="M2 12 Q15 -4 30 12 Q45 -4 58 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+    <svg class="bird b20 dir-a" viewBox="0 0 60 24" aria-hidden="true"><path d="M2 12 Q15 -4 30 12 Q45 -4 58 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+    <svg class="bird b21 dir-b" viewBox="0 0 60 24" aria-hidden="true"><path d="M2 12 Q15 -4 30 12 Q45 -4 58 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+    <svg class="bird b22 dir-c" viewBox="0 0 60 24" aria-hidden="true"><path d="M2 12 Q15 -4 30 12 Q45 -4 58 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+    <svg class="bird b23 dir-d" viewBox="0 0 60 24" aria-hidden="true"><path d="M2 12 Q15 -4 30 12 Q45 -4 58 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+    <svg class="bird b24 dir-a" viewBox="0 0 60 24" aria-hidden="true"><path d="M2 12 Q15 -4 30 12 Q45 -4 58 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+    <svg class="bird b25 dir-b" viewBox="0 0 60 24" aria-hidden="true"><path d="M2 12 Q15 -4 30 12 Q45 -4 58 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+    <svg class="bird b26 dir-c" viewBox="0 0 60 24" aria-hidden="true"><path d="M2 12 Q15 -4 30 12 Q45 -4 58 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+    <svg class="bird b27 dir-a" viewBox="0 0 60 24" aria-hidden="true"><path d="M2 12 Q15 -4 30 12 Q45 -4 58 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+    <svg class="bird b28 dir-d" viewBox="0 0 60 24" aria-hidden="true"><path d="M2 12 Q15 -4 30 12 Q45 -4 58 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+    <svg class="bird b29 dir-b" viewBox="0 0 60 24" aria-hidden="true"><path d="M2 12 Q15 -4 30 12 Q45 -4 58 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+    <svg class="bird b30 dir-c" viewBox="0 0 60 24" aria-hidden="true"><path d="M2 12 Q15 -4 30 12 Q45 -4 58 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+    <svg class="bird b31 dir-a" viewBox="0 0 60 24" aria-hidden="true"><path d="M2 12 Q15 -4 30 12 Q45 -4 58 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+    <svg class="bird b32 dir-d" viewBox="0 0 60 24" aria-hidden="true"><path d="M2 12 Q15 -4 30 12 Q45 -4 58 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+  </div>
+  <!-- sunlit dust motes: the light theme's twinkle, warm-toned instead of
+       starlight-white -->
+  <div class="sky-dust"></div>
+</div>
 
 <!-- The curtain. It is display:none until the script below turns it on, so a
      visitor without JavaScript never meets a screen they cannot dismiss. -->
@@ -140,18 +199,18 @@ document.documentElement.setAttribute('data-theme', 'dark');
     <a href="#speaking">Speaking</a>
     <a href="#events">Events</a>
     <a href="#life">Off the clock</a>
+    <a href="#games">Games</a>
+    <a href="#movies">Movies &amp; TV</a>
     <span class="bar-nav-glow" aria-hidden="true"></span>
   </nav>
   <div class="bar-right">
   <span class="sprog" id="sprog" aria-hidden="true">0%</span>
   <button class="sfx-btn" type="button" id="sfxbtn" aria-pressed="false" aria-label="Toggle interface sound">
-    <svg class="sfx-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
-    <span class="wave" aria-hidden="true"><i></i><i></i><i></i></span>
+    <svg class="sfx-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5L6 9H2v6h4l5 4V5z"/><g class="sfx-mute"><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></g><g class="sfx-signal"><path class="sfx-wave1" d="M15 8.2a5.2 5.2 0 0 1 0 7.6"/><path class="sfx-wave2" d="M18.3 5a9.5 9.5 0 0 1 0 14"/></g></svg>
     <span class="sfx-lab">Sound off</span>
   </button>
   <button class="mus-btn" type="button" aria-pressed="false" aria-label="Toggle background music">
     <svg class="mus-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-    <svg class="mus-disc" viewBox="0 0 24 24" aria-hidden="true"><circle class="mus-disc-rim" cx="12" cy="12" r="9.5"/><circle class="mus-disc-groove" cx="12" cy="12" r="6.6"/><circle class="mus-disc-groove" cx="12" cy="12" r="4.4"/><circle class="mus-disc-hub" cx="12" cy="12" r="1.5"/></svg>
     <span class="mus-lab">Music off</span>
   </button>
   <button class="thm-btn" type="button" aria-pressed="false" aria-label="Toggle dark and light theme">
@@ -201,12 +260,10 @@ document.documentElement.setAttribute('data-theme', 'dark');
       </button>
       <button class="mus-btn" type="button" aria-pressed="false" aria-label="Toggle background music">
         <svg class="mus-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-        <svg class="mus-disc" viewBox="0 0 24 24" aria-hidden="true"><circle class="mus-disc-rim" cx="12" cy="12" r="9.5"/><circle class="mus-disc-groove" cx="12" cy="12" r="6.6"/><circle class="mus-disc-groove" cx="12" cy="12" r="4.4"/><circle class="mus-disc-hub" cx="12" cy="12" r="1.5"/></svg>
         <span class="mus-lab">Music off</span>
       </button>
       <button class="sfx-btn" type="button" aria-pressed="false" aria-label="Toggle interface sound">
-        <svg class="sfx-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
-    <span class="wave" aria-hidden="true"><i></i><i></i><i></i></span>
+        <svg class="sfx-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5L6 9H2v6h4l5 4V5z"/><g class="sfx-mute"><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></g><g class="sfx-signal"><path class="sfx-wave1" d="M15 8.2a5.2 5.2 0 0 1 0 7.6"/><path class="sfx-wave2" d="M18.3 5a9.5 9.5 0 0 1 0 14"/></g></svg>
         <span class="sfx-lab">Sound off</span>
       </button>
     </div>
@@ -223,6 +280,46 @@ document.documentElement.setAttribute('data-theme', 'dark');
 
 <div class="wipe" id="wipe" aria-hidden="true"></div>
 
+<!-- Site guide: a scripted chat head, not a live AI - it matches keywords
+     against a small set of topics and can jump/flip the page for you. -->
+<div class="asst mood-welcoming" id="asst">
+  <div class="asst-bubble" id="asstBubble" hidden>
+    <p>Hey, I'm Bean, James's site guide. Need a hand finding something?</p>
+    <button class="asst-bubble-close" type="button" id="asstBubbleClose" aria-label="Dismiss">&times;</button>
+  </div>
+  <!-- follows the chathead while it's dragged/thrown (see JS) - a small
+       floating callout, separate from .asst-bubble, since it has to track
+       wherever the ball currently is rather than the docked corner spot -->
+  <div class="asst-quip" id="asstQuip" aria-hidden="true"></div>
+  <button class="asst-launch" type="button" id="asstLaunch"
+          aria-haspopup="dialog" aria-expanded="false" aria-controls="asstPanel" aria-label="Open chat with Bean">
+    <span class="asst-mk" aria-hidden="true">
+      <svg viewBox="0 0 100 100"><path class="ltr j" d="M41 26V74H12V61H28V26Z"/><path class="ltr m" d="M49 74V26H62L68.5 44L75 26H88V74H75V50L68.5 62L62 50V74Z"/></svg>
+    </span>
+    <span class="asst-dot" aria-hidden="true"></span>
+    <span class="asst-badge" id="asstBadge" hidden>1</span>
+  </button>
+  <section class="asst-panel" id="asstPanel" role="dialog" aria-label="Chat with Bean" hidden>
+    <header class="asst-head">
+      <span class="asst-mk sm" aria-hidden="true">
+        <svg viewBox="0 0 100 100"><path class="ltr j" d="M41 26V74H12V61H28V26Z"/><path class="ltr m" d="M49 74V26H62L68.5 44L75 26H88V74H75V50L68.5 62L62 50V74Z"/></svg>
+      </span>
+      <div class="asst-head-txt">
+        <h2>Bean</h2>
+        <p>James's site guide</p>
+      </div>
+      <button class="asst-close" type="button" id="asstClose" aria-label="Close guide">&times;</button>
+    </header>
+    <div class="asst-log" id="asstLog" role="log" aria-live="polite" aria-label="Conversation"></div>
+    <div class="asst-chips" id="asstChips" aria-label="Topics"></div>
+    <form class="asst-form" id="asstForm">
+      <label class="sr-only" for="asstInput">Ask a question</label>
+      <input type="text" id="asstInput" placeholder="Ask about James..." autocomplete="off">
+      <button type="submit" aria-label="Send">&rarr;</button>
+    </form>
+  </section>
+</div>
+
 <!-- Screen-reader announcement for a view flip - the visual arrow that used
      to accompany it is gone, but the announcement still matters. -->
 <p class="sr-only" id="scue-live" role="status" aria-live="polite"></p>
@@ -235,13 +332,11 @@ document.documentElement.setAttribute('data-theme', 'dark');
       <div class="hero-top-left">
       <span class="brand" aria-label="James Magpantay"><svg class="mark" viewBox="0 0 100 100" aria-hidden="true"><path fill-rule="evenodd" d="M20 0H80A20 20 0 0 1 100 20V80A20 20 0 0 1 80 100H0V20A20 20 0 0 1 20 0ZM41 26V74H12V61H28V26ZM49 74V26H62L68.5 44L75 26H88V74H75V50L68.5 62L62 50V74Z"/></svg></span>
       <button class="sfx-btn" type="button" aria-pressed="false" aria-label="Toggle interface sound">
-        <svg class="sfx-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
-    <span class="wave" aria-hidden="true"><i></i><i></i><i></i></span>
+        <svg class="sfx-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5L6 9H2v6h4l5 4V5z"/><g class="sfx-mute"><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></g><g class="sfx-signal"><path class="sfx-wave1" d="M15 8.2a5.2 5.2 0 0 1 0 7.6"/><path class="sfx-wave2" d="M18.3 5a9.5 9.5 0 0 1 0 14"/></g></svg>
         <span class="sfx-lab">Sound off</span>
       </button>
       <button class="mus-btn" type="button" aria-pressed="false" aria-label="Toggle background music">
         <svg class="mus-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-        <svg class="mus-disc" viewBox="0 0 24 24" aria-hidden="true"><circle class="mus-disc-rim" cx="12" cy="12" r="9.5"/><circle class="mus-disc-groove" cx="12" cy="12" r="6.6"/><circle class="mus-disc-groove" cx="12" cy="12" r="4.4"/><circle class="mus-disc-hub" cx="12" cy="12" r="1.5"/></svg>
         <span class="mus-lab">Music off</span>
       </button>
       <button class="thm-btn" type="button" aria-pressed="false" aria-label="Toggle dark and light theme">
@@ -265,6 +360,8 @@ document.documentElement.setAttribute('data-theme', 'dark');
         <a href="#speaking">Speaking</a>
         <a href="#events">Events</a>
         <a href="#life">Off the clock</a>
+        <a href="#games">Games</a>
+        <a href="#movies">Movies &amp; TV</a>
       </nav>
       </div>
     </div>
@@ -481,6 +578,78 @@ document.documentElement.setAttribute('data-theme', 'dark');
         <figure class="ph" style="--ar:1.0"><img src="photos/life/life-34.jpg" alt="TFT nights" loading="lazy"><figcaption>TFT nights</figcaption></figure>
         <figure class="ph" style="--ar:1.354"><img src="photos/life/life-35.jpg" alt="The boys" loading="lazy"><figcaption>The boys</figcaption></figure>
         <figure class="ph" style="--ar:0.751"><img src="photos/life/life-36.jpg" alt="White and blue" loading="lazy"><figcaption>White and blue</figcaption></figure>
+    </div>
+  </section>
+
+  <!-- ============ GAMES ============ -->
+  <section class="sec" id="games" data-view="off" aria-label="Games" hidden style="padding-top:0">
+    <div class="sec-head">
+      <h2>Games</h2>
+      <span class="meta big">What&rsquo;s running when the laptop isn&rsquo;t for work</span>
+    </div>
+    <div class="tk-groups">
+      <div class="tkg">
+        <h3 class="tkg-h">RPG favorites</h3>
+        <ul class="tks">
+          <li class="tk"><img src="logos/games/bg3.png" alt="" loading="lazy"><span class="tk-n">Baldur&rsquo;s Gate 3</span></li>
+          <li class="tk"><img style="--k:1.5" src="logos/games/skyrim.png" alt="" loading="lazy"><span class="tk-n">Skyrim</span></li>
+          <li class="tk"><img style="--k:1.1" src="logos/games/dungeon-siege.png" alt="" loading="lazy"><span class="tk-n">Dungeon Siege</span></li>
+          <li class="tk"><img style="--k:1.05" src="logos/games/warcraft3.png" alt="" loading="lazy"><span class="tk-n">Warcraft III</span></li>
+        </ul>
+      </div>
+      <div class="tkg">
+        <h3 class="tkg-h">Story-driven favorites</h3>
+        <ul class="tks">
+          <li class="tk"><img style="--k:1.05" src="logos/games/god-of-war.png" alt="" loading="lazy"><span class="tk-n">God of War</span></li>
+          <li class="tk"><img style="--k:1.15" src="logos/games/rdr2.png" alt="" loading="lazy"><span class="tk-n">Red Dead Redemption 2</span></li>
+          <li class="tk"><img style="--k:1.1" src="logos/games/last-of-us.png" alt="" loading="lazy"><span class="tk-n">The Last of Us</span></li>
+          <li class="tk"><img src="logos/games/gta.png" alt="" loading="lazy"><span class="tk-n">Grand Theft Auto</span></li>
+          <li class="tk"><img class="chip-dk" src="logos/games/detroit.png" alt="" loading="lazy"><span class="tk-n">Detroit: Become Human</span></li>
+          <li class="tk"><img style="--k:1.3" src="logos/games/twd.png" alt="" loading="lazy"><span class="tk-n">The Walking Dead</span></li>
+          <li class="tk"><img style="--k:1.25" src="logos/games/minecraft-story-mode.png" alt="" loading="lazy"><span class="tk-n">Minecraft: Story Mode</span></li>
+        </ul>
+      </div>
+      <div class="tkg">
+        <h3 class="tkg-h">Competitive &amp; mobile</h3>
+        <ul class="tks">
+          <li class="tk"><img style="--k:1.3" src="logos/games/tekken8.png" alt="" loading="lazy"><span class="tk-n">Tekken 8</span></li>
+          <li class="tk"><img style="--k:1.1" src="logos/games/mobile-legends.png" alt="" loading="lazy"><span class="tk-n">Mobile Legends: Bang Bang</span></li>
+          <li class="tk"><img style="--k:1.4" src="logos/games/tft.png" alt="" loading="lazy"><span class="tk-n">Teamfight Tactics</span></li>
+          <li class="tk"><img style="--k:.82" src="logos/games/roblox.png" alt="" loading="lazy"><span class="tk-n">Roblox</span></li>
+          <li class="tk"><img src="logos/games/minecraft.png" alt="" loading="lazy"><span class="tk-n">Minecraft</span></li>
+        </ul>
+      </div>
+      <div class="tkg">
+        <h3 class="tkg-h">Platforms &amp; tools</h3>
+        <ul class="tks">
+          <li class="tk"><img src="logos/games/steam.png" alt="" loading="lazy"><span class="tk-n">Steam</span></li>
+          <li class="tk"><img src="logos/games/epic-games.png" alt="" loading="lazy"><span class="tk-n">Epic Games</span></li>
+          <li class="tk"><img class="mono-lg" style="--k:1.6" src="logos/games/mod-organizer2.png" alt="" loading="lazy"><span class="tk-n">Mod Organizer 2</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MOVIES & TV ============ -->
+  <section class="sec" id="movies" data-view="off" aria-label="Movies and TV shows" hidden style="padding-top:0">
+    <div class="sec-head">
+      <h2>Movies &amp; TV</h2>
+      <span class="meta big">Favorites, ranked · The Lord of the Rings is unbeatable</span>
+    </div>
+    <div class="ledger">
+      <div class="row earned"><img class="lg lg-feat" src="logos/movies/lotr.png" alt="The Fellowship of the Ring poster"><div><h3>The Lord of the Rings</h3><p class="via">Trilogy · Fantasy epic</p></div><span class="yr">2001&ndash;2003</span><span class="st">All-time favorite</span></div>
+      <div class="row"><img class="lg" style="--k:1.05" src="logos/movies/harry-potter.png" alt=""><div><h3>Harry Potter</h3><p class="via">Film series · Fantasy</p></div><span class="yr">2001&ndash;2011</span><span class="st">Rewatched</span></div>
+      <div class="row"><img class="lg" style="--k:1.1" src="logos/movies/attack-on-titan.png" alt=""><div><h3>Attack on Titan</h3><p class="via">Anime series</p></div><span class="yr">2013&ndash;2023</span><span class="st">Watched</span></div>
+      <div class="row"><img class="lg" src="logos/movies/dragon-ball-z.png" alt=""><div><h3>Dragon Ball Z</h3><p class="via">Anime series</p></div><span class="yr">1989&ndash;1996</span><span class="st">Watched</span></div>
+      <div class="row"><img class="lg" style="--k:1.05" src="logos/movies/hajime-no-ippo.png" alt=""><div><h3>Hajime no Ippo</h3><p class="via">Anime series · Boxing</p></div><span class="yr">2000&ndash;</span><span class="st">Watched</span></div>
+      <div class="row"><img class="lg" src="logos/movies/transformers.png" alt=""><div><h3>Transformers</h3><p class="via">Film series · Action</p></div><span class="yr">2007&ndash;</span><span class="st">Watched</span></div>
+      <div class="row"><img class="lg" src="logos/movies/social-network.png" alt=""><div><h3>The Social Network</h3><p class="via">Film · Drama</p></div><span class="yr">2010</span><span class="st">Watched</span></div>
+      <div class="row"><img class="lg" src="logos/movies/brooklyn-99.png" alt=""><div><h3>Brooklyn Nine-Nine</h3><p class="via">Sitcom</p></div><span class="yr">2013&ndash;2021</span><span class="st">Watched</span></div>
+      <div class="row"><img class="lg mono-lg" style="--k:1.4" src="logos/movies/himym.png" alt=""><div><h3>How I Met Your Mother</h3><p class="via">Sitcom</p></div><span class="yr">2005&ndash;2014</span><span class="st">Watched</span></div>
+      <div class="row"><img class="lg" style="--k:1.05" src="logos/movies/big-bang-theory.png" alt=""><div><h3>The Big Bang Theory</h3><p class="via">Sitcom</p></div><span class="yr">2007&ndash;2019</span><span class="st">Watched</span></div>
+      <div class="row"><img class="lg" style="--k:1.15" src="logos/movies/suits.png" alt=""><div><h3>Suits</h3><p class="via">Legal drama</p></div><span class="yr">2011&ndash;2019</span><span class="st">Watched</span></div>
+      <div class="row"><img class="lg" src="logos/movies/silicon-valley.png" alt=""><div><h3>Silicon Valley</h3><p class="via">Tech comedy</p></div><span class="yr">2014&ndash;2019</span><span class="st">Watched</span></div>
+      <div class="row"><img class="lg" style="--k:1.6" src="logos/movies/nba.png" alt=""><div><h3>NBA</h3><p class="via">Sports · can&rsquo;t miss a game</p></div><span class="yr">ongoing</span><span class="st">On repeat</span></div>
     </div>
   </section>
 
