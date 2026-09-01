@@ -40,6 +40,17 @@
   .bar-flip:hover .dot,.vbadge:hover .dot{background:#fff}
   body.offline .bar-flip:hover .dot,body.offline .vbadge:hover .dot{background:var(--ink)}
   .bar-flip .swap{color:var(--cream-dim);border-left:1px solid var(--pill-line);padding-left:9px}
+  /* the header pill (#barflip only - #msheetflip in the mobile menu shares
+     .bar-flip for base styling but keeps its own profile-name text, so its
+     divider still separates two real segments and is left alone): James
+     wanted the "Security profile"/"Off the clock" state text gone here,
+     replaced by the same swap-arrows icon .vbadge already uses, leaving
+     just an icon + the word "Switch." With no state-name segment before it
+     any more, the divider that used to separate it from one has nothing
+     left to divide. */
+  .bar-flip-ico{width:14px;height:14px;flex:none;color:var(--cream)}
+  .bar-flip:hover .bar-flip-ico{color:#fff}
+  #barflip .swap{border-left:none;padding-left:0}
   /* sound toggle - same pill language as the flip control */
   .bar-right{display:flex;align-items:center;gap:clamp(8px,1vw,14px)}
   .sfx-btn{
@@ -317,39 +328,6 @@
     .vbadge-ico{width:22px;height:22px}
   }
 
-  /* one-time nudge pointing at the badge above (see scripts/07-view-chrome.js
-     for the show/hide logic) - same small-callout language as .snote below,
-     just anchored to the opposite corner and pointing down at what it's
-     about instead of sitting standalone near the top. bottom offset mirrors
-     .vbadge's own left/bottom + its height + a gap, at each of the two
-     breakpoints .vbadge itself uses, so it always sits just above the badge
-     rather than needing separate tuning. */
-  .vhint{
-    position:fixed;left:clamp(12px,2vw,24px);
-    bottom:calc(clamp(12px,2vw,24px) + 76px + 14px);z-index:60;
-    display:flex;align-items:center;gap:10px;width:max-content;max-width:min(240px,calc(100vw - 48px));
-    background:var(--bar-bg);color:var(--cream);
-    -webkit-backdrop-filter:blur(16px) saturate(1.6);backdrop-filter:blur(16px) saturate(1.6);
-    border:1.5px solid var(--pill-line);border-left:3px solid var(--orange);
-    border-radius:14px;padding:12px 10px 12px 14px;
-    box-shadow:0 14px 34px rgba(0,0,0,.38);
-    font-family:var(--mono);font-size:12.5px;letter-spacing:.04em;line-height:1.45;
-    opacity:0;pointer-events:none;translate:0 8px;
-    transition:opacity .3s ease-out,translate .3s cubic-bezier(.32,.72,0,1);
-  }
-  .vhint.on{opacity:1;pointer-events:auto;translate:0 0}
-  .vhint-close{
-    flex:none;width:24px;height:24px;border-radius:50%;
-    display:grid;place-items:center;font-size:16px;line-height:1;
-    background:transparent;color:var(--cream-dim);border:0;cursor:pointer;
-    transition:background .18s ease-out,color .18s ease-out;
-  }
-  .vhint-close:hover{background:var(--orange);color:#fff}
-  @media (min-width:861px){.vhint{display:none}}
-  @media (max-width:420px){
-    .vhint{bottom:calc(clamp(12px,2vw,24px) + 58px + 14px)}
-  }
-  @media (prefers-reduced-motion:reduce){.vhint{transition:opacity .01s linear}}
   /* the flip itself: a short wipe so the change is never missed */
   .wipe{
     position:fixed;inset:0;z-index:95;background:var(--card);

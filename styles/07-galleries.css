@@ -12,6 +12,14 @@
   .gal-feat .ph img{height:100%;object-fit:cover}
   @media (max-width:900px){.gal-feat{grid-template-columns:repeat(2,1fr);max-width:900px}}
   @media (max-width:560px){.gal-feat{grid-template-columns:1fr;max-width:480px}}
+  /* team roster - 3 columns x 2 rows of square photos beside the intro copy,
+     kept short so the section doesn't run much taller than Tech Stack */
+  .gal-roster{
+    columns:auto;display:grid;grid-template-columns:repeat(3,1fr);
+    gap:clamp(8px,1vw,14px);
+  }
+  .gal-roster .ph{margin:0;aspect-ratio:1}
+  .gal-roster .ph img{height:100%;object-fit:cover}
   .ph{
     break-inside:avoid;margin:0 0 clamp(12px,1.4vw,20px);
     position:relative;overflow:hidden;border-radius:var(--rad);cursor:zoom-in;
@@ -66,6 +74,9 @@
   /* summary + contact form */
   .off-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:clamp(28px,4vw,72px);align-items:start}
   @media (max-width:900px){.off-grid{grid-template-columns:1fr}}
+  /* Group One: text+photo stack on the left, a 2x3 roster grid on the right */
+  .grp-cols{grid-template-columns:1fr 1fr}
+  @media (max-width:900px){.grp-cols{grid-template-columns:1fr}}
   .cform{display:flex;flex-direction:column;gap:7px}
   .cform h3{font-size:clamp(19px,1.7vw,24px);font-weight:700;letter-spacing:-.015em;margin-bottom:6px}
   .cform label{

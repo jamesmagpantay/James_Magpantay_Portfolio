@@ -48,6 +48,7 @@ document.documentElement.setAttribute('data-theme', 'dark');
 <script defer src="scripts/14-feedback.js"></script>
 <script defer src="scripts/15-sky.js"></script>
 <script defer src="scripts/16-assistant.js"></script>
+<script defer src="scripts/17-groupone.js"></script>
 </head>
 <body>
 
@@ -190,6 +191,7 @@ document.documentElement.setAttribute('data-theme', 'dark');
     <a href="#education">Education</a>
     <a href="#experience">Experience</a>
     <a href="#work">Projects</a>
+    <a href="#groupone">Group One</a>
     <a href="#stack">Stack</a>
     <a href="#certs">Certifications</a>
     <a href="#summary">Summary</a>
@@ -220,11 +222,11 @@ document.documentElement.setAttribute('data-theme', 'dark');
     </svg>
     <span class="thm-lab">Dark</span>
   </button>
-  <button class="bar-flip" type="button" id="barflip">
-    <span class="dot" aria-hidden="true"></span>
-    <span data-view="pro">Security profile</span>
-    <span data-view="off" hidden>Off the clock</span>
-    <span class="swap" aria-hidden="true">Switch ⇄</span>
+  <button class="bar-flip" type="button" id="barflip" aria-label="Switch view">
+    <svg class="bar-flip-ico" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M7 7h12l-3.5-3.5M17 17H5l3.5 3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span class="swap" aria-hidden="true">Switch</span>
   </button>
 </div>
   <button class="menu-btn" type="button" id="menubtn"
@@ -280,14 +282,6 @@ document.documentElement.setAttribute('data-theme', 'dark');
   <span data-view="pro">Security profile</span>
   <span data-view="off" hidden>Off the clock</span>
 </button>
-
-<!-- one-time nudge pointing at the badge above, mobile only - see
-     scripts/07-view-chrome.js. Shown once ever per browser, cancelled
-     early the moment the badge is actually used. -->
-<div class="vhint" id="vhint" role="status">
-  <span>Tap to see the other side</span>
-  <button class="vhint-close" type="button" aria-label="Dismiss">&times;</button>
-</div>
 
 <div class="wipe" id="wipe" aria-hidden="true"></div>
 
@@ -363,6 +357,7 @@ document.documentElement.setAttribute('data-theme', 'dark');
         <a href="#education">Education</a>
         <a href="#experience">Experience</a>
         <a href="#work">Projects</a>
+        <a href="#groupone">Group One</a>
         <a href="#stack">Stack</a>
         <a href="#certs">Certifications</a>
         <a href="#summary">Summary</a>
@@ -928,6 +923,35 @@ document.documentElement.setAttribute('data-theme', 'dark');
           <span class="fact">100% compliance securing sensitive utility data</span>
         </div>
       </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ GROUP ONE ============ -->
+  <section class="sec" id="groupone" data-view="pro" aria-label="Group One" style="padding-top:0">
+    <div class="sec-head">
+      <h2>Group One</h2>
+      <span class="meta big">The crew I hack and build with</span>
+    </div>
+    <div class="off-grid grp-cols">
+      <div style="display:flex;flex-direction:column;gap:clamp(14px,1.8vw,22px);max-width:58ch">
+        <div class="nx" style="margin:0;padding-top:0">
+          <span class="nx-kick">CTF &amp; hackathon team</span>
+          <p>Group One started as a hackathon team, before cybersecurity pulled us in. We're a CTF team now, though we still show up for hackathons together. Proudest result so far: 8th place out of almost 600 teams from around the world, in a TryHackMe CTF room.</p>
+          <span class="nx-meta">8th of ~600 teams worldwide &middot; TryHackMe CTF</span>
+        </div>
+        <figure class="ph" style="--ar:1.778;margin:0">
+          <img src="photos/groupone/session.png" alt="Group One together mid-hackathon" loading="lazy">
+          <figcaption>Group One, mid-hackathon</figcaption>
+        </figure>
+      </div>
+      <div class="gal-roster">
+        <figure class="ph"><img src="photos/groupone/james.jpg" alt="James Magpantay" loading="lazy"><figcaption>James Magpantay</figcaption></figure>
+        <figure class="ph"><img src="photos/groupone/ivan.png" alt="Ivan James Macaraig" loading="lazy"><figcaption>Ivan James Macaraig</figcaption></figure>
+        <figure class="ph"><img src="photos/groupone/elieson.jpg" alt="Elieson Loplop" loading="lazy"><figcaption>Elieson Loplop</figcaption></figure>
+        <figure class="ph"><img src="photos/groupone/jared.jpg" alt="Jared Dean Tiu" loading="lazy"><figcaption>Jared Dean Tiu</figcaption></figure>
+        <figure class="ph"><img src="photos/groupone/jd.jpg" alt="JD Angelo Soon" loading="lazy"><figcaption>JD Angelo Soon</figcaption></figure>
+        <figure class="ph"><img src="photos/groupone/jef.jpg" alt="Jef Lecias" loading="lazy"><figcaption>Jef Lecias</figcaption></figure>
       </div>
     </div>
   </section>

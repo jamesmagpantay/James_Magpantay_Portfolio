@@ -25,46 +25,6 @@
   badge.addEventListener('click', flip);
 })();
 
-/* one-time nudge pointing at the badge, mobile only - shown once ever per
-   browser, and only if the flip has genuinely never been used before
-   (checked against 'viewflip', which fires regardless of which of the
-   three flip controls - the badge itself, the header pill, or the mobile
-   menu's own flip button - actually triggered it, so discovering the
-   feature any other way still cancels this). Mirrors the pattern already
-   built for Bean's own "try dragging me" hint (16-assistant.js). */
-(function(){
-  if(!matchMedia('(max-width:860px)').matches) return;
-  var el = document.getElementById('vhint');
-  if(!el) return;
-  var used, shown;
-  try{
-    used = localStorage.getItem('vbadge-used');
-    shown = localStorage.getItem('vhint-shown');
-  }catch(err){}
-  if(used || shown) return;
-
-  var hintT = null;
-  document.addEventListener('viewflip', function(){
-    clearTimeout(hintT);
-    hide();
-    try{ localStorage.setItem('vbadge-used', '1'); }catch(err){}
-  });
-
-  function show(){
-    requestAnimationFrame(function(){ el.classList.add('on'); });
-    try{ localStorage.setItem('vhint-shown', '1'); }catch(err){}
-    var t = setTimeout(hide, 8000);
-    el.querySelector('.vhint-close').addEventListener('click', function(){ clearTimeout(t); hide(); });
-  }
-  function hide(){ el.classList.remove('on'); }
-  /* after the intro curtain has actually lifted, not underneath it - same
-     idea as the sound heads-up in 09-sound.js, just a longer settle so it
-     doesn't compete with the page's own entrance */
-  function land(){ hintT = setTimeout(show, 6000); }
-  document.addEventListener('preready', land);
-  if(window.__preDone) land();
-})();
-
 /* View-flip announcement: the flip returns you to the top of a page whose
    whole body has been replaced - this tells screen readers, briefly, what
    changed and that there is more of it below. (The visual arrow that used
