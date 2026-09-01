@@ -1168,6 +1168,7 @@
          already-focused field don't re-fire, since focus only fires once
          per visit to the field. */
       el.addEventListener('focus', function(){
+        if(window.sfx) window.sfx.play('click');
         react(function(){ say(reactionText(el, 'click'), 1800); }, 900);
       });
       return;
