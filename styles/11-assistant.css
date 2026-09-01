@@ -409,18 +409,32 @@
     border:none;font-size:16px;cursor:pointer;
   }
 
+  /* mobile: the comment bubble stacks above the chat head instead of
+     beside it. Beside-him only worked because nothing else lived at that
+     height on the opposite side - now that .vbadge (04-view-chrome.css)
+     docks bottom-left on these widths, a bubble reaching left from
+     Bean's bottom-right corner could stretch far enough to overlap it.
+     Stacking upward (right:0 keeps it flush with the launcher's own right
+     edge, bottom:calc(100% + Npx) sits it just above the launcher's own
+     box - both track whichever launcher size is active, 76px normally or
+     58px under the 420px breakpoint below, with no separate math needed)
+     keeps it in its own vertical band regardless of screen width, so it
+     can never reach the badge's row at all. */
+  @media (max-width:860px){
+    .asst-bubble{right:0;bottom:calc(100% + 12px)}
+  }
   @media (max-width:420px){
     .asst-panel{width:92vw}
-    /* the chat head and its "comment box" (the greeting/reaction popup, not
-       the full open panel above) both shrink on phones - the 76px badge and
-       15px popup text are sized for a mouse-driven desktop corner, and read
-       oversized against a small viewport. .asst-mk fills .asst-launch via
-       inset:0, so shrinking the button scales the JM mark with it for free. */
+    /* the chat head and its comment bubble both shrink further on phones -
+       the 76px badge and 15px popup text are sized for a mouse-driven
+       desktop corner, and read oversized against a small viewport.
+       .asst-mk fills .asst-launch via inset:0, so shrinking the button
+       scales the JM mark with it for free. */
     .asst-launch{width:58px;height:58px}
     .asst-dot{width:13px;height:13px}
     .asst-badge{min-width:16px;height:16px;font-size:9px;line-height:14px}
     .asst-bubble{
-      right:66px;max-width:min(220px,calc(100vw - 96px));
+      max-width:min(220px,calc(100vw - 96px));
       padding:8px 26px 8px 12px;font-size:13px;
     }
     .asst-bubble-close{width:16px;height:16px;font-size:12px}
