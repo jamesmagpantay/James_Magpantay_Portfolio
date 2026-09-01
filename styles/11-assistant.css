@@ -3,7 +3,10 @@
      reads var() tokens only, so it re-themes for free across dark/light
      and the security/off-the-clock flip - no separate palette to maintain. ---- */
 
-  .asst{position:fixed;right:clamp(16px,2vw,28px);bottom:clamp(16px,2vw,28px);z-index:70;
+  /* above the photo lightbox (.lb, z-index:98) on purpose - its dark scrim
+     would otherwise sit over Bean and dim out his reaction bubble right
+     when a click on the photo underneath is what triggered it */
+  .asst{position:fixed;right:clamp(16px,2vw,28px);bottom:clamp(16px,2vw,28px);z-index:99;
     font-family:var(--body);}
   /* the corner view-badge (.vbadge, 04-view-chrome.css) used to dock in
      this same bottom-right spot below 861px, which is why this used to

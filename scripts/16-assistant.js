@@ -1070,6 +1070,15 @@
   var DL_HOVER = ["Good idea, keep that on file.", "That one's worth grabbing.", "Handy to have ready."];
   var DL_CLICK = ["Smart move.", "Good, that's saved.", "Keep that handy."];
 
+  /* Group One roster - these are just click-through photo IDs elsewhere in
+     REACT_SEL (.ph never carries a real label, so it would fall to
+     CLICK_GENERIC below), but James wanted the team's own section to feel
+     less like a generic gallery and more like he's actually introducing
+     them. Personalized with the figcaption name where there is one. */
+  var TEAMMATE_CLICK = ["Handsome.", "Okay, certified good-looking hacker.", "That's a solid teammate right there.", "10/10, would recruit again.", "Camera ready, that one."];
+  var TEAMMATE_CLICK_NAMED = ["NAME? Handsome.", "Look at NAME, showing off.", "NAME. Certified good looks, certified skills.", "That's NAME. Solid teammate, better face.", "NAME, camera ready as always."];
+  var GROUP_SHOT_CLICK = ["That's the whole crew, mid-hack.", "Group One, caught in the act.", "The team that got 8th out of 600. Not bad.", "Love this one, everyone's actually smiling."];
+
   var CF_LINES = {
     'cf-name': ["Go on, tell him who you are.", "Nice, starting with your name.", "Good, he likes knowing who's asking."],
     'cf-from': ["He'll actually reply to that one.", "Good, that's how he gets back to you.", "Make sure that one's right, it's the way back."],
@@ -1106,6 +1115,14 @@
     }
     if(el.matches('.dl a')){
       return pick(kind === 'hover' ? DL_HOVER : DL_CLICK);
+    }
+    if(el.closest('#groupone .gal-roster')){
+      var mate = el.querySelector('figcaption');
+      mate = mate ? mate.textContent.trim() : '';
+      return mate ? pick(TEAMMATE_CLICK_NAMED).replace(/NAME/g, mate) : pick(TEAMMATE_CLICK);
+    }
+    if(el.closest('#groupone') && el.matches('.ph')){
+      return pick(GROUP_SHOT_CLICK);
     }
     var label = labelOf(el);
     if(!label) return pick(kind === 'hover' ? HOVER_GENERIC : CLICK_GENERIC);
