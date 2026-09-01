@@ -277,9 +277,17 @@
 
   /* corner badge: the same answer, kept in reach on small screens - docked
      bottom-left so it doesn't compete with Bean (the site guide) in the
-     bottom-right corner (styles/11-assistant.css) */
+     bottom-right corner (styles/11-assistant.css). Icon-only rather than
+     the text pill .bar-flip uses in the header - it never appears above
+     861px (see below), so there's no desktop appearance to preserve, and
+     a compact round icon button reads as a corner utility rather than a
+     second nav element competing for attention next to Bean. The "Security
+     profile"/"Off the clock" text spans stay in the DOM (still swapped by
+     the same [data-view] toggle everything else uses) but are hidden here
+     - aria-label="Switch view" on the button covers the accessible name. */
   .vbadge{
     position:fixed;left:clamp(12px,2vw,24px);bottom:clamp(12px,2vw,24px);z-index:60;
+    width:46px;height:46px;padding:0;gap:0;justify-content:center;
     background:var(--bar-bg);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
     box-shadow:0 10px 26px rgba(0,0,0,.35);
     opacity:0;pointer-events:none;translate:0 12px;
@@ -287,6 +295,8 @@
                border-color .18s ease-out,background .18s ease-out,color .18s ease-out;
   }
   .vbadge.on{opacity:1;pointer-events:auto;translate:0 0}
+  .vbadge-ico{width:19px;height:19px;flex:none}
+  .vbadge .dot,.vbadge span[data-view]{display:none}
   @media (min-width:861px){.vbadge{display:none}}
   /* the flip itself: a short wipe so the change is never missed */
   .wipe{
