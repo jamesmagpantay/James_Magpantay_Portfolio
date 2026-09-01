@@ -5,12 +5,13 @@
 
   .asst{position:fixed;right:clamp(16px,2vw,28px);bottom:clamp(16px,2vw,28px);z-index:70;
     font-family:var(--body);}
-  /* below 861px the corner view-badge docks in the same spot once the hero
-     has scrolled past - lift the guide clear of it rather than chase its
-     own show/hide timing */
-  @media (max-width:860px){
-    .asst{bottom:calc(clamp(16px,2vw,28px) + 66px)}
-  }
+  /* the corner view-badge (.vbadge, 04-view-chrome.css) used to dock in
+     this same bottom-right spot below 861px, which is why this used to
+     lift the guide clear of it. It now docks bottom-left instead (James:
+     "put bean in the right bottom corner and move the switch button to
+     the left bottom corner"), so Bean no longer needs the extra lift -
+     the mobile-specific override that added it has been removed and he
+     just uses the same corner offset as desktop. */
 
   /* the quip: a little callout that trails the chathead while it's being
      dragged or thrown, positioned in real viewport pixels by JS every

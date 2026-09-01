@@ -275,9 +275,11 @@
     .bar .sfx-btn,.bar .mus-btn,.bar .thm-btn{padding:9px 11px}
   }
 
-  /* corner badge: the same answer, kept in reach on small screens */
+  /* corner badge: the same answer, kept in reach on small screens - docked
+     bottom-left so it doesn't compete with Bean (the site guide) in the
+     bottom-right corner (styles/11-assistant.css) */
   .vbadge{
-    position:fixed;right:clamp(12px,2vw,24px);bottom:clamp(12px,2vw,24px);z-index:60;
+    position:fixed;left:clamp(12px,2vw,24px);bottom:clamp(12px,2vw,24px);z-index:60;
     background:var(--bar-bg);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
     box-shadow:0 10px 26px rgba(0,0,0,.35);
     opacity:0;pointer-events:none;translate:0 12px;
