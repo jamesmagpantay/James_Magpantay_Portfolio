@@ -5,11 +5,18 @@
   var host = document.getElementById('toasts');
   var LIFE = 5200, MAX = 3;
 
-  window.toast = function(kind, title, detail){
+  window.toast = function(kind, title, detail, opts){
     if(!host) return;
     while(host.children.length >= MAX) drop(host.firstElementChild);
     var t = document.createElement('div');
-    t.className = 'toast ' + (kind || 'info');
+    /* .center is a modifier, not a second toast system - same host, same
+       queue/dismiss/auto-hide logic, it just escapes the bottom-left stack
+       via position:fixed (see 09-feedback.css) for the one case that needs
+       to interrupt bottom-middle rather than join the corner queue: an
+       incomplete contact-form submit. opts.life overrides the default
+       LIFE for that same call, so it can auto-dismiss faster without
+       shortening every other toast's lifetime. */
+    t.className = 'toast ' + (kind || 'info') + (opts && opts.center ? ' center' : '');
     var dot = document.createElement('i'); dot.className = 'toast-dot';
     var body = document.createElement('div');
     var b = document.createElement('b'); b.textContent = title;
@@ -22,7 +29,7 @@
     /* tapping one dismisses it - they stack at the thumb on a phone */
     t.addEventListener('click', function(){ drop(t); });
     host.appendChild(t);
-    setTimeout(function(){ drop(t); }, LIFE);
+    setTimeout(function(){ drop(t); }, (opts && opts.life) || LIFE);
     return t;
   };
   function drop(t){

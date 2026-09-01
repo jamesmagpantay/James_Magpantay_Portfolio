@@ -285,7 +285,7 @@
   try{
     if(!localStorage.getItem('asst-dragged') && !localStorage.getItem('asst-drag-hint-shown')){
       dragHintT = setTimeout(function(){
-        if(!showText("Oh, also - you can grab and toss me around if you want. Try it.", 6000, false)) return;
+        if(!showText("Oh, and you can actually grab and toss me around if you want. Try it.", 6000, false)) return;
         try{ localStorage.setItem('asst-drag-hint-shown', '1'); }catch(err){}
       }, 20000);
     }
@@ -990,6 +990,22 @@
   document.addEventListener('viewflip', function(e){
     react(function(){
       say(pick(FLIP_LINES[e.detail && e.detail.offline ? 'off' : 'pro']));
+    }, 1200);
+  });
+
+  /* fired by 05-contact.js on a failed submit (see 'contactinvalid' there) -
+     separate from the CF_LINES focus reactions above (which comment on
+     landing in a field) and from the centered toast (which names exactly
+     what's wrong). This one's just a quick aside acknowledging the miss,
+     singular/plural aware to match the toast's own count. */
+  var INCOMPLETE_LINES = {
+    one: ["Looks like one field's still empty.", "Almost. Just one more to fill in.", "One field's holding that up."],
+    many: ["A few fields still need filling in.", "Not quite ready yet. Check the ones in red.", "Couple more fields before that sends."]
+  };
+  document.addEventListener('contactinvalid', function(e){
+    var n = (e.detail && e.detail.count) || 1;
+    react(function(){
+      say(pick(n === 1 ? INCOMPLETE_LINES.one : INCOMPLETE_LINES.many), 1800);
     }, 1200);
   });
 

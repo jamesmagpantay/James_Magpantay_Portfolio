@@ -54,7 +54,11 @@
     });
     if(bad){
       bad.focus();
-      window.toast('err','Not sent', n===1 ? 'One field needs attention.' : n+' fields need attention.');
+      window.toast('err','Not sent', n===1 ? 'One field needs attention.' : n+' fields need attention.', {center:true, life:2800});
+      /* lets Bean react without this file needing to know he exists -
+         same pattern as the 'viewflip' event 16-assistant.js already
+         listens for. A no-op if the widget script never loaded. */
+      document.dispatchEvent(new CustomEvent('contactinvalid', {detail:{count:n}}));
       return;
     }
     var v=function(id){ return document.getElementById(id).value.trim(); };
