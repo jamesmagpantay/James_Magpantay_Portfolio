@@ -49,6 +49,7 @@ document.documentElement.setAttribute('data-theme', 'dark');
 <script defer src="scripts/15-sky.js"></script>
 <script defer src="scripts/16-assistant.js"></script>
 <script defer src="scripts/17-groupone.js"></script>
+<script defer src="scripts/18-certs.js"></script>
 </head>
 <body>
 
@@ -411,14 +412,14 @@ document.documentElement.setAttribute('data-theme', 'dark');
       </div>
       <div class="stage-panel">
         <div id="set-certs">
-          <span class="sticker s1"><img src="logos/ctia-ama.png" alt=""><b>CTIA Level III</b><small>Earned</small></span>
-          <span class="sticker s2"><img src="logos/google-cyber.png" alt=""><b>Google Cybersecurity</b><small>In progress</small></span>
-          <span class="sticker s3"><img src="logos/ccna.png" alt=""><b>Cisco CCNA</b><small>In training</small></span>
-          <span class="sticker s4"><img src="logos/ccp.png" alt=""><b>CCP · Appkademiya</b><small>Earned</small></span>
-          <span class="sticker s5"><img src="logos/isc2-cc.png" alt=""><b>ISC2 CC</b><small>Candidate</small></span>
-          <span class="sticker s6"><img src="logos/security-plus.png" alt=""><b>CompTIA Security+</b><small>Target</small></span>
-          <span class="sticker s7"><img src="logos/isc2-candidate.png" alt=""><b>ISC2 Candidate</b><small>Active</small></span>
-          <span class="sticker s8"><img src="logos/tryhackme.png" alt=""><b>TryHackMe</b><small>AI Odyssey CTF</small></span>
+          <span class="sticker s1" data-cert="ctia" tabindex="0" role="button"><span class="logo-pair"><img src="logos/ctia-ama.png" alt=""><img class="logo-pair-sub" src="logos/tesda.png" alt=""></span><b>CTIA Level III</b><small>Earned</small></span>
+          <span class="sticker s2" data-cert="google" tabindex="0" role="button"><img src="logos/google-cyber.png" alt=""><b>Google Cybersecurity</b><small>In progress</small></span>
+          <span class="sticker s3" data-cert="ccna" tabindex="0" role="button"><img src="logos/ccna.png" alt=""><b>Cisco CCNA</b><small>In training</small></span>
+          <span class="sticker s4" data-cert="ccp" tabindex="0" role="button"><img src="logos/ccp.png" alt=""><b>CCP · Appkademiya</b><small>Earned</small></span>
+          <span class="sticker s5" data-cert="isc2cc" tabindex="0" role="button"><img src="logos/isc2-cc.png" alt=""><b>ISC2 CC</b><small>Candidate</small></span>
+          <span class="sticker s6" data-cert="secplus" tabindex="0" role="button"><img src="logos/security-plus.png" alt=""><b>CompTIA Security+</b><small>Target</small></span>
+          <span class="sticker s7" data-cert="isc2candidate" tabindex="0" role="button"><img src="logos/isc2-candidate.png" alt=""><b>ISC2 Candidate</b><small>Active</small></span>
+          <span class="sticker s8" data-cert="thm" tabindex="0" role="button"><img src="logos/tryhackme.png" alt=""><b>TryHackMe</b><small>AI Odyssey CTF</small></span>
         </div>
 
         <div id="set-social" hidden>
@@ -1014,12 +1015,12 @@ document.documentElement.setAttribute('data-theme', 'dark');
       <span class="meta big">Credentials · verified against CV · 2026-08-29</span>
     </div>
     <div class="ledger">
-      <div class="row earned"><img class="lg" src="logos/ctia-ama.png" alt=""><div><h3>Cyber Threat Intelligence Analysis</h3><p class="via">CTIA Level III</p></div><span class="yr">2026</span><span class="st">Earned</span></div>
-      <div class="row earned"><img class="lg" src="logos/ccp.png" alt=""><div><h3>Certified Cybersecurity Professional</h3><p class="via">Appkademiya</p></div><span class="yr">2026</span><span class="st">Earned</span></div>
-      <div class="row"><img class="lg" src="logos/google-cyber.png" alt=""><div><h3>Google Cybersecurity Professional</h3><p class="via">Coursera</p></div><span class="yr">est. 2026</span><span class="st">In progress</span></div>
-      <div class="row"><img class="lg chip-lg" src="logos/isc2-cc.png" alt=""><div><h3>ISC2 Certified in Cybersecurity</h3><p class="via">ISC2 Candidate</p></div><span class="yr">est. 2027</span><span class="st">Candidate</span></div>
-      <div class="row"><img class="lg" src="logos/security-plus.png" alt=""><div><h3>CompTIA Security+</h3><p class="via">Next on the roadmap</p></div><span class="yr">target</span><span class="st">Target</span></div>
-      <div class="row"><img class="lg chip-lg" src="logos/ccna.png" alt=""><div><h3>Cisco CCNA</h3><p class="via">Training via Cisco NetConnect PUP</p></div><span class="yr">target</span><span class="st">Target</span></div>
+      <div class="row earned" data-cert="ctia" tabindex="0" role="button"><span class="logo-pair"><img class="lg" src="logos/ctia-ama.png" alt=""><img class="logo-pair-sub" src="logos/tesda.png" alt=""></span><div><h3>Cyber Threat Intelligence Analysis</h3><p class="via">CTIA Level III</p></div><span class="yr">2026</span><span class="st">Earned</span></div>
+      <div class="row earned" data-cert="ccp" tabindex="0" role="button"><img class="lg" src="logos/ccp.png" alt=""><div><h3>Certified Cybersecurity Professional</h3><p class="via">Appkademiya</p></div><span class="yr">2026</span><span class="st">Earned</span></div>
+      <div class="row" data-cert="google" tabindex="0" role="button"><img class="lg" src="logos/google-cyber.png" alt=""><div><h3>Google Cybersecurity Professional</h3><p class="via">Coursera</p></div><span class="yr">est. 2026</span><span class="st">In progress</span></div>
+      <div class="row" data-cert="isc2cc" tabindex="0" role="button"><img class="lg chip-lg" src="logos/isc2-cc.png" alt=""><div><h3>ISC2 Certified in Cybersecurity</h3><p class="via">ISC2 Candidate</p></div><span class="yr">est. 2027</span><span class="st">Candidate</span></div>
+      <div class="row" data-cert="secplus" tabindex="0" role="button"><img class="lg" src="logos/security-plus.png" alt=""><div><h3>CompTIA Security+</h3><p class="via">Next on the roadmap</p></div><span class="yr">target</span><span class="st">Target</span></div>
+      <div class="row" data-cert="ccna" tabindex="0" role="button"><img class="lg chip-lg" src="logos/ccna.png" alt=""><div><h3>Cisco CCNA</h3><p class="via">Training via Cisco NetConnect PUP</p></div><span class="yr">target</span><span class="st">Target</span></div>
     </div>
   </section>
 
@@ -1169,6 +1170,35 @@ document.documentElement.setAttribute('data-theme', 'dark');
 <div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Photo">
   <button class="lb-close" type="button" aria-label="Close">&times;</button>
   <figure><img id="lb-img" src="" alt=""><figcaption id="lb-cap"></figcaption></figure>
+</div>
+
+<div class="pm" id="cm" role="dialog" aria-modal="true" aria-label="Certification detail">
+  <div class="pm-panel">
+    <div class="pm-shot" id="cm-shot">
+      <img id="cm-img" src="" alt="" hidden>
+      <div class="cm-empty" id="cm-empty" hidden>
+        <svg class="cm-empty-ico" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="14" rx="2"/>
+          <path d="M7 8h10M7 11.5h6"/>
+          <path d="M9 17v4l3-1.5L15 21v-4"/>
+        </svg>
+        <span>Certificate not uploaded yet</span>
+      </div>
+    </div>
+    <div class="pm-body">
+      <button class="pm-close" type="button" aria-label="Close">&times;</button>
+      <span class="cm-status" id="cm-status"></span>
+      <h3 id="cm-title"></h3>
+      <p id="cm-copy"></p>
+      <span class="fact" id="cm-fact"></span>
+      <div class="pm-links">
+        <a class="pm-link pm-link-disabled" id="cm-verify" target="_blank" rel="noopener" aria-disabled="true" tabindex="-1">
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7"/><path d="M10 14L21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+          <span>Verify</span>
+        </a>
+      </div>
+    </div>
+  </div>
 </div>
 
 </body>

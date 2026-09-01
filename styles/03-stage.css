@@ -107,8 +107,41 @@
   }
   @keyframes float{0%,100%{translate:0 0}50%{translate:0 -9px}}
   @keyframes morph{from{transform:perspective(700px) rotateY(160deg) scale(.2);opacity:0}}
+  /* the cert stickers are clickable now (they open the certificate viewer).
+     float's own keyframes run continuously on this element and only touch
+     the standalone `translate` property, but Chrome couples ALL individual
+     transform properties (translate/rotate/scale) together the moment any
+     one of them is animated - a plain `scale:` on hover gets silently
+     frozen at its non-hover value instead of applying. The `transform`
+     shorthand isn't part of that coupling, so scaling through it here
+     actually works. */
+  .sticker:not(.ss){cursor:pointer;transition:transform .2s ease-out,filter .2s ease-out}
+  .sticker:not(.ss):hover{transform:scale(1.08);filter:drop-shadow(0 8px 16px rgba(0,0,0,.22))}
+  .sticker:not(.ss):focus-visible{outline:2px solid var(--orange);outline-offset:4px;border-radius:12px}
   .sticker img{width:100%;height:clamp(72px,9vw,124px);object-fit:contain}
   .s2 img,.s4 img,.s7 img{height:clamp(92px,11.5vw,158px)}
+  /* CTIA's badge is two logos, not one: AMA out front (the issuing school),
+     TESDA tucked behind and to the side (the sponsor) - still visible,
+     not competing for attention. .logo-pair takes over the box .sticker
+     img/.row .lg used to size directly; the main logo is a plain <img>
+     inside it and inherits that sizing normally through the same
+     descendant selectors, so only the sub-logo needs its own rule.
+     !important on its width/height is deliberate: those same descendant
+     selectors also match it and would otherwise blow it back up to full
+     size, since a more specific override can't out-rank them from here. */
+  /* z-index:0 (not just position:relative) is required here - without an
+     explicit z-index this box doesn't establish its own stacking context,
+     so the sub-logo's z-index:-1 below escapes it entirely and stacks
+     against whatever ancestor context happens to be nearest instead
+     (which buried it behind the ledger row entirely; the hero sticker
+     only looked fine by accident). */
+  .logo-pair{position:relative;z-index:0;display:inline-block}
+  .sticker .logo-pair{width:100%;height:clamp(72px,9vw,124px)}
+  .logo-pair-sub{
+    position:absolute;right:-10%;bottom:-12%;z-index:-1;
+    width:52% !important;height:52% !important;object-fit:contain;
+    filter:drop-shadow(0 3px 6px rgba(0,0,0,.32));
+  }
   .sticker b{font-weight:700;font-size:clamp(13.5px,1.3vw,18px);line-height:1.25;color:var(--ink)}
   .sticker small{display:block;font-family:var(--mono);font-weight:400;font-size:clamp(10px,.82vw,12px);letter-spacing:.1em;text-transform:uppercase;color:var(--meta)}
   .s1{left:4%;top:6%;rotate:-7deg;animation-delay:.02s,.2s}

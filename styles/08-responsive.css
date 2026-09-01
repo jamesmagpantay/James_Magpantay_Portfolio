@@ -191,12 +191,11 @@
     .stage{
       display:flex;flex-direction:column;align-items:center;
       gap:0;padding-bottom:0;
-      /* the school marks beside the CTA above now carry real height of their
-         own - close the gap that opened up under them so the photo and its
-         tile sit right underneath instead of drifting down the page. Pulled
-         up far enough that the figure's head lands level with the "Click my
-         photo to..." note above it, not just closer to it. */
-      margin-top:clamp(-84px,-15vw,-44px);
+      /* James: the negative pull-up here used to run the photo straight
+         into the last line of the intro paragraph above it, on real
+         phones. A small positive gap instead, just enough clearance for
+         the text to finish before the figure starts. */
+      margin-top:clamp(20px,4vw,40px);
       /* how far the cut-out's hard bottom crop is dissolved away into the
          tile it stands on */
       --sink:clamp(40px,10vw,80px);

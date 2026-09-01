@@ -32,12 +32,11 @@
      at this width and so keeps them in reach at any scroll depth. The hero
      row is just the name again. */
   @media (max-width:760px){
-    /* The chip hangs 38px above this block and bobs another 9px, so 47px of
-       it lives in this gap. The gap was trimmed to 5vh when the controls
-       needed a second row here; they are in the bar now, so give it back -
-       with a px floor, because a vh-based gap shrinks on a short phone or
-       under Display Zoom exactly where the clearance is already tightest. */
-    .hero-top{margin-bottom:clamp(56px,8vh,72px)}
+    /* James: pull the hero up so the flip chip sits level with the JM mark
+       instead of hanging well below it - the chip already climbs 38px
+       above this block on its own, so this gap only needs to cover the
+       rest of the distance up to the mark's own row. */
+    .hero-top{margin-bottom:clamp(16px,3vh,28px)}
     .hero-top-left .sfx-btn,
     .hero-top-left .mus-btn,
     .hero-top-left .thm-btn{display:none}
