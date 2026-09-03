@@ -126,7 +126,7 @@
      (excited, cheeky) pass a revert delay and settle back to welcoming on
      their own; curious and sleepy are idle-driven and persist until real
      activity clears them, below. ---- */
-  var MOOD_CLASSES = ['mood-welcoming','mood-excited','mood-curious','mood-sleepy','mood-cheeky','mood-angry','mood-sad','mood-proud','mood-bored','mood-confused','mood-smug','mood-shy','mood-cold','mood-cozy'];
+  var MOOD_CLASSES = ['mood-welcoming','mood-excited','mood-curious','mood-sleepy','mood-waking','mood-cheeky','mood-angry','mood-sad','mood-proud','mood-bored','mood-confused','mood-smug','mood-shy','mood-cold','mood-cozy'];
   var currentMood = 'welcoming', moodT = null;
 
   /* sad's pose (drooped, rotated apart) is far enough from every other
@@ -387,9 +387,26 @@
      mouse) resets it straight back to welcoming. Each stage fires once per
      page load, whether or not the first greeting was dismissed. ---- */
   var lastActivity = Date.now(), curiousShown = false, sleepyShown = false;
-  function markActivity(){
+  function markActivity(e){
+    /* the projects rail auto-drifts on its own (see 02-projects.js), which
+       nudges its scrollLeft every animation frame and fires a real native
+       'scroll' event each time - caught here too since scroll doesn't
+       bubble and this listener needs capture:true to see scrolling from
+       any scrollable container on the page. Left unfiltered, that ambient
+       drift alone was enough to keep resetting the idle clock forever, so
+       he could never actually go curious/sleepy while it played. A real
+       drag/scrub on that same rail still marks activity fine through the
+       pointerdown/pointermove listeners below, so ignoring its scroll
+       events specifically loses no real signal. */
+    if(e && e.type === 'scroll' && e.target && e.target.classList && e.target.classList.contains('proj-rail')) return;
     lastActivity = Date.now();
-    if(currentMood === 'curious' || currentMood === 'sleepy') setMood('welcoming');
+    /* sleepy gets its own brief "waking" stretch (see the CSS) rather than
+       snapping straight back to welcoming, since that's the one mood with
+       a Zzz visibly riding on it that ought to react to being woken rather
+       than just disappearing; curious has no such prop, so it can still
+       cut straight across. */
+    if(currentMood === 'sleepy') setMood('waking', 1200);
+    else if(currentMood === 'curious') setMood('welcoming');
   }
   ['pointerdown','pointermove','keydown','scroll'].forEach(function(ev){
     addEventListener(ev, markActivity, { passive: true, capture: true });
@@ -399,7 +416,7 @@
     if(!curiousShown && idle >= 25000){
       curiousShown = true;
       if(panel.hidden) showBubble('curious'); else setMood('curious');
-    } else if(!sleepyShown && idle >= 90000){
+    } else if(!sleepyShown && idle >= 45000){
       sleepyShown = true;
       if(panel.hidden) showBubble('sleepy'); else setMood('sleepy');
     }
@@ -745,7 +762,15 @@
   }
   function roam(){
     clearTimeout(roamT);
-    if(REDUCED || !panel.hidden || !bubble.hidden || dragging || thrown){
+    /* asleep holds this the same way an open panel does - showBubble('sleepy')
+       already sends him home and stops the idle bob via goHome() the moment
+       he drifts off (see markActivity/setMood), but that alone only lasts
+       as long as the sleepy speech bubble stays up (14s); without this
+       check here too, roam() would happily pick him back up and wander off
+       again the instant that bubble auto-hides while he's still supposedly
+       asleep. Stays parked until markActivity's currentMood==='sleepy'
+       check fires the waking stretch and clears the mood. */
+    if(REDUCED || !panel.hidden || !bubble.hidden || dragging || thrown || currentMood === 'sleepy'){
       roamT = setTimeout(roam, 2600);
       return;
     }
