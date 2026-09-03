@@ -1272,7 +1272,7 @@
     border:none;font-size:16px;cursor:pointer;
   }
 
-  @media (max-width:420px){
+  @media (max-width:640px){
     .asst-panel{width:92vw}
     /* the chat head and its "comment box" (the greeting/reaction popup, not
        the full open panel above) both shrink on phones - the 76px badge and

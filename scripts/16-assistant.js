@@ -1270,7 +1270,10 @@
       react(function(){
         var on = window.sfx && window.sfx.isOn();
         say(pick(SFX_LINES[on ? 'on' : 'off']));
-        if(on){ if(currentMood === 'sad') setMood('welcoming'); }
+        /* genuinely happy about sound coming back, not just no-longer-sad -
+           same transient excited pose/revert timing the CTA hover and
+           other quick pick-me-ups already use, not a special one-off */
+        if(on) setMood('excited', 2200);
         else setMood('sad', 2600);
       }, 1200);
     });
@@ -1290,7 +1293,9 @@
         var on = b.getAttribute('aria-pressed') === 'true';
         if(!on){ say(pick(MUS_OFF_LINES)); setMood('sad', 2600); return; }
         say(pick(document.body.classList.contains('offline') ? MUS_ON_OFF : MUS_ON_PRO));
-        if(currentMood === 'sad') setMood('welcoming');
+        /* same "actually happy," not just "no longer sad," treatment as
+           the sound toggle above */
+        setMood('excited', 2200);
       }, 1200);
     });
   });

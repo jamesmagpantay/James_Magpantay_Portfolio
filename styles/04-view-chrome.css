@@ -174,8 +174,11 @@
   .hero-top .thm-btn:hover{background:var(--orange);color:#fff}
   @media (max-width:760px){.hero-top .thm-btn{font-size:12px;padding:10px 15px}}
   @media (max-width:600px){.thm-btn .thm-lab{display:none}.thm-btn{padding:9px 11px}}
-  .hero-top-right{display:flex;align-items:center;gap:clamp(18px,2.8vw,40px)}
-  .hero-top-left{display:flex;align-items:center;gap:clamp(10px,1.6vw,22px)}
+  /* gap sizes are tuned per content, not per side - the wider gap suits
+     the brand-to-nav and nav-link spacing now living in hero-top-left,
+     the tighter one suits the three toggle buttons now in hero-top-right */
+  .hero-top-left{display:flex;align-items:center;gap:clamp(18px,2.8vw,40px)}
+  .hero-top-right{display:flex;align-items:center;gap:clamp(10px,1.6vw,22px)}
   /* the hero control is the one people meet first - it wears the accent */
   .hero-top .sfx-btn{
     font-size:clamp(12.5px,1.05vw,16px);padding:11px 19px;gap:11px;

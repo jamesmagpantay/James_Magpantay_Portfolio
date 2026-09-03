@@ -37,13 +37,22 @@
        above this block on its own, so this gap only needs to cover the
        rest of the distance up to the mark's own row. */
     .hero-top{margin-bottom:clamp(16px,3vh,28px)}
-    .hero-top-left .sfx-btn,
-    .hero-top-left .mus-btn,
-    .hero-top-left .thm-btn{display:none}
     .brand{gap:12px;font-size:clamp(23px,6.4vw,34px)}
     .brand .mark{width:clamp(32px,7.6vw,44px);height:clamp(32px,7.6vw,44px)}
-    /* it holds only the section nav, already hidden at this width */
-    .hero-top-right{display:none}
+    /* nav now lives beside the brand in hero-top-left, but is already
+       hidden at this width by the generic nav{display:none} above - only
+       the toggles (now in hero-top-right) need hiding here explicitly.
+       Targeting the three buttons directly, not the container itself
+       (.hero-top-right{display:none}) - that container rule loses a
+       same-specificity cascade fight against 04-view-chrome.css's own
+       unconditional .hero-top-right{display:flex}, which loads after this
+       file and isn't scoped to a media query, so it would win regardless
+       of viewport width. The old left-side version of this rule dodged
+       that fight by targeting buttons directly for the same reason; doing
+       the same here on the right side keeps that guarantee. */
+    .hero-top-right .sfx-btn,
+    .hero-top-right .mus-btn,
+    .hero-top-right .thm-btn{display:none}
   }
 
   .h-wrap{position:relative;z-index:0;margin-bottom:clamp(6px,1.4vh,18px);cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;translate:0 clamp(8px,2.2vw,38px)}
