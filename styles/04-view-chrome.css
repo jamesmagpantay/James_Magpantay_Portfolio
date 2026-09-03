@@ -163,14 +163,14 @@
     /* the delay lives here, on the hidden state, not the visible one - a
        transition takes its timing from whichever rule the property is
        transitioning TO, so leaving hover (falling back to this rule) waits
-       .4s before the fade even starts, while entering hover below matches
+       1.5s before the fade even starts, while entering hover below matches
        its own zero-delay rule instead and appears instantly. pointer-events
        is carried in the same transition (0s duration, same delay) purely
        so it flips to none in step with the fade rather than the instant
        the cursor leaves - without that, the popover would go visually
        fading-but-unclickable for the whole delay window, and a cursor
        doubling back onto it mid-fade would land on a dead slider. */
-    transition:opacity .16s ease-out .4s,translate .16s ease-out .4s,pointer-events 0s linear .4s;
+    transition:opacity .16s ease-out 1.5s,translate .16s ease-out 1.5s,pointer-events 0s linear 1.5s;
   }
   /* :focus-visible, not :focus-within - clicking into the slider to drag
      it focuses it same as tabbing to it would, but a plain click focus
