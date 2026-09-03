@@ -11,6 +11,8 @@
   var shot   = document.getElementById('cm-shot'),
       img    = document.getElementById('cm-img'),
       empty  = document.getElementById('cm-empty'),
+      emptyTxt = document.getElementById('cm-empty-txt'),
+      emptyDefault = emptyTxt ? emptyTxt.textContent : 'Certificate not uploaded yet',
       status = document.getElementById('cm-status'),
       title  = document.getElementById('cm-title'),
       copy   = document.getElementById('cm-copy'),
@@ -25,7 +27,8 @@
     ctia: {
       title: 'Cyber Threat Intelligence Analysis', earned: true, statusLabel: 'Earned',
       desc: 'Threat intelligence lifecycle work: collection, analysis, and reporting on adversary behavior. Sponsored by TESDA.',
-      fact: "Earned via CTIA Level III (AMA), 2026. Certificate photo not uploaded yet."
+      fact: "Earned via CTIA Level III (AMA), 2026. Certificate photo not uploaded yet.",
+      emptyNote: 'Earned — photo pending upload'
     },
     ccp: {
       title: 'Certified Cybersecurity Professional', earned: true, statusLabel: 'Earned',
@@ -105,6 +108,7 @@
       empty.hidden = true;
     }else{
       img.style.display = 'none'; img.removeAttribute('src');
+      if(emptyTxt) emptyTxt.textContent = c.emptyNote || emptyDefault;
       empty.hidden = false;
     }
     document.body.classList.add('pm-open');

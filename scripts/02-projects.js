@@ -36,7 +36,26 @@
 
   /* any manual scrub wins, then the drift eases back in after a beat */
   function defer(){ idle = performance.now() + 1600; }
-  rail.addEventListener('wheel', defer, {passive:true});
+  /* a plain vertical mouse wheel over the rail would otherwise get
+     auto-converted into a horizontal pan by the browser, since the rail
+     only scrolls on the x axis - that traps anyone just trying to scroll
+     down the page. Only treat it as "the visitor chose to pan" when the
+     gesture is actually horizontal (trackpad swipe or shift+wheel); a
+     vertical-dominant wheel is stopped from panning the rail and applied
+     to the page scroll instead, not passive since it needs to preventDefault. */
+  rail.addEventListener('wheel', function(e){
+    if(!e.shiftKey && Math.abs(e.deltaY) > Math.abs(e.deltaX)){
+      e.preventDefault();
+      /* the object form with an explicit behavior, not the legacy
+         scrollBy(x,y) signature - that one silently no-ops here under
+         the page's global CSS scroll-behavior:smooth. 'instant' mirrors
+         how a native wheel scroll actually feels (each tick lands right
+         away, not eased), so passthrough scrolling doesn't feel laggy. */
+      scrollBy({top: e.deltaY, left: 0, behavior: 'instant'});
+      return;
+    }
+    defer();
+  }, {passive:false});
   rail.addEventListener('touchstart', defer, {passive:true});
   rail.addEventListener('touchmove', defer, {passive:true});
 
