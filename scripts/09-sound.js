@@ -735,14 +735,62 @@
      sync with each other on every input rather than each owning its own
      state. */
   var volSliders = [].slice.call(document.querySelectorAll('.mus-vol-slider'));
-  function syncSliders(){
-    volSliders.forEach(function(s){ s.value = String(Math.round(userVol * 100)); });
+  /* skip, optionally, the one currently under the user's own cursor -
+     writing element.value back onto a range input the user has an active
+     pointer-drag on (even to the value it already holds) can fight the
+     browser's own internal drag tracking, reading as the thumb freezing
+     or refusing to move past wherever the first successful move landed.
+     The other slider (kept in sync so both always agree) is never the one
+     mid-drag, so it always gets the write. */
+  function syncSliders(exceptEl){
+    volSliders.forEach(function(s){
+      if(s === exceptEl) return;
+      s.value = String(Math.round(userVol * 100));
+    });
   }
   syncSliders();
+  /* dragging is handled entirely by hand here, not left to the browser's
+     own native range-drag tracking. A fully custom-styled
+     (-webkit-appearance:none) range input loses Chrome's "click anywhere
+     on the track to jump there" handling - checked directly, only a
+     pointerdown landing pixel-for-pixel on the 14px thumb itself actually
+     engages native dragging; anywhere else on the track does nothing.
+     Since the thumb starts pinned at one end (100%), a click meant to
+     jump it from across the track almost never lands exactly on it, so
+     nothing happens - reads as the slider being stuck at whatever it
+     already was. setPointerCapture is what makes this reliable rather
+     than just a pointerdown fix: it keeps pointermove routed to this
+     element for the rest of the gesture even if the cursor drifts outside
+     the slider's own (small, 14px-tall) box mid-drag, which a real drag
+     toward either edge does often. */
+  volSliders.forEach(function(s){
+    function setFromClientX(clientX){
+      var rect = s.getBoundingClientRect();
+      var pct = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+      var v = String(Math.round(pct * 100));
+      if(v !== s.value){
+        s.value = v;
+        s.dispatchEvent(new Event('input', {bubbles:true}));
+      }
+    }
+    s.addEventListener('pointerdown', function(e){
+      setFromClientX(e.clientX);
+      try{ s.setPointerCapture(e.pointerId); }catch(err){}
+      function onMove(ev){ setFromClientX(ev.clientX); }
+      function onUp(){
+        s.removeEventListener('pointermove', onMove);
+        s.removeEventListener('pointerup', onUp);
+        s.removeEventListener('pointercancel', onUp);
+      }
+      s.addEventListener('pointermove', onMove);
+      s.addEventListener('pointerup', onUp);
+      s.addEventListener('pointercancel', onUp);
+    });
+  });
   volSliders.forEach(function(s){
     s.addEventListener('input', function(){
       userVol = Math.max(0, Math.min(1, s.value / 100));
-      syncSliders();
+      syncSliders(s);
       try{ localStorage.setItem('music-uservol', String(userVol)); }catch(err){}
       /* dragging the slider while music is off used to just set a level
          nobody could hear yet - silent, so it read as broken rather than

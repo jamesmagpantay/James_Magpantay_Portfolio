@@ -199,9 +199,21 @@
      (and the Firefox track/thumb pseudo-elements below) replace that with
      one fixed, always-visible circle that cannot depend on OS theming. */
   .mus-vol-slider{
-    width:90px;height:4px;margin:0;cursor:pointer;
+    width:90px;height:14px;margin:0;cursor:pointer;
     -webkit-appearance:none;appearance:none;
-    background:var(--pill-quiet);border-radius:2px;outline:none;
+    background:transparent;outline:none;
+  }
+  /* the runnable-track needs its own explicit reset too, not just the
+     input itself - left alone, some Chromium builds keep a default
+     vertical padding on this pseudo-element even once the outer input is
+     -webkit-appearance:none, so the visible 4px bar and the track's real
+     hit-area stop matching (still clickable, just not quite where it
+     looks like it should be, which reads as "stuck"/unresponsive rather
+     than off by a few px). Height matches the input's own box above so
+     the thumb has room to sit centered without a negative margin fighting
+     a mismatched track height. */
+  .mus-vol-slider::-webkit-slider-runnable-track{
+    width:90px;height:4px;background:var(--pill-quiet);border-radius:2px;
   }
   .mus-vol-slider::-webkit-slider-thumb{
     -webkit-appearance:none;appearance:none;
