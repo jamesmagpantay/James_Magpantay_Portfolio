@@ -250,12 +250,12 @@
      on one side. Still pure scaling: same position, same proportions,
      just smaller top clamp values. */
   @media (min-width:1000px) and (max-height:1080px){
-    .h-intro{max-width:490px}
-    .h-intro .h-eyebrow{font-size:clamp(15px,1.25vw,17px)}
-    .h-intro .h-name{font-size:clamp(28px,3vw,36px)}
-    .h-intro .h-lede{font-size:clamp(16px,1.3vw,18.5px)}
-    .h-line .ol{font-size:clamp(48px,8vw,136px)}
-    .h-line .sd{font-size:clamp(57px,9.9vw,166px)}
+    .h-intro{max-width:515px}
+    .h-intro .h-eyebrow{font-size:clamp(15.5px,1.35vw,18.5px)}
+    .h-intro .h-name{font-size:clamp(29px,3.3vw,39px)}
+    .h-intro .h-lede{font-size:clamp(17px,1.4vw,20px)}
+    .h-line .ol{font-size:clamp(50px,8.5vw,144px)}
+    .h-line .sd{font-size:clamp(59px,10.4vw,175px)}
   }
   /* the desktop sizes have a fixed px floor (they only need to shrink until
      the column beside the headline runs out, not all the way to a phone) -
