@@ -323,12 +323,12 @@
   .vbadge-ico{width:28px;height:28px;flex:none}
   .vbadge .dot,.vbadge span[data-view]{display:none}
   @media (min-width:861px){.vbadge{display:none}}
-  /* matches Bean's own phone-width shrink (.asst-launch, 76px -> 58px
+  /* matches Bean's own phone-width shrink (.asst-launch, 76px -> 48px
      under 640px, styles/11-assistant.css) so the two stay the same size
      at every width, not just above 640px */
   @media (max-width:640px){
-    .vbadge{width:58px;height:58px}
-    .vbadge-ico{width:22px;height:22px}
+    .vbadge{width:48px;height:48px}
+    .vbadge-ico{width:18px;height:18px}
   }
 
   /* the flip itself: a short wipe so the change is never missed */

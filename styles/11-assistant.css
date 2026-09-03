@@ -1285,9 +1285,9 @@
        (see 04-view-chrome.css) rather than a wide text pill, so that
        overlap risk is gone and the beside placement (less visually
        distracting, per James) was restored. */
-    .asst-launch{width:58px;height:58px}
+    .asst-launch{width:48px;height:48px}
     /* the desktop-only JM enlargement above is sized for the 76px button
-       and its generous margin to the header/panel avatar - on the 58px
+       and its generous margin to the header/panel avatar - on the 48px
        phone badge that same 2x scale would run the letters right past
        the circle's edge, so it's switched back off here. */
     .asst-mk:not(.sm) .ltr-wrap{scale:1}
