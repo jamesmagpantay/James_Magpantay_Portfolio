@@ -3,6 +3,17 @@
      reads var() tokens only, so it re-themes for free across dark/light
      and the security/off-the-clock flip - no separate palette to maintain. ---- */
 
+  /* --anger: 0-1, set by JS (see the bounce handler in runPhysics) as he
+     bounces past BOUNCE_ANGER_THRESHOLD - higher means madder, read by
+     .mood-angry .asst-launch below to redden the whole button (and
+     everything drawn inside it - filter rasterizes the element's full
+     subtree, so the JM mark and limbs come along for free without
+     needing their own color rules). Registered as a real <number> so the
+     filter's transition can smoothly ramp between values bounce to
+     bounce instead of snapping; inherits so JS only has to set it once,
+     on the root .asst element. */
+  @property --anger{syntax:'<number>';inherits:true;initial-value:0}
+
   /* above the photo lightbox (.lb, z-index:98) on purpose - its dark scrim
      would otherwise sit over Bean and dim out his reaction bubble right
      when a click on the photo underneath is what triggered it */
@@ -50,7 +61,8 @@
     transition:box-shadow .18s var(--mo-ease),
       translate .85s cubic-bezier(.34,1.56,.64,1),
       rotate .95s cubic-bezier(.34,1.56,.64,1) .04s,
-      scale .5s cubic-bezier(.34,1.56,.64,1);
+      scale .5s cubic-bezier(.34,1.56,.64,1),
+      filter .3s ease-out;
   }
   @media (prefers-reduced-motion:reduce){
     .asst-launch{transition:box-shadow .18s var(--mo-ease)}
@@ -58,7 +70,27 @@
   /* a grab cursor on hover is the standard "this is draggable" signal -
      :active below still wins once you're actually holding him down */
   .asst-launch:hover{box-shadow:0 16px 34px rgba(0,0,0,.45),inset 0 0 0 1px rgba(255,255,255,.25);cursor:grab}
+  /* the tickle: hovering him (not dragging - .no-glide means a real drag
+     is in progress, see JS) wiggles the whole mark as one unit, layered
+     on top of whatever the current mood's own limb/letter animation is
+     doing underneath (sped up further by the hover rule below) rather
+     than fighting it - .asst-mk is a separate transform layer from its
+     children's own local rotate, so this reads as the whole body
+     squirming regardless of pose. Static tilt+scale kept as the
+     reduced-motion fallback. */
   .asst-launch:hover .asst-mk{rotate:-6deg;scale:1.06}
+  .asst-launch:hover:not(.no-glide) .asst-mk{animation:asstTickle .5s ease-in-out infinite}
+  @keyframes asstTickle{
+    0%,100%{rotate:-6deg;scale:1.06}
+    20%{rotate:-15deg;scale:1.1}
+    40%{rotate:5deg;scale:1.03}
+    60%{rotate:-11deg;scale:1.09}
+    80%{rotate:7deg;scale:1.05}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .asst-launch:hover .asst-mk{animation:none!important}
+    .asst.mood-shy .asst-mk{animation:none!important}
+  }
   .asst.open .asst-launch{box-shadow:0 12px 30px rgba(0,0,0,.4),inset 0 0 0 2px #fff}
   /* while being dragged or mid-throw, JS drives translate/rotate/scale every
      frame directly - the eased transition above would fight that and lag
@@ -121,9 +153,147 @@
     70%{rotate:-4deg}
     100%{rotate:0deg}
   }
+  /* startled: a genuinely hard/fast throw (see STARTLE_SPEED in JS) gets
+     its own flinch - a quick outward-then-back jolt on .asst-mk (the
+     whole mark as one unit, same layering trick .asst-launch:hover's
+     tickle wiggle uses) layered on top of whichever mood is already
+     playing underneath, plus a quick "!" pop. Distinct from .bounce
+     (fires on every wall/floor impact all through a throw) - this is
+     specifically the release-moment reaction to the throw being hard,
+     one-shot like .bounce/.tug above. */
+  .asst-launch.startle .asst-mk{animation:asstStartleFlinch .4s cubic-bezier(.3,0,.3,1) 1}
+  @keyframes asstStartleFlinch{
+    0%{scale:1;rotate:0deg}
+    15%{scale:1.18;rotate:-8deg}
+    35%{scale:.92;rotate:6deg}
+    55%{scale:1.08;rotate:-3deg}
+    100%{scale:1;rotate:0deg}
+  }
+  .asst-startle-mark{
+    position:absolute;left:60%;bottom:100%;translate:0 4px;
+    font-family:var(--mono);font-weight:800;font-size:28px;line-height:1;
+    color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.45);
+    pointer-events:none;opacity:0;scale:.3;transform-origin:50% 100%;
+  }
+  .asst-launch.startle .asst-startle-mark{animation:asstStartlePop .6s ease-out}
+  @keyframes asstStartlePop{
+    0%{opacity:0;scale:.3;translate:0 8px}
+    20%{opacity:1;scale:1.3;translate:0 -6px}
+    40%{scale:1;translate:0 -6px}
+    100%{opacity:0;scale:.9;translate:0 -10px}
+  }
+  /* dizzy: a throw that's bounced way more than a normal one (see
+     DIZZY_BOUNCE_THRESHOLD in JS) - a wobble on .asst-mk plus two small
+     stars (reusing the same clip-path shape .asst-sparkle's do) orbiting
+     his head, approximated as a diamond path through four points rather
+     than a true circle - simple keyframe steps, no need for an actual
+     circular easing function for something this quick. One-shot like
+     .startle, same remove/reflow/add retrigger pattern. */
+  .asst-launch.dizzy .asst-mk{animation:asstDizzySpin .9s ease-in-out 1}
+  @keyframes asstDizzySpin{
+    0%{rotate:0deg;scale:1}
+    20%{rotate:20deg;scale:1.05}
+    45%{rotate:-15deg;scale:.95}
+    70%{rotate:10deg;scale:1.03}
+    100%{rotate:0deg;scale:1}
+  }
+  .asst-dizzy-swirl{position:absolute;left:50%;top:-6px;width:0;height:0;pointer-events:none}
+  .asst-dizzy-swirl .dstar{
+    position:absolute;width:7px;height:7px;background:#ffd447;
+    clip-path:polygon(50% 0%,61% 35%,100% 50%,61% 65%,50% 100%,39% 65%,0% 50%,39% 35%);
+    opacity:0;
+  }
+  .asst-launch.dizzy .asst-dizzy-swirl .dstar{animation:asstDizzyOrbit .9s linear 1}
+  .asst-launch.dizzy .asst-dizzy-swirl .d2{animation-delay:.15s}
+  @keyframes asstDizzyOrbit{
+    0%{opacity:0;translate:14px 0}
+    10%{opacity:1}
+    25%{translate:0 -14px}
+    50%{translate:-14px 0}
+    75%{translate:0 14px}
+    90%{opacity:1}
+    100%{opacity:0;translate:14px 0}
+  }
+  /* border trace: flipping to the security/professional view - a spinner
+     arc rides right on the button's own edge (r=37 + stroke-width 2 = 38,
+     which is exactly the 76px circle's own radius) and spins like a
+     loading/verifying indicator rather than drawing a full ring. dasharray
+     is a short arc + long gap (~25% of the r=37 circumference, 232.5)
+     so only a comet-tail segment shows at once. lives on its own svg (not
+     .asst-mk) so it isn't fighting the JS-driven translate/rotate on
+     .asst-launch, same reasoning as every other decorative prop here.
+     stroke is plain white, not an off-brand accent color - same white the
+     hover/open state already rings this button with (inset 0 0 0 1-2px
+     #fff above), just brought out onto the edge instead of staying inset.
+     --cream isn't used here on purpose: it flips to dark ink in the light
+     theme (see 01-tokens.css), which would vanish against the orange disc. */
+  .asst-scan-ring{
+    position:absolute;inset:0;width:100%;height:100%;pointer-events:none;
+    overflow:visible;opacity:0;
+  }
+  .asst-scan-ring circle{
+    fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;
+    stroke-dasharray:58 174.5;
+    filter:drop-shadow(0 0 3px #fff) drop-shadow(0 0 7px rgba(255,255,255,.6));
+    transform-origin:50% 50%;
+  }
+  .asst-launch.scan-trace .asst-scan-ring{animation:asstScanRingFade .8s ease-out}
+  .asst-launch.scan-trace .asst-scan-ring circle{animation:asstScanRingSpin .8s cubic-bezier(.32,0,.22,1)}
+  @keyframes asstScanRingFade{
+    0%{opacity:0}
+    10%{opacity:1}
+    78%{opacity:1}
+    100%{opacity:0}
+  }
+  @keyframes asstScanRingSpin{
+    0%{transform:rotate(0deg)}
+    100%{transform:rotate(1030deg)}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .asst-launch.scan-trace .asst-scan-ring,
+    .asst-launch.scan-trace .asst-scan-ring circle{animation:none!important;opacity:0}
+  }
+  /* coffee: flipping to the off-the-clock view (offline:true) - the right
+     hand's own <g> (see the arm-r hand group in index.html) gains a mug +
+     two steam wisps, living inside that same <g> rather than as a
+     separate DOM prop so it inherits the hand's own view-box coordinate
+     space and moves with it for free under any mood's arm animation,
+     with no separate pixel-math needed to line a sibling div up with a
+     hand that can be anywhere mid-gesture. Off by default (opacity:0);
+     .asst-launch.coffee (JS-toggled, same one-shot pattern as every
+     other flip/mood prop here) plays the raise-sip-lower timeline in
+     lockstep with the arm-r rotation defined down by the mood-cozy block
+     (asstCoffeeSip - same 1.6s length and easing, so the mug fades in as
+     the arm finishes raising and fades out as it lowers back down). */
+  .asst-mk .asst-coffee-mug{opacity:0;transform-box:view-box;transform-origin:144px 47px}
+  .asst-mk .asst-coffee-mug .mug-cup{fill:#fff}
+  .asst-mk .asst-coffee-mug .mug-handle{fill:none;stroke:#fff;stroke-width:7;stroke-linecap:round}
+  .asst-mk .asst-coffee-mug .steam{fill:none;stroke:#fff;stroke-width:5;stroke-linecap:round;opacity:0}
+  .asst-launch.coffee .asst-mk .asst-coffee-mug{animation:asstCoffeeMugIn 1.6s cubic-bezier(.32,.61,.36,1)}
+  .asst-launch.coffee .asst-mk .asst-coffee-mug .steam.s1{animation:asstSteamRise .7s ease-out .5s infinite}
+  .asst-launch.coffee .asst-mk .asst-coffee-mug .steam.s2{animation:asstSteamRise .7s ease-out .75s infinite}
+  @keyframes asstCoffeeMugIn{
+    0%{opacity:0;scale:.5}
+    20%{opacity:1;scale:1.12}
+    35%{scale:1.05}
+    85%{opacity:1;scale:1.05}
+    100%{opacity:0;scale:1}
+  }
+  @keyframes asstSteamRise{
+    0%{opacity:0;translate:0 0}
+    25%{opacity:.85}
+    70%{opacity:.35}
+    100%{opacity:0;translate:0 -16px}
+  }
   @media (prefers-reduced-motion:reduce){
     .asst-launch.bounce{animation:none}
     .asst-launch.tug{animation:none}
+    .asst-launch.startle .asst-mk{animation:none!important}
+    .asst-startle-mark{animation:none!important;opacity:0}
+    .asst-launch.dizzy .asst-mk{animation:none!important}
+    .asst-dizzy-swirl .dstar{animation:none!important;opacity:0}
+    .asst-launch.coffee .asst-mk .asst-coffee-mug,
+    .asst-launch.coffee .asst-mk .asst-coffee-mug .steam{animation:none!important;opacity:0}
   }
 
   /* the mark itself: the header's JM logotype, blown up, and split into its
@@ -137,10 +307,101 @@
     pointer-events:none;
   }
   .asst-mk svg{width:46px;height:46px;overflow:visible;display:block}
-  .asst-mk.sm svg{width:28px;height:28px}
-  .asst-mk .ltr{fill:#fff;transform-box:fill-box;transform-origin:50% 100%}
+  /* 20.6px, not an arbitrary shrink - the same viewBox-to-pixel ratio the
+     76px launch button uses (46px svg / 100 viewBox units) scaled for the
+     header's 34px circle instead (34 / 1.652, where 1.652 is that same
+     svg-px-to-circle-px ratio: mk-disc's r=82.6 viewBox units times
+     46/100 = 38px radius = 76px diameter). Letting the whole svg - disc,
+     limbs, letters together - shrink by this one number instead of
+     independently rescaling just .mk-disc/.limb (the old approach, see
+     the removed comments below) is what keeps the hands and feet sitting
+     flush against the body's own rim here exactly like they do on the
+     big button, rather than floating off in a gap the old two-different-
+     origins hack left behind. */
+  .asst-mk.sm svg{width:20.6px;height:20.6px}
+  .asst-mk .ltr{fill:#fff;transform-box:fill-box;transform-origin:50% 100%;transition:opacity .2s ease-out}
+  /* the JM mark, blown up on desktop to sit close to the launch circle's
+     own edge - scaled on a wrapping <g> around the letters rather than on
+     .ltr itself, since .ltr's own scale is already spoken for by the
+     panel-open/close pop (asstPop below animates scale on .ltr directly);
+     stacking a second static scale on the same property would just get
+     overridden by that animation's keyframe values whenever it plays.
+     transform-box:view-box + an explicit center point (same technique the
+     limbs use) keeps the enlargement centered on the mark regardless of
+     the letters' own off-center path coordinates. Header/panel avatar
+     (.sm) is excluded - this is sized for the big 76px button, not the
+     34px header icon. */
+  .asst-mk .ltr-wrap{transform-box:view-box;transform-origin:50px 50px}
+  .asst-mk:not(.sm) .ltr-wrap{scale:1.2}
+  /* arms and feet: two small limb pairs stitched onto the JM mark itself -
+     arms hinge off the outer edge of each letter (shoulder = the letter's
+     own side, transform-origin at that edge), legs hinge off the letter's
+     bottom edge (hip = top of the leg group). Left limbs are pinned to J's
+     timing, right limbs to M's, the same pairing the letters already use,
+     so a whole-body pose reads as one figure rather than two hopping
+     letters with loose parts. */
+  /* the reference-photo pose (James, "bean reference.png"): arms raised
+     up and out with a rounded mitten hand - a bigger palm ball plus a
+     smaller thumb ball tucked against it - and short, straight, close-
+     together legs with a flat oval foot pad, instead of the previous
+     bent-elbow/bent-knee standing figure. Kept flat and monochrome (no
+     outline, no shading, no face) to match the rest of the mark rather
+     than the reference's fully illustrated look - only the limb shapes
+     and pose are borrowed. Each shoulder/hip point still sits exactly on
+     the 76px launch button's rim (circle radius 38px / the svg's
+     0.46px-per-unit scale = 82.6 viewBox units out from center), and
+     transform-box:view-box lets transform-origin below name that point
+     directly in viewBox units - mood swings still pivot the whole limb
+     rigidly from there, same as before. */
+  .asst-mk .limb{fill:#fff;transform-box:view-box;transition:opacity .2s ease-out}
+  /* stroke thickened from 12 to 20 - close to the hand/foot ball's own
+     size (26/24 units across) rather than a thin line with a bigger shape
+     stuck on the end, so the whole limb reads as one continuous rounded
+     form. */
+  .asst-mk .limb path,.asst-mk .limb line{fill:none;stroke:#fff;stroke-width:15;stroke-linecap:round;stroke-linejoin:round}
+  /* each limb is actually two separate elements sharing the same class
+     (see the markup) - a "root" piece (just the path/line, sunk inside
+     the circle's own edge) and a "tip" piece (the hand/foot ball, always
+     outside it), with .mk-disc sandwiched between them in z-order. Same
+     class means both pieces get the exact same animation and
+     transform-origin from one CSS rule, so they always rotate in
+     lockstep and read as one rigid limb - the disc just masks the part
+     of the root that's behind it, so the limb visibly emerges from
+     behind the badge instead of sitting drawn on top of it (the previous
+     approach: a small "joint" circle drawn over the orange at the
+     shoulder/hip - looked like a sticker, not a socket, so it's gone). */
+  .asst-mk .mk-disc{fill:var(--orange)}
+  .asst-mk .limb.arm-l{transform-origin:-14.6px 50px}
+  .asst-mk .limb.arm-r{transform-origin:114.6px 50px}
+  .asst-mk .limb.leg-l{transform-origin:38.3px 113.3px}
+  .asst-mk .limb.leg-r{transform-origin:61.7px 113.3px}
+  /* mid-throw (see runPhysics() in JS), the limbs stop taking orders from
+     the mood keyframes below and JS drives their rotate directly instead,
+     lagging behind the ball's velocity like loose weight rather than
+     rigidly tumbling with the body - the .phys class is JS's on/off
+     switch for that handoff. Animations always win a property fight
+     against inline style, so this is the only way to actually let JS's
+     per-frame value through. No transition here on purpose - JS's own
+     spring-lag in updateLimbSwing() already smooths it frame to frame;
+     stacking a CSS transition on top would double-smooth into a mushy,
+     delayed feel instead of a reactive one. !important is load-bearing:
+     every mood rule below targets .limb plus a side class (.limb.arm-l
+     etc), one class more specific than plain .limb here, so without it
+     an active mood would keep outranking this and JS's rotate would
+     never actually show mid-throw. */
+  .asst.phys .limb{animation:none!important}
+  /* the lighter-weight cousin for an ordinary hop or the pull back home
+     (see hopMove() in JS, called from roam(), goHome() and settle()) - a
+     real per-frame jump arc rather than a single CSS-eased slide, so like
+     .phys above it wants JS driving rotate directly every frame with no
+     CSS transition fighting it (same !important reasoning as .phys). */
+  .asst.hop .limb{animation:none!important}
+  /* the brief cross-fade setMood() uses when sad enters or leaves (JS) -
+     swapping mood classes happens while this is at opacity 0, so the pose
+     jump between sad's droop and whatever mood follows it is never seen */
+  .asst.mood-fade .ltr,.asst.mood-fade .limb{opacity:0}
   @media (prefers-reduced-motion:reduce){
-    .asst-mk .ltr{animation:none!important}
+    .asst-mk .ltr,.asst-mk .limb{animation:none!important}
   }
 
   /* ===== moods =====
@@ -174,9 +435,41 @@
     82%{translate:0 -6px;rotate:2deg}
     94%{translate:0 0}
   }
+  .asst.mood-welcoming .limb.arm-l{animation:asstArmL-welcoming 3.2s ease-in-out infinite}
+  .asst.mood-welcoming .limb.arm-r{animation:asstArmR-welcoming 2.8s ease-in-out infinite .35s}
+  .asst.mood-welcoming .limb.leg-l{animation:asstLegL-welcoming 3.2s ease-in-out infinite}
+  .asst.mood-welcoming .limb.leg-r{animation:asstLegR-welcoming 2.8s ease-in-out infinite .35s}
+  /* the drawn pose (rotate:0deg) is now arms hanging at his sides, not the
+     reference photo's raised cheer - gravity's job is already done by the
+     geometry itself, so idle no longer needs an artificial rotate offset
+     to fake a sag (an earlier pass here forced one in for exactly that
+     reason, back when the drawn pose was rigidly raised). This is just a
+     gentle idle sway around that natural hang. */
+  @keyframes asstArmL-welcoming{
+    0%,100%{rotate:0deg}30%{rotate:-9deg}55%{rotate:4deg}80%{rotate:-3deg}
+  }
+  @keyframes asstArmR-welcoming{
+    0%,100%{rotate:0deg}26%{rotate:7deg}52%{rotate:-5deg}82%{rotate:3deg}
+  }
+  @keyframes asstLegL-welcoming{
+    0%,100%{rotate:0deg;translate:0 0}30%{rotate:8deg;translate:0 -2px}72%{rotate:-4deg;translate:0 0}
+  }
+  @keyframes asstLegR-welcoming{
+    0%,100%{rotate:0deg;translate:0 0}40%{rotate:-8deg;translate:0 -2px}82%{rotate:5deg;translate:0 0}
+  }
 
-  /* excited: greeting a visitor, or the panel just opened - bigger, quicker,
-     a real double-hop rather than a single bounce */
+  /* excited: greeting a visitor, the panel just opened, or hovering the
+     "Hire the candidate" CTA (see the pointerenter/pointerleave pair in
+     JS) - bigger, quicker, a real double-hop rather than a single bounce.
+     Paired with a warm glow (the inverse of sad's darkening: brighter and
+     more saturated instead of desaturated) and .asst-sparkle below, the
+     same "color shift plus a decorative effect" treatment sad's cloud and
+     angry's redness already get, so excited reads as equally visible
+     rather than being the one mood that's animation-only. */
+  .asst.mood-excited .asst-launch{
+    filter:saturate(1.3) brightness(1.15);
+    box-shadow:0 12px 34px rgba(255,196,50,.55),inset 0 0 0 2px rgba(255,255,255,.45);
+  }
   .asst.mood-excited .ltr.j{animation:asstHopJ-excited 1.05s ease-in-out infinite}
   .asst.mood-excited .ltr.m{animation:asstHopM-excited .9s ease-in-out infinite .12s}
   @keyframes asstHopJ-excited{
@@ -195,6 +488,50 @@
     46%{translate:0 -14px;rotate:8deg}
     62%{translate:0 0;rotate:-5deg}
     80%{translate:0 -6px;rotate:3deg}
+  }
+  .asst.mood-excited .limb.arm-l{animation:asstArmL-excited 1.05s ease-in-out infinite}
+  .asst.mood-excited .limb.arm-r{animation:asstArmR-excited .9s ease-in-out infinite .12s}
+  .asst.mood-excited .limb.leg-l{animation:asstLegL-excited 1.05s ease-in-out infinite}
+  .asst.mood-excited .limb.leg-r{animation:asstLegR-excited .9s ease-in-out infinite .12s}
+  @keyframes asstArmL-excited{
+    0%,100%{rotate:0deg}12%{rotate:-70deg}40%{rotate:-55deg}55%{rotate:-10deg}72%{rotate:-60deg}
+  }
+  @keyframes asstArmR-excited{
+    0%,100%{rotate:0deg}18%{rotate:65deg}46%{rotate:50deg}62%{rotate:8deg}80%{rotate:55deg}
+  }
+  @keyframes asstLegL-excited{
+    0%,100%{rotate:0deg;translate:0 0}12%{rotate:-20deg;translate:0 -4px}40%{rotate:14deg;translate:0 0}
+  }
+  @keyframes asstLegR-excited{
+    0%,100%{rotate:0deg;translate:0 0}18%{rotate:18deg;translate:0 -4px}46%{rotate:-14deg;translate:0 0}
+  }
+  /* the sparkle burst: four small star shapes (flat clip-path diamonds,
+     matching the site's no-gradient/sharp-corner language rather than a
+     soft glowing particle) scattered around the badge, each popping in
+     and fading on its own staggered loop while excited holds. inset:-14px
+     lets them sit slightly outside the button's own edge without needing
+     per-star position math relative to the circle. */
+  .asst-sparkle{position:absolute;inset:-14px;pointer-events:none}
+  .asst-sparkle .spark{
+    position:absolute;width:10px;height:10px;background:#ffd447;
+    clip-path:polygon(50% 0%,61% 35%,100% 50%,61% 65%,50% 100%,39% 65%,0% 50%,39% 35%);
+    opacity:0;scale:.3;transform-origin:50% 50%;
+  }
+  .asst-sparkle .s1{top:0;left:10px}
+  .asst-sparkle .s2{top:8px;right:0}
+  .asst-sparkle .s3{bottom:4px;left:-2px}
+  .asst-sparkle .s4{bottom:-6px;right:16px}
+  .asst.mood-excited .asst-sparkle .spark{animation:asstSparklePop 1.1s ease-in-out infinite}
+  .asst.mood-excited .asst-sparkle .s2{animation-delay:.25s}
+  .asst.mood-excited .asst-sparkle .s3{animation-delay:.5s}
+  .asst.mood-excited .asst-sparkle .s4{animation-delay:.75s}
+  @keyframes asstSparklePop{
+    0%,100%{opacity:0;scale:.3;rotate:0deg}
+    30%{opacity:1;scale:1;rotate:20deg}
+    60%{opacity:.7;scale:.8;rotate:-10deg}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .asst-sparkle .spark{animation:none!important;opacity:0}
   }
 
   /* cheeky: a quick satisfied bounce after answering something - fires as a
@@ -215,9 +552,59 @@
     62%{translate:0 -5px;rotate:5deg}
     80%{translate:0 0;rotate:-2deg}
   }
+  .asst.mood-cheeky .limb.arm-l{animation:asstArmL-cheeky .85s ease-in-out 2}
+  .asst.mood-cheeky .limb.arm-r{animation:asstArmR-cheeky .75s ease-in-out 2 .08s}
+  .asst.mood-cheeky .limb.leg-l{animation:asstLegL-cheeky .85s ease-in-out 2}
+  .asst.mood-cheeky .limb.leg-r{animation:asstLegR-cheeky .75s ease-in-out 2 .08s}
+  @keyframes asstArmL-cheeky{
+    0%,100%{rotate:0deg}18%{rotate:-40deg}45%{rotate:20deg}70%{rotate:-15deg}
+  }
+  @keyframes asstArmR-cheeky{
+    0%,100%{rotate:0deg}22%{rotate:35deg}50%{rotate:-18deg}75%{rotate:10deg}
+  }
+  @keyframes asstLegL-cheeky{
+    0%,100%{rotate:0deg}30%{rotate:16deg}60%{rotate:-10deg}
+  }
+  @keyframes asstLegR-cheeky{
+    0%,100%{rotate:0deg}35%{rotate:-14deg}65%{rotate:8deg}
+  }
 
-  /* curious: a slow, wondering head-tilt - more rotation than lift, a shrug
-     when a typed question doesn't match anything as much as an idle drift */
+  /* smug: grabbing the CV/résumé (see the .dl a check in JS) - a cocky
+     held pose rather than a bounce, one arm cranked up into an
+     akimbo-ish angle and mostly HOLDING there (little motion in the
+     keyframe itself) while the mark leans, asymmetric on purpose so it
+     doesn't read as proud's more symmetric, evenly-lifted stand-tall.
+     Same finite-burst pattern as cheeky (2 iterations, not a loop) since
+     it's a momentary "nailed it" reaction to one click, not a held state. */
+  .asst.mood-smug .ltr.j{animation:asstHopJ-smug .9s ease-in-out 2}
+  .asst.mood-smug .ltr.m{animation:asstHopM-smug .95s ease-in-out 2 .1s}
+  @keyframes asstHopJ-smug{
+    0%,100%{translate:0 0;rotate:-8deg}40%{translate:0 -4px;rotate:-12deg}70%{translate:0 -1px;rotate:-6deg}
+  }
+  @keyframes asstHopM-smug{
+    0%,100%{translate:0 0;rotate:4deg}45%{translate:0 -2px;rotate:6deg}
+  }
+  .asst.mood-smug .limb.arm-l{animation:asstArmL-smug .9s ease-in-out 2}
+  .asst.mood-smug .limb.arm-r{animation:asstArmR-smug .95s ease-in-out 2 .1s}
+  .asst.mood-smug .limb.leg-l{animation:asstLegL-smug .9s ease-in-out 2}
+  .asst.mood-smug .limb.leg-r{animation:asstLegR-smug .95s ease-in-out 2 .1s}
+  @keyframes asstArmL-smug{
+    0%,100%{rotate:-35deg}60%{rotate:-40deg}
+  }
+  @keyframes asstArmR-smug{
+    0%,100%{rotate:5deg}60%{rotate:8deg}
+  }
+  @keyframes asstLegL-smug{
+    0%,100%{rotate:6deg}60%{rotate:9deg}
+  }
+  @keyframes asstLegR-smug{
+    0%,100%{rotate:-3deg}60%{rotate:-6deg}
+  }
+
+  /* curious: a slow, wondering head-tilt - more rotation than lift, purely
+     an idle-drift mood now (see roam() in JS) - a typed question that
+     doesn't match anything gets its own sharper "confused" reaction
+     below instead of borrowing this one. */
   .asst.mood-curious .ltr.j{animation:asstHopJ-curious 2.6s ease-in-out infinite}
   .asst.mood-curious .ltr.m{animation:asstHopM-curious 2.3s ease-in-out infinite .3s}
   @keyframes asstHopJ-curious{
@@ -233,6 +620,76 @@
     54%{translate:0 -1px;rotate:-10deg}
     78%{translate:0 -2px;rotate:6deg}
     92%{translate:0 0;rotate:-2deg}
+  }
+  .asst.mood-curious .limb.arm-l{animation:asstArmL-curious 2.6s ease-in-out infinite}
+  .asst.mood-curious .limb.arm-r{animation:asstArmR-curious 2.3s ease-in-out infinite .3s}
+  .asst.mood-curious .limb.leg-l{animation:asstLegL-curious 2.6s ease-in-out infinite}
+  .asst.mood-curious .limb.leg-r{animation:asstLegR-curious 2.3s ease-in-out infinite .3s}
+  @keyframes asstArmL-curious{
+    0%,100%{rotate:0deg}30%{rotate:-45deg}60%{rotate:-30deg}85%{rotate:-10deg}
+  }
+  @keyframes asstArmR-curious{
+    0%,100%{rotate:0deg}35%{rotate:8deg}65%{rotate:-4deg}
+  }
+  @keyframes asstLegL-curious{
+    0%,100%{rotate:0deg}40%{rotate:6deg}75%{rotate:-4deg}
+  }
+  @keyframes asstLegR-curious{
+    0%,100%{rotate:0deg}45%{rotate:-6deg}80%{rotate:4deg}
+  }
+
+  /* confused: a typed question he genuinely couldn't match (see the
+     FALLBACKS branch in JS) - a sharper, more asymmetric "huh?" than
+     curious's slow wonder: the left letter tilts hard and holds while the
+     right one barely moves, the left arm lifts to scratch at where a head
+     would be, and a "?" pops up over him once (.asst-question below). */
+  .asst.mood-confused .ltr.j{animation:asstHopJ-confused 2.4s ease-in-out infinite}
+  .asst.mood-confused .ltr.m{animation:asstHopM-confused 2.1s ease-in-out infinite .25s}
+  @keyframes asstHopJ-confused{
+    0%,100%{translate:0 0;rotate:-6deg}
+    40%{translate:0 -3px;rotate:-12deg}
+    70%{translate:0 0;rotate:-4deg}
+  }
+  @keyframes asstHopM-confused{
+    0%,100%{translate:0 0;rotate:3deg}
+    45%{translate:0 -2px;rotate:6deg}
+    75%{translate:0 0;rotate:1deg}
+  }
+  .asst.mood-confused .limb.arm-l{animation:asstArmL-confused 2.4s ease-in-out infinite}
+  .asst.mood-confused .limb.arm-r{animation:asstArmR-confused 2.1s ease-in-out infinite .25s}
+  .asst.mood-confused .limb.leg-l{animation:asstLegL-confused 2.4s ease-in-out infinite}
+  .asst.mood-confused .limb.leg-r{animation:asstLegR-confused 2.1s ease-in-out infinite .25s}
+  @keyframes asstArmL-confused{
+    0%,100%{rotate:-30deg}30%{rotate:-55deg}50%{rotate:-48deg}70%{rotate:-58deg}
+  }
+  @keyframes asstArmR-confused{
+    0%,100%{rotate:8deg}50%{rotate:14deg}
+  }
+  @keyframes asstLegL-confused{
+    0%,100%{rotate:3deg}50%{rotate:7deg}
+  }
+  @keyframes asstLegR-confused{
+    0%,100%{rotate:-5deg}50%{rotate:-2deg}
+  }
+  /* the "?": pops up once per confused activation (fixed iteration-count,
+     like .asst-shine's sweep) rather than looping - a lingering question
+     mark would read as a permanent status icon, not a one-off reaction. */
+  .asst-question{
+    position:absolute;left:62%;bottom:100%;translate:0 4px;
+    font-family:var(--mono);font-weight:800;font-size:26px;line-height:1;
+    color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.4);
+    pointer-events:none;opacity:0;scale:.4;rotate:-8deg;transform-origin:50% 100%;
+  }
+  .asst.mood-confused .asst-question{animation:asstQuestionPop 1.8s ease-out}
+  @keyframes asstQuestionPop{
+    0%{opacity:0;scale:.4;translate:0 10px;rotate:-8deg}
+    15%{opacity:1;scale:1.15;translate:0 -4px;rotate:8deg}
+    30%{scale:1;rotate:-4deg}
+    75%{opacity:1;scale:1;rotate:2deg}
+    100%{opacity:0;scale:.8;translate:0 -6px;rotate:0deg}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .asst-question{animation:none!important;opacity:0}
   }
 
   /* sleepy: after a long stretch with nobody touching the page - slow,
@@ -250,6 +707,94 @@
     42%{translate:0 5px;rotate:-9deg}
     60%{translate:0 2px;rotate:-2deg}
   }
+  .asst.mood-sleepy .limb.arm-l{animation:asstArmL-sleepy 4.6s ease-in-out infinite}
+  .asst.mood-sleepy .limb.arm-r{animation:asstArmR-sleepy 5s ease-in-out infinite .7s}
+  .asst.mood-sleepy .limb.leg-l{animation:asstLegL-sleepy 4.6s ease-in-out infinite}
+  .asst.mood-sleepy .limb.leg-r{animation:asstLegR-sleepy 5s ease-in-out infinite .7s}
+  @keyframes asstArmL-sleepy{
+    0%,78%,100%{rotate:8deg}42%{rotate:14deg}60%{rotate:6deg}
+  }
+  @keyframes asstArmR-sleepy{
+    0%,78%,100%{rotate:-8deg}42%{rotate:-15deg}60%{rotate:-6deg}
+  }
+  @keyframes asstLegL-sleepy{
+    0%,78%,100%{rotate:4deg}42%{rotate:8deg}
+  }
+  @keyframes asstLegR-sleepy{
+    0%,78%,100%{rotate:-4deg}42%{rotate:-8deg}
+  }
+
+  /* sad: sound or music just got switched off on him - a slow, slumped
+     droop, letters sagging down and leaning apart rather than lifting up
+     or huddling together (that's sleepy's move). More desaturated than
+     sleepy too, since this is a mood, not just low energy - deepened
+     further than the original pass (heavier droop angles, darker/greyer
+     filter) since a subtle version read as barely-there. Fires as a
+     revert-timed burst from the sound/music toggles, not a loop that
+     waits for something else to clear it. Paired with .asst-cloud below -
+     a little rain cloud over his head for as long as this mood holds. */
+  .asst.mood-sad .ltr.j{animation:asstHopJ-sad 3.2s ease-in-out infinite}
+  .asst.mood-sad .ltr.m{animation:asstHopM-sad 3.4s ease-in-out infinite .25s}
+  .asst.mood-sad .asst-launch{filter:saturate(.28) brightness(.68)}
+  @keyframes asstHopJ-sad{
+    0%,100%{translate:0 3px;rotate:7deg}
+    50%{translate:0 11px;rotate:13deg}
+  }
+  @keyframes asstHopM-sad{
+    0%,100%{translate:0 3px;rotate:-7deg}
+    50%{translate:0 11px;rotate:-13deg}
+  }
+  .asst.mood-sad .limb.arm-l{animation:asstArmL-sad 3.2s ease-in-out infinite}
+  .asst.mood-sad .limb.arm-r{animation:asstArmR-sad 3.4s ease-in-out infinite .25s}
+  .asst.mood-sad .limb.leg-l{animation:asstLegL-sad 3.2s ease-in-out infinite}
+  .asst.mood-sad .limb.leg-r{animation:asstLegR-sad 3.4s ease-in-out infinite .25s}
+  @keyframes asstArmL-sad{
+    0%,100%{rotate:28deg}50%{rotate:38deg}
+  }
+  @keyframes asstArmR-sad{
+    0%,100%{rotate:-28deg}50%{rotate:-38deg}
+  }
+  @keyframes asstLegL-sad{
+    0%,100%{rotate:9deg}50%{rotate:17deg}
+  }
+  @keyframes asstLegR-sad{
+    0%,100%{rotate:-9deg}50%{rotate:-17deg}
+  }
+  /* the rain cloud: a plain HTML sibling of .asst-mk, not part of the JM
+     SVG mark itself, positioned above the button and normally invisible.
+     Two different transition speeds do the "appears gently, vanishes
+     quick" split - a CSS transition always runs on the duration/easing
+     that belongs to the state being transitioned INTO, so the base rule
+     below (fast, .18s) governs every disappearance regardless of how the
+     mood ended, while the more specific .mood-sad rule's slower .5s only
+     ever applies on the way in. */
+  .asst-cloud{
+    position:absolute;left:50%;bottom:100%;
+    translate:-50% 6px;width:52px;height:38px;
+    pointer-events:none;opacity:0;scale:.6;transform-origin:50% 100%;
+    transition:opacity .18s ease-in,scale .18s ease-in,translate .18s ease-in;
+  }
+  .asst-cloud svg{width:100%;height:100%;display:block;overflow:visible}
+  .asst-cloud .cloud-body{fill:#9aa4b2}
+  .asst-cloud .cloud-rain .drop{stroke:#7fb4e0;stroke-width:2.5;stroke-linecap:round;opacity:0}
+  .asst.mood-sad .asst-cloud{
+    opacity:1;scale:1;translate:-50% -4px;
+    transition:opacity .5s ease-out,scale .5s cubic-bezier(.34,1.56,.64,1),
+      translate .5s cubic-bezier(.34,1.56,.64,1);
+  }
+  .asst.mood-sad .asst-cloud .cloud-rain .drop{animation:asstRainDrop .9s linear infinite}
+  .asst.mood-sad .asst-cloud .cloud-rain .d2{animation-delay:.25s}
+  .asst.mood-sad .asst-cloud .cloud-rain .d3{animation-delay:.5s}
+  @keyframes asstRainDrop{
+    0%{translate:0 -4px;opacity:0}
+    15%{opacity:1}
+    70%{opacity:1}
+    100%{translate:0 10px;opacity:0}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .asst-cloud{transition:opacity .18s linear}
+    .asst-cloud .cloud-rain .drop{animation:none!important;opacity:.7}
+  }
 
   /* angry: one of two reactions to being picked up and thrown (see JS
      drag-throw physics) - a fast, tight, aggravated shake, mostly rotation
@@ -260,8 +805,18 @@
      temperament. */
   .asst.mood-angry .ltr.j{animation:asstHopJ-angry .34s ease-in-out infinite}
   .asst.mood-angry .ltr.m{animation:asstHopM-angry .3s ease-in-out infinite .05s}
+  /* the redder-the-more-you've-pestered-him part (see the throwTimes
+     comment in JS - --anger tracks recent grabs, not this throw's own
+     bounces): hue-rotate walks the button's own orange (~26-30deg of hue
+     across the four themes) down toward true red as --anger climbs,
+     saturate keeps it vivid instead of washing out grey partway there,
+     and the glow's own alpha ramps alongside it so the two read as one
+     escalating temperature rather than a color shift plus a
+     separately-timed glow. */
   .asst.mood-angry .asst-launch{
-    box-shadow:0 12px 30px rgba(200,40,20,.5),inset 0 0 0 2px rgba(255,110,70,.65);
+    filter:hue-rotate(calc(var(--anger,0) * -34deg)) saturate(calc(1 + var(--anger,0) * .65));
+    box-shadow:0 12px 30px rgba(200,40,20,calc(.5 + var(--anger,0) * .3)),
+      inset 0 0 0 2px rgba(255,110,70,.65);
   }
   @keyframes asstHopJ-angry{
     0%,100%{translate:0 0;rotate:0deg}
@@ -275,17 +830,315 @@
     50%{translate:0 0;rotate:-9deg}
     75%{translate:0 -1px;rotate:6deg}
   }
+  .asst.mood-angry .limb.arm-l{animation:asstArmL-angry .34s ease-in-out infinite}
+  .asst.mood-angry .limb.arm-r{animation:asstArmR-angry .3s ease-in-out infinite .05s}
+  .asst.mood-angry .limb.leg-l{animation:asstLegL-angry .34s ease-in-out infinite}
+  .asst.mood-angry .limb.leg-r{animation:asstLegR-angry .3s ease-in-out infinite .05s}
+  @keyframes asstArmL-angry{
+    0%,100%{rotate:-10deg}25%{rotate:-25deg}50%{rotate:-5deg}75%{rotate:-20deg}
+  }
+  @keyframes asstArmR-angry{
+    0%,100%{rotate:10deg}25%{rotate:25deg}50%{rotate:5deg}75%{rotate:20deg}
+  }
+  @keyframes asstLegL-angry{
+    0%,100%{translate:0 0}25%{translate:0 -3px}50%{translate:0 0}75%{translate:0 -2px}
+  }
+  @keyframes asstLegR-angry{
+    0%,100%{translate:0 0}25%{translate:0 -2px}50%{translate:0 0}75%{translate:0 -3px}
+  }
+
+  /* proud: clicked a cert he actually earned (see certStatus() in JS) -
+     a steady, satisfied stand-tall rather than a wild bounce, arms held
+     in toward the body instead of swinging loose. Paired with .asst-shine
+     below, a single light sweep across the badge each time it triggers -
+     the closest thing to a "ta-da" this flat, faceless mark can do. */
+  .asst.mood-proud .ltr.j{animation:asstHopJ-proud 2.6s ease-in-out infinite}
+  .asst.mood-proud .ltr.m{animation:asstHopM-proud 2.8s ease-in-out infinite .2s}
+  .asst.mood-proud .asst-launch{filter:brightness(1.08) saturate(1.12)}
+  @keyframes asstHopJ-proud{
+    0%,100%{translate:0 0;rotate:0deg}30%{translate:0 -6px;rotate:-4deg}60%{translate:0 -2px;rotate:2deg}
+  }
+  @keyframes asstHopM-proud{
+    0%,100%{translate:0 0;rotate:0deg}35%{translate:0 -6px;rotate:4deg}65%{translate:0 -2px;rotate:-2deg}
+  }
+  .asst.mood-proud .limb.arm-l{animation:asstArmL-proud 2.6s ease-in-out infinite}
+  .asst.mood-proud .limb.arm-r{animation:asstArmR-proud 2.8s ease-in-out infinite .2s}
+  .asst.mood-proud .limb.leg-l{animation:asstLegL-proud 2.6s ease-in-out infinite}
+  .asst.mood-proud .limb.leg-r{animation:asstLegR-proud 2.8s ease-in-out infinite .2s}
+  @keyframes asstArmL-proud{
+    0%,100%{rotate:-12deg}50%{rotate:-19deg}
+  }
+  @keyframes asstArmR-proud{
+    0%,100%{rotate:12deg}50%{rotate:19deg}
+  }
+  @keyframes asstLegL-proud{
+    0%,100%{rotate:4deg}50%{rotate:8deg}
+  }
+  @keyframes asstLegR-proud{
+    0%,100%{rotate:-4deg}50%{rotate:-8deg}
+  }
+  /* the shine: a single diagonal light sweep across the badge, clipped to
+     the circle by .asst-shine's own border-radius+overflow so it reads as
+     light crossing the disc rather than a bar floating over it. Plays
+     once per mood-proud activation (fixed iteration-count, not infinite
+     like everything else on this page) - a repeating shine would read as
+     a loading spinner, not a moment of pride. */
+  .asst-shine{position:absolute;inset:0;border-radius:50%;overflow:hidden;pointer-events:none}
+  .asst-shine::before{
+    content:'';position:absolute;top:-20%;left:-60%;width:40%;height:140%;
+    background:linear-gradient(100deg,transparent,rgba(255,255,255,.65),transparent);
+    rotate:-20deg;opacity:0;
+  }
+  .asst.mood-proud .asst-shine::before{animation:asstShineSweep 1.1s ease-out}
+  @keyframes asstShineSweep{
+    0%{left:-60%;opacity:0}
+    15%{opacity:1}
+    55%{opacity:1}
+    100%{left:130%;opacity:0}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .asst-shine::before{animation:none!important;opacity:0}
+  }
+
+  /* bored: the panel's been open a while with nobody actually talking to
+     him (see noteActivity()/BORED_IDLE_MS in JS) - not upset, not tired,
+     just waiting. Letters and arms barely move at all (the slowest,
+     flattest motion of any mood here), deliberately mismatched against a
+     leg that taps on its own quick little loop - the classic "outwardly
+     patient, one foot giving it away" tell. */
+  .asst.mood-bored .ltr.j{animation:asstHopJ-bored 4s ease-in-out infinite}
+  .asst.mood-bored .ltr.m{animation:asstHopM-bored 4.4s ease-in-out infinite .3s}
+  .asst.mood-bored .asst-launch{filter:saturate(.85)}
+  @keyframes asstHopJ-bored{
+    0%,100%{translate:0 0;rotate:2deg}50%{translate:0 1px;rotate:-1deg}
+  }
+  @keyframes asstHopM-bored{
+    0%,100%{translate:0 0;rotate:-2deg}50%{translate:0 1px;rotate:1deg}
+  }
+  .asst.mood-bored .limb.arm-l{animation:asstArmL-bored 4s ease-in-out infinite}
+  .asst.mood-bored .limb.arm-r{animation:asstArmR-bored 4.4s ease-in-out infinite .3s}
+  .asst.mood-bored .limb.leg-l{animation:asstLegL-bored 4s ease-in-out infinite}
+  .asst.mood-bored .limb.leg-r{animation:asstLegR-bored .65s ease-in-out infinite}
+  @keyframes asstArmL-bored{
+    0%,100%{rotate:6deg}50%{rotate:9deg}
+  }
+  @keyframes asstArmR-bored{
+    0%,100%{rotate:-6deg}50%{rotate:-9deg}
+  }
+  @keyframes asstLegL-bored{
+    0%,100%{rotate:2deg}
+  }
+  @keyframes asstLegR-bored{
+    0%,80%,100%{rotate:-2deg;translate:0 0}90%{rotate:14deg;translate:0 -3px}
+  }
+
+  /* shy: hovering a teammate's photo (see the .gal-roster .ph hover pair
+     in JS) - no color shift here on purpose, unlike proud/excited's warm
+     glow or angry's red: with a face-less mark, "blushing" is carried
+     entirely by the line itself ("Can I blush? I don't know."), so
+     tinting the badge pink risked reading as a fourth version of the
+     same red-ish-glow trick sad/angry/excited already use. Pure pose
+     instead: the whole mark shrinks and leans away (.asst-mk, same
+     group-transform layering the tickle wiggle and startle flinch use),
+     both arms lifting in and up together like a half-hearted attempt at
+     covering up. Tied to hover like excited/shy above, loops for as long
+     as the cursor stays on the photo. */
+  .asst.mood-shy .asst-mk{animation:asstShyRecoil 1.6s ease-in-out infinite}
+  @keyframes asstShyRecoil{
+    0%,100%{scale:1;rotate:0deg}
+    30%{scale:.9;rotate:-6deg}
+    60%{scale:.94;rotate:-3deg}
+  }
+  .asst.mood-shy .limb.arm-l{animation:asstArmL-shy 1.6s ease-in-out infinite}
+  .asst.mood-shy .limb.arm-r{animation:asstArmR-shy 1.6s ease-in-out infinite .1s}
+  .asst.mood-shy .limb.leg-l{animation:asstLegL-shy 1.6s ease-in-out infinite}
+  .asst.mood-shy .limb.leg-r{animation:asstLegR-shy 1.6s ease-in-out infinite .1s}
+  @keyframes asstArmL-shy{
+    0%,100%{rotate:-25deg}50%{rotate:-45deg}
+  }
+  @keyframes asstArmR-shy{
+    0%,100%{rotate:25deg}50%{rotate:45deg}
+  }
+  @keyframes asstLegL-shy{
+    0%,100%{rotate:8deg}50%{rotate:4deg}
+  }
+  @keyframes asstLegR-shy{
+    0%,100%{rotate:-8deg}50%{rotate:-4deg}
+  }
+
+  /* cold: dark mode toggle (see the .thm-btn handler in JS) - an icy pale
+     filter (heavier desaturation + blue hue-rotate than the first pass),
+     a hard, fast shiver-jitter, arms hugged tight, and icicles forming
+     off the bottom rim (.asst-ice below) rather than a jacket - reads as
+     "frozen" more than "bundled up", and doesn't need a garment shape to
+     land the point. */
+  .asst.mood-cold .ltr.j{animation:asstHopJ-cold .35s ease-in-out infinite}
+  .asst.mood-cold .ltr.m{animation:asstHopM-cold .35s ease-in-out infinite .08s}
+  /* the button's own orange sits at roughly 26-30deg of hue - getting to
+     an actually-icy blue needs a big rotation (not a small nudge, which
+     - as a first pass here wrongly assumed - just slides it toward
+     yellow/gold instead), landing around 216deg. */
+  .asst.mood-cold .asst-launch{filter:saturate(.4) brightness(.98) hue-rotate(190deg)}
+  @keyframes asstHopJ-cold{
+    0%,100%{translate:0 0;rotate:-7deg}25%{translate:0 1px;rotate:6deg}50%{translate:0 0;rotate:-8deg}75%{translate:0 1px;rotate:5deg}
+  }
+  @keyframes asstHopM-cold{
+    0%,100%{translate:0 0;rotate:7deg}25%{translate:0 1px;rotate:-6deg}50%{translate:0 0;rotate:8deg}75%{translate:0 1px;rotate:-5deg}
+  }
+  .asst.mood-cold .limb.arm-l{animation:asstArmL-cold .35s ease-in-out infinite}
+  .asst.mood-cold .limb.arm-r{animation:asstArmR-cold .35s ease-in-out infinite .08s}
+  .asst.mood-cold .limb.leg-l{animation:asstLegL-cold .35s ease-in-out infinite}
+  .asst.mood-cold .limb.leg-r{animation:asstLegR-cold .35s ease-in-out infinite .08s}
+  @keyframes asstArmL-cold{
+    0%,100%{rotate:-50deg}50%{rotate:-59deg}
+  }
+  @keyframes asstArmR-cold{
+    0%,100%{rotate:50deg}50%{rotate:59deg}
+  }
+  @keyframes asstLegL-cold{
+    0%,100%{rotate:3deg}50%{rotate:9deg}
+  }
+  @keyframes asstLegR-cold{
+    0%,100%{rotate:-3deg}50%{rotate:-9deg}
+  }
+  /* ice flakes: four small crystals (same clip-path star shape
+     .asst-sparkle's stars use, recolored pale blue) scattered around him
+     rather than icicles hanging off one edge, each drifting and twinkling
+     on its own staggered loop - same "several small particles" pattern
+     as the sparkle burst, just icy instead of golden. Only animated while
+     .mood-cold is active; losing that class stops the animation and the
+     base .flake{opacity:0} rule takes back over immediately; no extra
+     fade-out transition needed the way .asst-cloud/.asst-jacket wanted -
+     an animation ending just reverts to the plain (invisible) rule. */
+  .asst-ice{position:absolute;inset:-14px;pointer-events:none}
+  .asst-ice .flake{
+    position:absolute;width:9px;height:9px;background:#bfe6f7;
+    clip-path:polygon(50% 0%,61% 35%,100% 50%,61% 65%,50% 100%,39% 65%,0% 50%,39% 35%);
+    opacity:0;scale:.3;
+  }
+  .asst-ice .f1{top:2px;left:10px}
+  .asst-ice .f2{top:10px;right:2px}
+  .asst-ice .f3{bottom:6px;left:-2px}
+  .asst-ice .f4{bottom:-4px;right:14px}
+  .asst.mood-cold .asst-ice .flake{animation:asstFlakeDrift 1.3s ease-in-out infinite}
+  .asst.mood-cold .asst-ice .f2{animation-delay:.25s}
+  .asst.mood-cold .asst-ice .f3{animation-delay:.5s}
+  .asst.mood-cold .asst-ice .f4{animation-delay:.75s}
+  @keyframes asstFlakeDrift{
+    0%{opacity:0;scale:.3;translate:0 -4px;rotate:0deg}
+    25%{opacity:1;scale:1;rotate:60deg}
+    70%{opacity:.8;scale:.9;rotate:140deg}
+    100%{opacity:0;scale:.4;translate:0 8px;rotate:200deg}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .asst-ice .flake{animation:none!important;opacity:0}
+  }
+
+  /* cozy: light mode toggle - the inverse of cold, a slow lazy stretch
+     (arms up and out rather than hugged in) with a stronger warm boost
+     than the original pass, plus sun rays radiating from behind him
+     (.asst-sunrays below) rather than a breeze - a still, warm "in the
+     sun" read instead of something moving past him. */
+  .asst.mood-cozy .ltr.j{animation:asstHopJ-cozy 3s ease-in-out infinite}
+  .asst.mood-cozy .ltr.m{animation:asstHopM-cozy 3s ease-in-out infinite .2s}
+  .asst.mood-cozy .asst-launch{filter:brightness(1.12) saturate(1.15)}
+  @keyframes asstHopJ-cozy{
+    0%,100%{translate:0 0;rotate:-3deg}50%{translate:0 -5px;rotate:5deg}
+  }
+  @keyframes asstHopM-cozy{
+    0%,100%{translate:0 0;rotate:3deg}50%{translate:0 -5px;rotate:-5deg}
+  }
+  .asst.mood-cozy .limb.arm-l{animation:asstArmL-cozy 3s ease-in-out infinite}
+  .asst.mood-cozy .limb.arm-r{animation:asstArmR-cozy 3s ease-in-out infinite .2s}
+  .asst.mood-cozy .limb.leg-l{animation:asstLegL-cozy 3s ease-in-out infinite}
+  .asst.mood-cozy .limb.leg-r{animation:asstLegR-cozy 3s ease-in-out infinite .2s}
+  @keyframes asstArmL-cozy{
+    0%,100%{rotate:-15deg}50%{rotate:-45deg}
+  }
+  @keyframes asstArmR-cozy{
+    0%,100%{rotate:15deg}50%{rotate:45deg}
+  }
+  @keyframes asstLegL-cozy{
+    0%,100%{rotate:4deg}50%{rotate:9deg}
+  }
+  @keyframes asstLegR-cozy{
+    0%,100%{rotate:-4deg}50%{rotate:-9deg}
+  }
+  /* coffee sip: raises the mug-holding arm-r up toward the mouth and back
+     down, layered on top of whatever mood animation happens to be
+     running on that arm at the moment the off-the-clock flip fires.
+     !important because .asst.hop .limb{animation:none!important} (idle
+     bounce state, further up this file) otherwise wins outright and kills
+     every limb animation regardless of source order or specificity - this
+     rule still has higher specificity than that one anyway (four classes
+     vs three), so it wins the !important-vs-!important tiebreak too. */
+  .asst-launch.coffee .limb.arm-r{animation:asstCoffeeSip 1.6s cubic-bezier(.32,.61,.36,1) 1!important}
+  @keyframes asstCoffeeSip{
+    0%,100%{rotate:0deg}
+    18%{rotate:0deg}
+    40%{rotate:-95deg}
+    68%{rotate:-95deg}
+    88%{rotate:0deg}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .asst-launch.coffee .limb.arm-r{animation:none!important}
+  }
+  /* the sun rays: painted BEFORE .asst-mk in the markup (first child of
+     .asst-launch) so they sit behind the whole mark, mostly visible as
+     spikes poking out past his silhouette. repeating-conic-gradient
+     draws the even wedge pattern in one declaration rather than a dozen
+     rotated divs; inset:-30px lets the rays extend well past the
+     button's own 76px edge instead of being clipped tight to it. */
+  .asst-sunrays{
+    position:absolute;inset:-30px;border-radius:50%;pointer-events:none;
+    background:repeating-conic-gradient(rgba(255,196,50,.55) 0deg 6deg,transparent 6deg 24deg);
+    opacity:0;scale:.7;
+    transition:opacity .18s ease-in,scale .18s ease-in;
+  }
+  .asst.mood-cozy .asst-sunrays{
+    opacity:1;scale:1;animation:asstSunSpin 8s linear infinite;
+    transition:opacity .35s ease-out,scale .35s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes asstSunSpin{from{rotate:0deg}to{rotate:360deg}}
+  @media (prefers-reduced-motion:reduce){
+    .asst-sunrays{transition:opacity .18s linear}
+    .asst.mood-cozy .asst-sunrays{animation:none!important;rotate:0deg}
+  }
+  /* the shades: a flat pair of sunglasses sitting over the letters where
+     a face would be - the one deliberate exception to "faceless" this
+     mark makes, since a face-less mark that's supposedly relaxing in the
+     sun still reads as more of a joke with something covering its
+     "eyes". Painted after .asst-mk in the markup so it sits on top.
+     Same asymmetric-timing trick as .asst-cloud/.asst-ice - fast (.18s)
+     base rule governs every time they come off, the slower .mood-cozy
+     rule only applies putting them on. */
+  .asst-shades{
+    position:absolute;inset:0;pointer-events:none;
+    opacity:0;scale:.7;transform-origin:50% 45%;
+    transition:opacity .18s ease-in,scale .18s ease-in;
+  }
+  .asst-shades svg{width:100%;height:100%;display:block}
+  .asst-shades .shade-lens{fill:#1b1b1f}
+  .asst-shades .shade-bridge,.asst-shades .shade-arm{stroke:#1b1b1f;stroke-width:2;stroke-linecap:round}
+  .asst.mood-cozy .asst-shades{
+    opacity:1;scale:1;
+    transition:opacity .3s ease-out,scale .3s cubic-bezier(.34,1.56,.64,1);
+  }
+  @media (prefers-reduced-motion:reduce){
+    .asst-shades{transition:opacity .18s linear}
+  }
 
   /* every mood gets a little more urgent under the cursor, without
      switching to a different shape - excluded while the click-pop below is
      mid-flight so a hovered click still gets its full quick snap */
-  .asst-launch:hover .asst-mk:not(.pop) .ltr{animation-duration:.85s!important}
+  .asst-launch:hover .asst-mk:not(.pop) .ltr,
+  .asst-launch:hover .asst-mk:not(.pop) .limb{animation-duration:.85s!important}
 
   /* a satisfied little squash-and-stretch pop each time the panel opens or
      closes, layered on top of whatever mood is currently playing - JS adds
      this class for one animation cycle, then removes it so nothing is ever
      left stuck on it. */
-  .asst-mk.pop .ltr{animation-name:asstPop;animation-duration:.38s;
+  .asst-mk.pop .ltr,.asst-mk.pop .limb{animation-name:asstPop;animation-duration:.38s;
     animation-timing-function:var(--mo-ease);animation-iteration-count:1}
   @keyframes asstPop{0%{scale:1}35%{scale:.82 1.16}65%{scale:1.1 .9}100%{scale:1}}
 
@@ -342,10 +1195,17 @@
   }
   .asst-head .asst-mk.sm{position:relative;inset:auto;width:34px;height:34px;flex:none;
     background:var(--orange);border-radius:50%;display:flex;align-items:center;justify-content:center}
-  .asst-head-txt{flex:1;min-width:0}
-  .asst-head-txt h2{font-family:var(--mono);font-size:10px;letter-spacing:.06em;
-    text-transform:uppercase;color:var(--cream);margin:0}
-  .asst-head-txt p{font-size:11px;color:var(--cream-dim);margin:2px 0 0}
+  /* name and role sit side by side on one line now, not stacked - baseline
+     alignment so the bigger "Bean" and the smaller role text share a
+     visual bottom edge instead of the role looking like it's floating
+     relative to the now-taller name; min-width:0 (unchanged) still lets
+     the row shrink and the role truncate rather than force the header to
+     overflow on a narrow panel. */
+  .asst-head-txt{flex:1;min-width:0;display:flex;align-items:baseline;gap:7px}
+  .asst-head-txt h2{font-family:var(--mono);font-size:19px;letter-spacing:.03em;
+    text-transform:uppercase;color:var(--cream);margin:0;flex:none}
+  .asst-head-txt p{font-size:11px;color:var(--cream-dim);margin:0;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
   .asst-close{background:none;border:none;color:var(--cream-dim);font-size:20px;line-height:1;
     cursor:pointer;padding:4px 6px;border-radius:6px}
   .asst-close:hover{color:var(--cream);background:var(--pill-quiet)}
@@ -426,6 +1286,11 @@
        overlap risk is gone and the beside placement (less visually
        distracting, per James) was restored. */
     .asst-launch{width:58px;height:58px}
+    /* the desktop-only JM enlargement above is sized for the 76px button
+       and its generous margin to the header/panel avatar - on the 58px
+       phone badge that same 2x scale would run the letters right past
+       the circle's edge, so it's switched back off here. */
+    .asst-mk:not(.sm) .ltr-wrap{scale:1}
     .asst-dot{width:13px;height:13px}
     .asst-badge{min-width:16px;height:16px;font-size:9px;line-height:14px}
     .asst-bubble{

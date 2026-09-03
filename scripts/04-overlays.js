@@ -20,13 +20,17 @@
   if(!pm) return;
   var img=document.getElementById('pm-img'),
       ttl=document.getElementById('pm-title'), copy=document.getElementById('pm-copy'),
-      fact=document.getElementById('pm-fact'),
+      fact=document.getElementById('pm-fact'), links=document.getElementById('pm-links'),
       repoLink=document.getElementById('pm-repo'), demoLink=document.getElementById('pm-demo');
 
   /* repo/demo are optional per project and not all are filled in yet - a
      card without one shows the button greyed out and inert rather than
      hiding it outright, so the row still reads as "code + demo" while the
-     real links get added */
+     real links get added. That's for "not yet linked" projects. A project
+     that will never have either - an internship's private repo, a CTF
+     with no demo to show - opts out with data-links="none" instead, which
+     hides the whole row rather than showing two buttons that will always
+     be dead. */
   function setLink(a, url){
     if(url){
       a.href = url; a.removeAttribute('aria-disabled'); a.removeAttribute('tabindex');
@@ -48,8 +52,11 @@
       ttl.innerHTML    = h.innerHTML;
       copy.textContent = card.querySelector('p').textContent;
       fact.textContent = card.querySelector('.fact').textContent;
-      setLink(repoLink, card.dataset.repo);
-      setLink(demoLink, card.dataset.demo);
+      links.hidden = card.dataset.links === 'none';
+      if(!links.hidden){
+        setLink(repoLink, card.dataset.repo);
+        setLink(demoLink, card.dataset.demo);
+      }
       document.body.classList.add('pm-open');
       pm.classList.add('on');
     });

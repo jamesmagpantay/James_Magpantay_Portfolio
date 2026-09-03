@@ -299,16 +299,63 @@ document.documentElement.setAttribute('data-theme', 'dark');
   <div class="asst-quip" id="asstQuip" aria-hidden="true"></div>
   <button class="asst-launch" type="button" id="asstLaunch"
           aria-haspopup="dialog" aria-expanded="false" aria-controls="asstPanel" aria-label="Open chat with Bean">
+    <div class="asst-sunrays" aria-hidden="true"></div>
     <span class="asst-mk" aria-hidden="true">
-      <svg viewBox="0 0 100 100"><path class="ltr j" d="M41 26V74H12V61H28V26Z"/><path class="ltr m" d="M49 74V26H62L68.5 44L75 26H88V74H75V50L68.5 62L62 50V74Z"/></svg>
+      <svg viewBox="0 0 100 100"><g class="limb arm-l"><path d="M-14.6,50 Q-36,65 -44.2,82"/></g><g class="limb arm-r"><path d="M114.6,50 Q136,65 144.2,82"/></g><g class="limb leg-l"><line x1="38.3" y1="113.3" x2="35" y2="161"/></g><g class="limb leg-r"><line x1="61.7" y1="113.3" x2="65" y2="161"/></g><circle class="mk-disc" cx="50" cy="50" r="82.6"/><g class="ltr-wrap"><path class="ltr j" d="M41 26V74H12V61H28V26Z"/><path class="ltr m" d="M49 74V26H62L68.5 44L75 26H88V74H75V50L68.5 62L62 50V74Z"/></g><g class="limb arm-l"><circle class="hand" cx="-44.2" cy="82" r="13"/><circle class="hand" cx="-34.2" cy="70" r="7"/></g><g class="limb arm-r"><circle class="hand" cx="144.2" cy="82" r="13"/><circle class="hand" cx="134.2" cy="70" r="7"/><g class="asst-coffee-mug"><rect class="mug-cup" x="123" y="30" width="40" height="34" rx="5"/><path class="mug-handle" d="M163 37 q15 0 15 10 t-15 10"/><path class="steam s1" d="M134 30 C124 16,144 6,134 -12"/><path class="steam s2" d="M154 30 C164 16,144 6,154 -12"/></g></g><g class="limb leg-l"><ellipse class="foot" cx="35" cy="161" rx="12" ry="7"/></g><g class="limb leg-r"><ellipse class="foot" cx="65" cy="161" rx="12" ry="7"/></g></svg>
     </span>
+    <div class="asst-shades" aria-hidden="true">
+      <svg viewBox="0 0 76 76">
+        <line class="shade-arm" x1="10" y1="32" x2="0" y2="27"/>
+        <line class="shade-arm" x1="66" y1="32" x2="76" y2="27"/>
+        <rect class="shade-lens" x="10" y="28" width="24" height="18" rx="7"/>
+        <rect class="shade-lens" x="42" y="28" width="24" height="18" rx="7"/>
+        <line class="shade-bridge" x1="34" y1="37" x2="42" y2="37"/>
+      </svg>
+    </div>
+    <div class="asst-ice" aria-hidden="true">
+      <span class="flake f1"></span>
+      <span class="flake f2"></span>
+      <span class="flake f3"></span>
+      <span class="flake f4"></span>
+    </div>
+    <div class="asst-cloud" aria-hidden="true">
+      <svg viewBox="0 0 64 46">
+        <g class="cloud-body">
+          <ellipse cx="20" cy="20" rx="14" ry="11"/>
+          <ellipse cx="34" cy="14" rx="16" ry="13"/>
+          <ellipse cx="48" cy="21" rx="13" ry="10"/>
+          <rect x="10" y="18" width="44" height="14" rx="7"/>
+        </g>
+        <g class="cloud-rain">
+          <line class="drop d1" x1="18" y1="34" x2="14" y2="44"/>
+          <line class="drop d2" x1="32" y1="34" x2="28" y2="44"/>
+          <line class="drop d3" x1="46" y1="34" x2="42" y2="44"/>
+        </g>
+      </svg>
+    </div>
+    <div class="asst-sparkle" aria-hidden="true">
+      <span class="spark s1"></span>
+      <span class="spark s2"></span>
+      <span class="spark s3"></span>
+      <span class="spark s4"></span>
+    </div>
+    <div class="asst-shine" aria-hidden="true"></div>
+    <svg class="asst-scan-ring" aria-hidden="true" viewBox="0 0 76 76">
+      <circle cx="38" cy="38" r="37"/>
+    </svg>
+    <div class="asst-question" aria-hidden="true">?</div>
+    <div class="asst-startle-mark" aria-hidden="true">!</div>
+    <div class="asst-dizzy-swirl" aria-hidden="true">
+      <span class="dstar d1"></span>
+      <span class="dstar d2"></span>
+    </div>
     <span class="asst-dot" aria-hidden="true"></span>
     <span class="asst-badge" id="asstBadge" hidden>1</span>
   </button>
   <section class="asst-panel" id="asstPanel" role="dialog" aria-label="Chat with Bean" hidden>
     <header class="asst-head">
       <span class="asst-mk sm" aria-hidden="true">
-        <svg viewBox="0 0 100 100"><path class="ltr j" d="M41 26V74H12V61H28V26Z"/><path class="ltr m" d="M49 74V26H62L68.5 44L75 26H88V74H75V50L68.5 62L62 50V74Z"/></svg>
+        <svg viewBox="0 0 100 100"><g class="limb arm-l"><path d="M-14.6,50 Q-36,65 -44.2,82"/></g><g class="limb arm-r"><path d="M114.6,50 Q136,65 144.2,82"/></g><g class="limb leg-l"><line x1="38.3" y1="113.3" x2="35" y2="161"/></g><g class="limb leg-r"><line x1="61.7" y1="113.3" x2="65" y2="161"/></g><circle class="mk-disc" cx="50" cy="50" r="82.6"/><g class="ltr-wrap"><path class="ltr j" d="M41 26V74H12V61H28V26Z"/><path class="ltr m" d="M49 74V26H62L68.5 44L75 26H88V74H75V50L68.5 62L62 50V74Z"/></g><g class="limb arm-l"><circle class="hand" cx="-44.2" cy="82" r="13"/><circle class="hand" cx="-34.2" cy="70" r="7"/></g><g class="limb arm-r"><circle class="hand" cx="144.2" cy="82" r="13"/><circle class="hand" cx="134.2" cy="70" r="7"/></g><g class="limb leg-l"><ellipse class="foot" cx="35" cy="161" rx="12" ry="7"/></g><g class="limb leg-r"><ellipse class="foot" cx="65" cy="161" rx="12" ry="7"/></g></svg>
       </span>
       <div class="asst-head-txt">
         <h2>Bean</h2>
@@ -811,7 +858,7 @@ document.documentElement.setAttribute('data-theme', 'dark');
     </div>
     <div class="proj-rail">
       <div class="proj-grid">
-      <article class="proj c1">
+      <article class="proj c1" data-repo="https://github.com/jamesmagpantay/PAMS---Ticketing-and-SIEM">
         <div class="proj-shot"><img src="photos/projects/siem.jpg" alt="SIEM dashboard and ticket queue" loading="lazy"></div>
         <div class="proj-body">
           <h3>PUP OUS SIEM &amp; Ticketing System</h3>
@@ -819,7 +866,7 @@ document.documentElement.setAttribute('data-theme', 'dark');
           <span class="fact">100% audit-log tamper detection</span>
         </div>
       </article>
-      <article class="proj c2">
+      <article class="proj c2" data-repo="https://github.com/jamesmagpantay/python_nmap_scanner" data-demo="https://lnkd.in/p/eeZiktUi">
         <div class="proj-shot"><img src="photos/projects/scanner.jpg" alt="Port scanner output" loading="lazy"></div>
         <div class="proj-body">
           <h3>Automated Network Vulnerability &amp; Change Scanner</h3>
@@ -827,7 +874,7 @@ document.documentElement.setAttribute('data-theme', 'dark');
           <span class="fact">Flags new, closed, and modified ports over time</span>
         </div>
       </article>
-      <article class="proj c3">
+      <article class="proj c3" data-repo="https://github.com/pams-ous/pams-ous">
         <div class="proj-shot"><img src="photos/projects/pams.jpg" alt="Personnel monitoring system" loading="lazy"></div>
         <div class="proj-body">
           <h3>PUP OUS Personnel Accomplishment Monitoring System</h3>
@@ -835,7 +882,7 @@ document.documentElement.setAttribute('data-theme', 'dark');
           <span class="fact">Data handling policies for confidentiality, integrity, availability</span>
         </div>
       </article>
-      <article class="proj c4">
+      <article class="proj c4" data-links="none">
         <div class="proj-shot"><img class="top" src="photos/projects/ctf.jpg" alt="TryHackMe AI Odyssey CTF" loading="lazy"></div>
         <div class="proj-body">
           <h3>AI Odyssey CTF · TryHackMe</h3>
@@ -843,7 +890,7 @@ document.documentElement.setAttribute('data-theme', 'dark');
           <span class="fact">Flags captured, vulnerabilities exploited</span>
         </div>
       </article>
-      <article class="proj c1">
+      <article class="proj c1" data-links="none">
         <div class="proj-shot"><img src="photos/projects/dost.jpg" alt="DOST platform" loading="lazy"></div>
         <div class="proj-body">
           <h3>DOST Security Remediation</h3>
@@ -851,7 +898,7 @@ document.documentElement.setAttribute('data-theme', 'dark');
           <span class="fact">Production auth flaw closed</span>
         </div>
       </article>
-      <article class="proj c2">
+      <article class="proj c2" data-links="none">
         <div class="proj-shot"><img src="photos/projects/buddy.jpg" alt="PUP Enrollment Buddy chatbot" loading="lazy"></div>
         <div class="proj-body">
           <h3>PUP Enrollment Buddy · AWS Cloud Club</h3>
@@ -859,16 +906,24 @@ document.documentElement.setAttribute('data-theme', 'dark');
           <span class="fact">LLM architecture in a real conversational interface</span>
         </div>
       </article>
-      <article class="proj c4">
+      <article class="proj c4" data-repo="https://github.com/Utokotok/groupone-eely">
         <div class="proj-shot"><img src="photos/projects/eely.jpg" alt="Eely bill scanner" loading="lazy"></div>
         <div class="proj-body">
           <h3>Eely · CODEKADA</h3>
           <p>Cybersecurity lead on an AI electricity bill scanner: formulated data privacy protocols for AI modelling, secured data integrity during extraction, and shaped the energy-insight UI.</p>
           <span class="fact">100% compliance securing sensitive utility data</span>
+        </div>
+      </article>
+      <article class="proj c3" data-repo="https://github.com/Utokotok/Skillet/tree/main">
+        <div class="proj-shot"><img src="photos/projects/skillet.png" alt="Skillet skills library dashboard" loading="lazy"></div>
+        <div class="proj-body">
+          <h3>Skillet</h3>
+          <p>A reusable skills library for IBM Bob IDE: coding standards, security guidelines, and validation checks codified as structured, versioned skills, enforced through immutable policies split across a two-repo governance model.</p>
+          <span class="fact">Immutable policies enforced across a two-repo trust boundary</span>
         </div>
       </article>
         <!-- duplicated set: makes the marquee loop seamlessly -->
-      <article class="proj c1" aria-hidden="true">
+      <article class="proj c1" aria-hidden="true" data-repo="https://github.com/jamesmagpantay/PAMS---Ticketing-and-SIEM">
         <div class="proj-shot"><img src="photos/projects/siem.jpg" alt="SIEM dashboard and ticket queue" loading="lazy"></div>
         <div class="proj-body">
           <h3>PUP OUS SIEM &amp; Ticketing System</h3>
@@ -876,7 +931,7 @@ document.documentElement.setAttribute('data-theme', 'dark');
           <span class="fact">100% audit-log tamper detection</span>
         </div>
       </article>
-      <article class="proj c2" aria-hidden="true">
+      <article class="proj c2" aria-hidden="true" data-repo="https://github.com/jamesmagpantay/python_nmap_scanner" data-demo="https://lnkd.in/p/eeZiktUi">
         <div class="proj-shot"><img src="photos/projects/scanner.jpg" alt="Port scanner output" loading="lazy"></div>
         <div class="proj-body">
           <h3>Automated Network Vulnerability &amp; Change Scanner</h3>
@@ -884,7 +939,7 @@ document.documentElement.setAttribute('data-theme', 'dark');
           <span class="fact">Flags new, closed, and modified ports over time</span>
         </div>
       </article>
-      <article class="proj c3" aria-hidden="true">
+      <article class="proj c3" aria-hidden="true" data-repo="https://github.com/pams-ous/pams-ous">
         <div class="proj-shot"><img src="photos/projects/pams.jpg" alt="Personnel monitoring system" loading="lazy"></div>
         <div class="proj-body">
           <h3>PUP OUS Personnel Accomplishment Monitoring System</h3>
@@ -892,7 +947,7 @@ document.documentElement.setAttribute('data-theme', 'dark');
           <span class="fact">Data handling policies for confidentiality, integrity, availability</span>
         </div>
       </article>
-      <article class="proj c4" aria-hidden="true">
+      <article class="proj c4" aria-hidden="true" data-links="none">
         <div class="proj-shot"><img class="top" src="photos/projects/ctf.jpg" alt="TryHackMe AI Odyssey CTF" loading="lazy"></div>
         <div class="proj-body">
           <h3>AI Odyssey CTF · TryHackMe</h3>
@@ -900,7 +955,7 @@ document.documentElement.setAttribute('data-theme', 'dark');
           <span class="fact">Flags captured, vulnerabilities exploited</span>
         </div>
       </article>
-      <article class="proj c1" aria-hidden="true">
+      <article class="proj c1" aria-hidden="true" data-links="none">
         <div class="proj-shot"><img src="photos/projects/dost.jpg" alt="DOST platform" loading="lazy"></div>
         <div class="proj-body">
           <h3>DOST Security Remediation</h3>
@@ -908,7 +963,7 @@ document.documentElement.setAttribute('data-theme', 'dark');
           <span class="fact">Production auth flaw closed</span>
         </div>
       </article>
-      <article class="proj c2" aria-hidden="true">
+      <article class="proj c2" aria-hidden="true" data-links="none">
         <div class="proj-shot"><img src="photos/projects/buddy.jpg" alt="PUP Enrollment Buddy chatbot" loading="lazy"></div>
         <div class="proj-body">
           <h3>PUP Enrollment Buddy · AWS Cloud Club</h3>
@@ -916,12 +971,20 @@ document.documentElement.setAttribute('data-theme', 'dark');
           <span class="fact">LLM architecture in a real conversational interface</span>
         </div>
       </article>
-      <article class="proj c4" aria-hidden="true">
+      <article class="proj c4" aria-hidden="true" data-repo="https://github.com/Utokotok/groupone-eely">
         <div class="proj-shot"><img src="photos/projects/eely.jpg" alt="Eely bill scanner" loading="lazy"></div>
         <div class="proj-body">
           <h3>Eely · CODEKADA</h3>
           <p>Cybersecurity lead on an AI electricity bill scanner: formulated data privacy protocols for AI modelling, secured data integrity during extraction, and shaped the energy-insight UI.</p>
           <span class="fact">100% compliance securing sensitive utility data</span>
+        </div>
+      </article>
+      <article class="proj c3" aria-hidden="true" data-repo="https://github.com/Utokotok/Skillet/tree/main">
+        <div class="proj-shot"><img src="photos/projects/skillet.png" alt="Skillet skills library dashboard" loading="lazy"></div>
+        <div class="proj-body">
+          <h3>Skillet</h3>
+          <p>A reusable skills library for IBM Bob IDE: coding standards, security guidelines, and validation checks codified as structured, versioned skills, enforced through immutable policies split across a two-repo governance model.</p>
+          <span class="fact">Immutable policies enforced across a two-repo trust boundary</span>
         </div>
       </article>
       </div>

@@ -1,48 +1,92 @@
-/* A two-way shortcut between the two long galleries. Scrolling down through
-   the events set offers the way on; scrolling back up through Off the clock
-   offers the way back. It follows the direction of travel, so it never points
-   the way someone has just decided not to go. */
+/* A two-way shortcut across three long sections in a row: events -> life ->
+   games. Scrolling down deep inside events or life offers the way on to the
+   next one; scrolling back up deep inside events, life, or games offers the
+   way back to the TOP OF THAT SAME SECTION, not a jump into the one before
+   it - so "Back up" is always a local "top of this gallery" move, symmetric
+   with the fill below rather than a second kind of jump. events has no
+   upstream section to clear first (it's the start of the chain), so its
+   own up-check skips that half of the condition the other two use. It
+   follows the direction of travel, so it never points the way someone has
+   just decided not to go, and only one button/target is ever live at a
+   time since the down/up checks below are each other's mutually exclusive
+   scroll ranges.
+
+   The pill's own fill (.skipto::before, driven by --p) is scoped to
+   whichever section is actually being read here, not the whole-page
+   scroll --p that <html> otherwise carries - set directly on the button
+   as an inline custom property, which cascades over the page-level one
+   for this element without needing a second CSS variable name. */
 (function(){
-  var btn  = document.getElementById('skipto'),
-      lab  = btn && btn.querySelector('span'),
-      ev   = document.getElementById('events'),
-      life = document.getElementById('life');
-  if(!btn || !lab || !ev || !life) return;
+  var btn   = document.getElementById('skipto'),
+      lab   = btn && btn.querySelector('span'),
+      ev    = document.getElementById('events'),
+      life  = document.getElementById('life'),
+      games = document.getElementById('games');
+  if(!btn || !lab || !ev || !life || !games) return;
 
-  var last = window.scrollY, dir = 1, mode = null;
+  var last = window.scrollY, dir = 1, mode = null, dest = null, track = null;
 
-  function set(next){
-    if(next === mode) return;
-    mode = next;
+  /* 0 at this section's own top, 1 at its own bottom - independent of
+     where the section sits in the document as a whole */
+  function sectionProgress(sec){
+    var vh = window.innerHeight || 800;
+    var r = sec.getBoundingClientRect();
+    var span = r.height - vh;
+    if(span <= 0) return 1;
+    return Math.min(1, Math.max(0, -r.top / span));
+  }
+
+  function set(next, target, trackSec, label){
+    track = trackSec;
+    if(next === mode && target === dest) return;
+    mode = next; dest = target;
     btn.classList.toggle('on', !!next);
     btn.classList.toggle('up', next === 'up');
     btn.setAttribute('aria-hidden', next ? 'false' : 'true');
     btn.tabIndex = next ? 0 : -1;
     if(next){
-      var to = next === 'up' ? 'Rooms I show up in' : 'Off the clock';
       /* the vbadge corner toggle already shows "Off the clock" on screen at
          this scroll depth - keep the visible label generic so the two
          fixed bottom elements never repeat the same words, and save the
-         destination name for the accessible label instead */
+         actual destination for the accessible label instead */
       lab.textContent = next === 'up' ? 'Back up' : 'Next';
-      btn.setAttribute('aria-label', 'Jump to ' + to);
+      btn.setAttribute('aria-label', label);
     }
   }
 
   function update(){
-    /* both sections belong to the off-clock view only */
+    /* all three sections belong to the off-clock view only */
     if(ev.hidden || !ev.offsetParent){ set(null); return; }
     var vh = window.innerHeight || 800,
         e  = ev.getBoundingClientRect(),
-        l  = life.getBoundingClientRect();
+        l  = life.getBoundingClientRect(),
+        g  = games.getBoundingClientRect();
 
     if(dir > 0){
-      /* heading down, well inside the events gallery, destination not yet near */
-      set(e.top < -vh * .55 && e.bottom > vh * 1.15 ? 'down' : null);
+      /* heading down, well inside events, destination (life) not yet near */
+      if(e.top < -vh * .55 && e.bottom > vh * 1.15){ set('down', life, ev, 'Jump to Off the clock'); }
+      /* heading down, well inside life, destination (games) not yet near */
+      else if(l.top < -vh * .55 && l.bottom > vh * 1.15){ set('down', games, life, 'Jump to Games'); }
+      else { set(null); return; }
     } else {
-      /* heading up, well inside Off the clock, with the gallery clear above */
-      set(l.top < -vh * .5 && e.bottom < -vh * .15 ? 'up' : null);
+      /* heading up, well inside games (top AND bottom checked, so this
+         stops firing once movies has been scrolled past games too - the
+         top check alone stays true forever past that point), with life
+         clear above - back to the top of games itself, not a jump into
+         life */
+      if(g.top < -vh * .5 && g.bottom > vh * .15 && l.bottom < -vh * .15){ set('up', games, games, 'Back to top of Games'); }
+      /* heading up, well inside life (same top+bottom bracket as games
+         above, for the same reason: stops this firing once games itself
+         has been scrolled past), with events clear above - back to the
+         top of life itself, not a jump into events */
+      else if(l.top < -vh * .5 && l.bottom > vh * .15 && e.bottom < -vh * .15){ set('up', life, life, 'Back to top of Off the clock'); }
+      /* heading up, well inside events itself - back to the top of events.
+         No upstream section to clear first here (events is the start of
+         the chain), so this is just the same top+bottom bracket alone. */
+      else if(e.top < -vh * .5 && e.bottom > vh * .15){ set('up', ev, ev, 'Back to top of Rooms I show up in'); }
+      else { set(null); return; }
     }
+    btn.style.setProperty('--p', sectionProgress(track).toFixed(4));
   }
 
   addEventListener('scroll', function(){
@@ -58,7 +102,7 @@
 
   btn.addEventListener('click', function(){
     if(window.sfx) window.sfx.play('click');
-    (mode === 'up' ? ev : life).scrollIntoView();   /* inherits smooth scrolling */
+    if(dest) dest.scrollIntoView();   /* inherits smooth scrolling */
     set(null);
   });
   btn.tabIndex = -1;

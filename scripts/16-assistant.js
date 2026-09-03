@@ -30,34 +30,34 @@
   var TOPICS = [
     { id:'projects', chip:'Projects', keywords:['project','projects','siem','scanner','ctf','hackathon','build','built','portfolio','app','vulnerability','nmap'],
       view:'pro', target:'#work', jump:'Show me',
-      reply:"Oh, this is the fun part. James builds things that actually catch bad guys: a SIEM with SHA-256 hash-chained audit logs, a Python + Nmap vulnerability scanner, an AWS RAG chatbot, and an international CTF where he prompt-injected his way past an LLM's safety filters." },
+      reply:"Oh, this is the fun part. James builds things that actually catch bad guys: a SIEM with SHA-256 hash-chained audit logs, a Python + Nmap vulnerability scanner, an AWS RAG chatbot, and an international CTF where he prompt-injected his way past an LLM's safety filters. :D" },
 
     { id:'experience', chip:'Experience', keywords:['experience','intern','internship','job','dost','netconnect','cisco','gdg','google developer','aws cloud club','work history','career'],
       view:'pro', target:'#experience', jump:'Show me',
-      reply:"He's a Software Developer Intern at the DOST (fixed a forged-token auth flaw there, no big deal), Vice CTO of Cisco NetConnect PUP, a Cybersecurity Compliance Analyst with Google Developer Groups, and he still finds time for the AWS Cloud Club too. Busy guy." },
+      reply:"He's a Software Developer Intern at the DOST (fixed a forged-token auth flaw there, no big deal), Vice CTO of Cisco NetConnect PUP, a Cybersecurity Compliance Analyst with Google Developer Groups, and he still finds time for the AWS Cloud Club too. Busy guy. ;)" },
 
     { id:'education', chip:'Education', keywords:['education','school','university','degree','pup','college','gpa','scholar','scholarship','student'],
       view:'pro', target:'#education', jump:'Show me',
-      reply:"BSIT at the Polytechnic University of the Philippines (Manila), expected 2028, cybersecurity and networking track. He's also a Gokongwei Brothers Foundation scholar and made President's Lister for AY 2024 to 2025. The nerd credentials check out." },
+      reply:"BSIT at the Polytechnic University of the Philippines (Manila), expected 2028, cybersecurity and networking track. He's also a Gokongwei Brothers Foundation scholar and made President's Lister for AY 2024 to 2025. The nerd credentials check out. :)" },
 
     { id:'certs', chip:'Certs', keywords:['cert','certs','certificate','certification','certifications','credential','credentials','ccna','security+','isc2','ctia'],
       view:'pro', target:'#certs', jump:'Show me',
-      reply:"Badge collection so far: CTIA Level III and Certified Cybersecurity Professional, both earned. Google Cybersecurity Professional and ISC2 Candidate are in progress. Security+ and CCNA are next up on the hit list." },
+      reply:"Badge collection so far: CTIA Level III and Certified Cybersecurity Professional, both earned. Google Cybersecurity Professional and ISC2 Candidate are in progress. Security+ and CCNA are next up on the hit list. :)" },
 
     { id:'stack', chip:'Tech stack', keywords:['stack','tools','tooling','language','languages','python','skills','technical skills','wireshark','burp','kali'],
       view:'pro', target:'#stack', jump:'Show me',
-      reply:"Kali Linux, Burp Suite, Nmap, Wireshark, Elastic SIEM, CyberChef for the security side; Python, C, Java, and SQL for code; Git, GitHub, and Cisco Packet Tracer round it out. He's also comfortable pairing with AI tools like Claude, OpenAI, and Gemini." },
+      reply:"Kali Linux, Burp Suite, Nmap, Wireshark, Elastic SIEM, CyberChef for the security side; Python, C, Java, and SQL for code; Git, GitHub, and Cisco Packet Tracer round it out. He's also comfortable pairing with AI tools like Claude, OpenAI, and Gemini. 8)" },
 
     { id:'hobbies', chip:'Off the clock', keywords:['hobby','hobbies','fun','personal','off the clock','games','gaming','movies','anime','life outside','free time','interests'],
       view:'off', target:'#life', jump:'Take me there',
-      reply:"He's not always in incident-response mode, I promise. There's a whole other side of this site: games, movies and shows, speaking gigs, tech events he's crashed. It's one view flip away, want me to take you?" },
+      reply:"He's not always in incident-response mode, I promise. There's a whole other side of this site: games, movies and shows, speaking gigs, tech events he's crashed. It's one view flip away, want me to take you? :)" },
 
     { id:'contact', chip:'Hire him', keywords:['hire','hiring','contact','reach','email','recruit','recruiter','opportunity','available','availability','internship opportunity','apply'],
       view:'pro', target:'#summary', jump:'Take me there',
-      reply:"Good news, he's actively looking. Open to internships and entry-level SOC, GRC, network, or cloud security roles, based in Manila, PH. Fastest route in is email, jamess.a.magpantay@gmail.com, or the form at the bottom of the page. I won't take it personally if you skip me." },
+      reply:"Good news, he's actively looking. Open to internships and entry-level SOC, GRC, network, or cloud security roles, based in Manila, PH. Fastest route in is email, jamess.a.magpantay@gmail.com, or the form at the bottom of the page. I won't take it personally if you skip me. :)" },
 
     { id:'resume', chip:'Résumé', keywords:['resume','résumé','cv','download'],
-      reply:"Say less. Both are ready to go.",
+      reply:"Say less. Both are ready to go. :)",
       files:[
         {label:'Download CV', href:'docs/James_Magpantay_CV.pdf'},
         {label:'Download resume', href:'docs/James_Magpantay_Resume.pdf'}
@@ -65,11 +65,11 @@
 
     { id:'socials', chip:'Socials', keywords:['linkedin','github','social','socials','discord','facebook','instagram'],
       view:'pro', target:'#contact',
-      reply:"LinkedIn, GitHub, Facebook, and Instagram are all sitting in the footer along with his email. Scroll all the way down, or let me take you there." },
+      reply:"LinkedIn, GitHub, Facebook, and Instagram are all sitting in the footer along with his email. Scroll all the way down, or let me take you there. :)" },
 
     { id:'about', chip:'About James', keywords:['who is james','who are you','about james','about him','tell me about','summary'],
       view:'pro', target:'#summary', jump:'Read more',
-      reply:"James Randall A. Magpantay, BSIT student in Manila, building a career out of networking, cybersecurity, and systems administration. Real DOST internship, real CCNA training, real projects that ship real controls. Not bad for a student." }
+      reply:"James Randall A. Magpantay, BSIT student in Manila, building a career out of networking, cybersecurity, and systems administration. Real DOST internship, real CCNA training, real projects that ship real controls. Not bad for a student. ;)" }
   ];
 
   /* the persistent quick-reply row - every topic gets a button now that the
@@ -92,50 +92,133 @@
      keyword coincidence. ---- */
   var SMALLTALK = [
     { keywords:['are you real','are you human','are you a bot','are you ai','are you an ai','are you alive'],
-      reply:["Define 'real.' I know an awful lot about James, if that counts for something.",
-             "Real enough to point you where you need to go. That's what matters here."] },
+      reply:["Define 'real.' I know an awful lot about James, if that counts for something. :)",
+             "Real enough to point you where you need to go. That's what matters here. :)"] },
     { keywords:['who made you','who built you','who created you','who coded you'],
-      reply:"James made me, with Claude doing the actual typing. He named me Bean. I didn't get a vote." },
+      reply:"James made me, with Claude doing the actual typing. He named me Bean. I didn't get a vote. :/" },
     { keywords:['what can you do','what do you do','help me','how do you work','what are you'],
-      reply:"I'm Bean. I match what you type against a script about James: projects, experience, certs, his stack, hobbies, how to reach him. Try a button below." },
+      reply:"I'm Bean. I match what you type against a script about James: projects, experience, certs, his stack, hobbies, how to reach him. Try a button below. :)" },
     { keywords:['tell me a joke','make me laugh','say something funny','joke'],
-      reply:["Why did the pen tester bring a ladder? To get to the higher level privileges.",
-             "James's favorite HTTP status code is 418. I'm a teapot. Mine's 429, too many requests, because that's basically my personality.",
-             "There are 10 kinds of people who read this: those who understand binary, and those who don't."] },
+      reply:["Why did the pen tester bring a ladder? To get to the higher level privileges. :D",
+             "James's favorite HTTP status code is 418. I'm a teapot. Mine's 429, too many requests, because that's basically my personality. XD",
+             "There are 10 kinds of people who read this: those who understand binary, and those who don't. :D"] },
     { keywords:['you suck','you\'re dumb','youre dumb','you are dumb','useless','you\'re useless','bad bot','stupid bot'],
-      reply:["Fair. I'm a script, not a genius. Give me a real question about James and I'll actually earn my keep.",
-             "Ouch, but okay. Try me on something I actually know, like his projects or certs."] },
+      reply:["Fair. I'm a script, not a genius. Give me a real question about James and I'll actually earn my keep. :(",
+             "Ouch, but okay. Try me on something I actually know, like his projects or certs. :("] },
     { keywords:['who are you really','what is your name','your name','who is bean','whats bean',"what's bean"],
-      reply:"Bean. Just Bean, that's the whole name, no last name required. I answer to pretty much anything though, as long as it's about James." },
+      reply:"Bean. Just Bean, that's the whole name, no last name required. I answer to pretty much anything though, as long as it's about James. :)" },
     /* the joke James specifically asked for - triggers on anything Mr. Bean
        shaped, not just the exact phrase, so "bean???" or "like mr bean?"
        both land here instead of falling through to the generic fallback */
     { keywords:['mr bean','mr. bean','mister bean','rowan atkinson','are you bean','teddy bear','bowler hat'],
-      reply:["I'm Bean, not Mr. Bean! No bowler hat, no silent comedy, no yellow car. Just a guy with a script.",
-             "Close, but no. Bean, not Mr. Bean. I don't even own a teddy bear."] },
+      reply:["I'm Bean, not Mr. Bean! No bowler hat, no silent comedy, no yellow car. Just a guy with a script. :P",
+             "Close, but no. Bean, not Mr. Bean. I don't even own a teddy bear. :P"] },
     { keywords:['are you james','is this james'],
-      reply:"Nope, I'm Bean, his guide. James is off doing actual security work. I'm the understudy who knows his lines." }
+      reply:"Nope, I'm Bean, his guide. James is off doing actual security work. I'm the understudy who knows his lines. ;)" }
   ];
 
   /* ---- moods: swap a class on .asst, CSS carries the rest. Transient moods
      (excited, cheeky) pass a revert delay and settle back to welcoming on
      their own; curious and sleepy are idle-driven and persist until real
      activity clears them, below. ---- */
-  var MOOD_CLASSES = ['mood-welcoming','mood-excited','mood-curious','mood-sleepy','mood-cheeky','mood-angry'];
+  var MOOD_CLASSES = ['mood-welcoming','mood-excited','mood-curious','mood-sleepy','mood-cheeky','mood-angry','mood-sad','mood-proud','mood-bored','mood-confused','mood-smug','mood-shy','mood-cold','mood-cozy'];
   var currentMood = 'welcoming', moodT = null;
 
+  /* sad's pose (drooped, rotated apart) is far enough from every other
+     mood's that swapping the class outright snaps the letters into their
+     new position mid-frame - a real jump, not just a tempo change like
+     most mood swaps read as. Cross-fading through a beat of opacity 0
+     hides that jump; every other mood pair still swaps instantly, which
+     is the point for the snappy ones (cheeky, excited). */
+  var moodFadeT = null, sadRevertT = null;
   function setMood(name, revertMs){
     if(currentMood === name && !revertMs) return;
+    var smooth = currentMood === 'sad' || name === 'sad';
     currentMood = name;
-    MOOD_CLASSES.forEach(function(c){ root.classList.remove(c); });
-    root.classList.add('mood-' + name);
-    clearTimeout(moodT);
-    if(revertMs) moodT = setTimeout(function(){ setMood('welcoming'); }, revertMs);
+    function swap(){
+      MOOD_CLASSES.forEach(function(c){ root.classList.remove(c); });
+      root.classList.add('mood-' + name);
+    }
+    /* a call landing mid-fade (someone else's mood claiming the moment
+       sad was about to hand off) cancels the pending swap below but must
+       also drop the fade class itself here - otherwise the icon is left
+       invisible with nothing left running to ever bring it back. */
+    clearTimeout(moodFadeT);
+    root.classList.remove('mood-fade');
+    if(smooth){
+      root.classList.add('mood-fade');
+      moodFadeT = setTimeout(function(){
+        swap();
+        requestAnimationFrame(function(){ root.classList.remove('mood-fade'); });
+      }, 220);
+    } else {
+      swap();
+    }
+    /* sad gets its own revert timer, kept apart from the shared one every
+       other transient mood (excited, cheeky) reuses - that timer is
+       single-slot, so an unrelated idle nudge landing mid-sad would
+       silently overwrite it and cut the hold short before its real
+       duration. Any mood swap still clears a pending sad-revert, whatever
+       triggered it, so it never fires late for a mood that already moved
+       on. */
+    clearTimeout(sadRevertT);
+    if(name === 'sad'){
+      sadRevertT = setTimeout(function(){ setMood('welcoming'); }, revertMs);
+    } else {
+      clearTimeout(moodT);
+      if(revertMs) moodT = setTimeout(function(){ setMood('welcoming'); }, revertMs);
+    }
   }
 
   /* ---- open/close ---- */
   var everOpened = false;
   var launchMk = launch.querySelector('.asst-mk');
+  /* the four limbs on the launch button specifically (the header avatar
+     isn't thrown, so it never needs this) - cached once so the physics
+     loop below isn't doing a DOM query every frame of a throw. Each limb
+     is actually two elements sharing one class (a "root" piece sunk
+     behind .mk-disc, and a "tip" piece - the hand/foot - see the CSS
+     comment by .mk-disc for why), so these are NodeLists, not single
+     elements; setLimbRotate()/clearLimbRotate() below apply to every
+     element in the list so both pieces of a limb always move together. */
+  var limbArmL = launch.querySelectorAll('.limb.arm-l'),
+      limbArmR = launch.querySelectorAll('.limb.arm-r'),
+      limbLegL = launch.querySelectorAll('.limb.leg-l'),
+      limbLegR = launch.querySelectorAll('.limb.leg-r');
+  function setLimbRotate(list, deg){
+    var s = deg.toFixed(1) + 'deg';
+    for(var i = 0; i < list.length; i++) list[i].style.rotate = s;
+  }
+  function clearLimbRotate(list){
+    for(var i = 0; i < list.length; i++) list[i].style.rotate = '';
+  }
+
+  /* bored/impatient: the panel's been open for a while with nobody
+     actually talking to him - not "he can't match your question" (that's
+     curious/FALLBACKS below), just plain idle. noteActivity() is called
+     from the real activity points (a chip click, a submitted question,
+     opening the panel fresh) rather than from addMsg() itself, since the
+     bored line below is ITSELF delivered through addMsg() - hooking the
+     reset into addMsg would have it immediately reschedule its own next
+     firing, turning one gentle nag into a repeating alarm every
+     BORED_IDLE_MS for as long as the panel stayed open. boredShown keeps
+     it to exactly one nag per idle stretch; a fresh noteActivity() call
+     is what re-arms it. */
+  var BORED_IDLE_MS = 15000;
+  var BORED_LINES = ["Still there? Take your time. :|", "No rush, I'll just be here. :|", "Whenever you're ready. :|", "I can wait, I've got nowhere to be. :|"];
+  var boredT = null, boredShown = false;
+  function noteActivity(){
+    clearTimeout(boredT);
+    boredShown = false;
+    if(currentMood === 'bored') setMood('welcoming');
+    if(panel.hidden) return;
+    boredT = setTimeout(function(){
+      if(panel.hidden || boredShown) return;
+      boredShown = true;
+      addMsg('bot', pick(BORED_LINES));
+      setMood('bored');
+    }, BORED_IDLE_MS);
+  }
 
   function setOpen(v){
     if(v){ cancelThrow(); thrown = false; goHome(); }
@@ -171,9 +254,12 @@
          instead of going completely still the second you're actually
          talking to him */
       startBob();
+      noteActivity();
     } else {
       /* closing hands him back to roam() - see kickRoam() for why this
          doesn't just happen on its own */
+      clearTimeout(boredT);
+      if(currentMood === 'bored') setMood('welcoming');
       kickRoam();
     }
   }
@@ -201,26 +287,26 @@
      while still greeting on every fresh page load rather than just once
      ever. Picked in showWelcome() below, not here. */
   var WELCOME_BACK = [
-    "Welcome back! Still Bean, still know this site cold.",
-    "Hey again! Need a hand finding something this time?",
-    "Oh, you're back. Want the tour, or just poking around?"
+    "Welcome back! Still Bean, still know this site cold. :)",
+    "Hey again! Need a hand finding something this time? :)",
+    "Oh, you're back. Want the tour, or just poking around? :)"
   ];
   var GREETINGS = {
     excited: [
-      "Psst, I'm Bean, James's site guide. Want the tour?",
-      "Hi! I'm Bean. I know where all the good stuff is buried. Want a hand?",
-      "Oh hey! Bean here. Poke me if you want the shortcut version of this site.",
-      "Hi, I'm Bean. Also, you can actually grab and toss me around if you want. Try it."
+      "Psst, I'm Bean, James's site guide. Want the tour? :D",
+      "Hi! I'm Bean. I know where all the good stuff is buried. Want a hand? :D",
+      "Oh hey! Bean here. Poke me if you want the shortcut version of this site. :D",
+      "Hi, I'm Bean. Also, you can actually grab and toss me around if you want. Try it. :D"
     ],
     curious: [
-      "Still scrolling? I can just point you somewhere specific.",
-      "Take your time, or tap me and I'll cut to the chase.",
-      "Looking for something in particular? I'm right here."
+      "Still scrolling? I can just point you somewhere specific. :)",
+      "Take your time, or tap me and I'll cut to the chase. :)",
+      "Looking for something in particular? I'm right here. :)"
     ],
     sleepy: [
-      "I'll just be over here if you need me.",
-      "No rush at all. I'm basically furniture at this point.",
-      "Zzz. Tap whenever, I'm not going anywhere."
+      "I'll just be over here if you need me. :|",
+      "No rush at all. I'm basically furniture at this point. :|",
+      "Zzz. Tap whenever, I'm not going anywhere. :|"
     ]
   };
   function pick(arr){ return arr[(Math.random() * arr.length) | 0]; }
@@ -285,7 +371,7 @@
   try{
     if(!localStorage.getItem('asst-dragged') && !localStorage.getItem('asst-drag-hint-shown')){
       dragHintT = setTimeout(function(){
-        if(!showText("Oh, and you can actually grab and toss me around if you want. Try it.", 6000, false)) return;
+        if(!showText("Oh, and you can actually grab and toss me around if you want. Try it. :)", 6000, false)) return;
         try{ localStorage.setItem('asst-drag-hint-shown', '1'); }catch(err){}
       }, 20000);
     }
@@ -392,6 +478,7 @@
         if(window.sfx) window.sfx.play('click');
         addMsg('user', escapeHtml(t.chip));
         reply(t);
+        noteActivity();
       });
       chips.appendChild(b);
     });
@@ -428,20 +515,20 @@
   })();
 
   var BOOTS = [
-    "Hey! I'm Bean, James's site guide. Don't ask me about the weather. Tap something below or just type.",
-    "Hi there. I'm Bean, not James, but I know this site cold. What are you after?"
+    "Hey! I'm Bean, James's site guide. Don't ask me about the weather. Tap something below or just type. :)",
+    "Hi there. I'm Bean, not James, but I know this site cold. What are you after? :)"
   ];
   /* if a drag/throw session was still fresh when the panel opened, the
      very first thing he says reflects it instead of the neutral boot
      line - same idea as the mood carrying into the icon animation, just
      applied to the opening message too */
   var BOOTS_HAPPY = [
-    "Okay that was fun. Anyway, hi, I'm Bean, James's site guide. What are you after?",
-    "Ha, again sometime. I'm Bean, James's site guide, by the way. What do you need?"
+    "Okay that was fun. Anyway, hi, I'm Bean, James's site guide. What are you after? :D",
+    "Ha, again sometime. I'm Bean, James's site guide, by the way. What do you need? :D"
   ];
   var BOOTS_ANGRY = [
-    "I'm still recovering from that, but fine. I'm Bean, James's site guide. What do you need?",
-    "We're going to pretend that didn't happen. I'm Bean, James's site guide. What are you after?"
+    "I'm still recovering from that, but fine. I'm Bean, James's site guide. What do you need? >:(",
+    "We're going to pretend that didn't happen. I'm Bean, James's site guide. What are you after? >:("
   ];
   function boot(mood){
     var pool = mood === 'happy' ? BOOTS_HAPPY : mood === 'angry' ? BOOTS_ANGRY : BOOTS;
@@ -451,16 +538,16 @@
   /* the short version, for when he's already been opened before and this
      is just a passing remark rather than the whole opening line */
   var PLAY_OPEN_LINES = {
-    happy: ["That was fun, by the way.", "We should do that again sometime.", "Okay, still buzzing from that throw."],
-    angry: ["I have not forgiven you for that, by the way.", "Still recovering from being thrown, for the record.", "We need to talk about what just happened."]
+    happy: ["That was fun, by the way. :D", "We should do that again sometime. :)", "Okay, still buzzing from that throw. :D"],
+    angry: ["I have not forgiven you for that, by the way. >:(", "Still recovering from being thrown, for the record. >:(", "We need to talk about what just happened. >:("]
   };
 
   var FALLBACKS = [
-    "Hmm, that one's outside what I know. Try a button below, or go straight to the source: <a href=\"mailto:jamess.a.magpantay@gmail.com\">jamess.a.magpantay@gmail.com</a>",
-    "I've got nothing for that. I'm no oracle. Pick a topic below?",
-    "That's above my pay grade (I'm unpaid, technically). Try one of these instead:"
+    "Hmm, that one's outside what I know. :/ Try a button below, or go straight to the source: <a href=\"mailto:jamess.a.magpantay@gmail.com\">jamess.a.magpantay@gmail.com</a>",
+    "I've got nothing for that. I'm no oracle. :/ Pick a topic below?",
+    "That's above my pay grade (I'm unpaid, technically). :/ Try one of these instead:"
   ];
-  var THANKS_REPLIES = ["Anytime! Anything else?", "That's what I'm here for. Need anything else?", "You got it. What else can I dig up?"];
+  var THANKS_REPLIES = ["Anytime! Anything else? :)", "That's what I'm here for. Need anything else? :)", "You got it. What else can I dig up? :)"];
 
   /* ---- typed questions: small talk first (it's about the bot, not the
      site, so a topic keyword coincidence shouldn't win), then score every
@@ -468,7 +555,7 @@
   function match(q){
     q = q.toLowerCase().replace(/[?!.,]+$/g, '').trim();
     if(GREET.some(function(w){ return q === w || q.indexOf(w) === 0; })){
-      return { reply: "Hey yourself! Ask me about projects, experience, certs, or how to reach James, or tap a topic below." };
+      return { reply: "Hey yourself! Ask me about projects, experience, certs, or how to reach James, or tap a topic below. :)" };
     }
     if(THANKS.some(function(w){ return q.indexOf(w) > -1; })){
       return { reply: pick(THANKS_REPLIES) };
@@ -497,10 +584,16 @@
     if(window.sfx) window.sfx.play('key');
     addMsg('user', escapeHtml(q));
     input.value = '';
+    noteActivity();
     var hit = match(q);
     if(!hit){
       addMsg('bot', pick(FALLBACKS));
-      setMood('curious', 1800);
+      /* confused, not curious - curious is the slow, wondering idle-drift
+         mood (see roam()); this is a sharper "huh?" reaction to a
+         question he genuinely couldn't match, distinct enough (one arm
+         scratching, a "?" popping up) that it earned its own mood rather
+         than borrowing curious's. */
+      setMood('confused', 1800);
       return;
     }
     if(hit.id) reply(hit);
@@ -519,15 +612,15 @@
      Every actual move also warps the circle itself - a cartoon squash and
      stretch aligned with whichever axis that hop covers more of, so it
      reads as a body launching itself in a direction, not a dot sliding. */
-  var roamT = null, curX = 0, curY = 0;
+  var roamT = null, curX = 0, curY = 0, curTilt = 0;
   /* small, low-key asides for idle wandering - not reactions to anything,
      just him thinking out loud while he drifts. Deliberately mundane/quiet
      rather than punchy, so it reads as ambient personality and not as if
      every hop is trying to be a joke. */
   var ROAM_LINES = [
-    "Just stretching my legs.", "Don't mind me.", "Patrolling.", "Nothing much going on.",
-    "Taking the scenic route.", "Just doing my rounds.", "Exploring the corners.",
-    "Still here, just wandering.", "Keeping the corner warm.", "La la la."
+    "Just stretching my legs. :)", "Don't mind me. :)", "Patrolling. :|", "Nothing much going on. :|",
+    "Taking the scenic route. :)", "Just doing my rounds. :)", "Exploring the corners. :)",
+    "Still here, just wandering. :)", "Keeping the corner warm. :)", "La la la. :D"
   ];
   /* roam() is self-perpetuating (each call reschedules itself, deferring
      quietly whenever the panel's open or he's being played with) - but
@@ -551,17 +644,99 @@
     void launch.offsetWidth;               /* forces the animation to restart every hop */
     launch.classList.add(cls);
   }
-  function moveTo(x, y, tiltDeg){
-    warpFor(x - curX, y - curY);
-    curX = x; curY = y;
-    launch.style.translate = x.toFixed(0) + 'px ' + y.toFixed(0) + 'px';
-    launch.style.rotate = tiltDeg + 'deg';
+  /* ---- every non-throw move (roam()'s wander, goHome()'s trip back to
+     the corner, settle()'s roll home after a throw) used to just set
+     translate/rotate and let a CSS transition glide between the two
+     points in a straight line - which, overshoot easing aside, reads as
+     sliding or warping rather than a body actually moving itself. hopMove
+     replaces that with a real per-frame arc (see below): a parabolic
+     lift layered on top of the straight-line path (constant horizontal
+     speed, gravity-shaped vertical motion - the same shape a real jump
+     traces), a takeoff/landing squash reusing the existing warp/bounce
+     classes, and legs/arms that swing through the jump - tucking up
+     toward the peak, extending back down for landing - rather than
+     sitting frozen mid-air. onDone (optional) fires once, after landing,
+     for callers that need to sequence something after the hop finishes
+     (roam()'s idle bob, which shouldn't start while he's still airborne). */
+  var hopRAF = null;
+  function cancelHop(){
+    if(!hopRAF) return;
+    cancelAnimationFrame(hopRAF); hopRAF = null;
+    root.classList.remove('hop');
+    launch.classList.remove('no-glide');
+    clearLimbRotate(limbArmL); clearLimbRotate(limbArmR);
+    clearLimbRotate(limbLegL); clearLimbRotate(limbLegR);
+  }
+  function hopMove(toX, toY, toTilt, onDone){
+    cancelHop();
+    /* roam() hands this a toFixed() string (needed elsewhere as a CSS
+       value) - coerced to a real number here so it can't poison curTilt
+       into a string once landed (that broke the *next* hop's arithmetic:
+       string + number below silently string-concatenates instead of
+       adding, and the result has no .toFixed()). */
+    toTilt = +toTilt;
+    var fromX = curX, fromY = curY, fromTilt = curTilt;
+    var dx = toX - fromX, dy = toY - fromY;
+    if(REDUCED){
+      curX = toX; curY = toY; curTilt = toTilt;
+      launch.style.translate = toX.toFixed(0) + 'px ' + toY.toFixed(0) + 'px';
+      launch.style.rotate = toTilt + 'deg';
+      if(onDone) onDone();
+      return;
+    }
+    warpFor(dx, dy);
+    var dist = Math.hypot(dx, dy);
+    if(dist < 1 && toTilt === fromTilt){
+      curX = toX; curY = toY; curTilt = toTilt;
+      if(onDone) onDone();
+      return;
+    }
+    var duration = Math.max(450, Math.min(1050, dist / 220 * 1000));
+    var height = Math.max(14, Math.min(70, dist * 0.28));
+    var maxArm = Math.min(46, 18 + dist * 0.12);
+    var maxLeg = Math.min(30, 12 + dist * 0.08);
+    root.classList.add('hop');
+    /* .asst-launch has its own CSS transition on translate/rotate for
+       clicks/other one-off moves - left in place, it would fight this
+       loop's own per-frame values every frame (each new inline style
+       kicking off another .85s transition toward it), same conflict
+       .no-glide already exists to prevent during a drag/throw. Reused
+       here for the same reason, removed on landing. */
+    launch.classList.add('no-glide');
+    var start = performance.now();
+    function frame(now){
+      var p = Math.min(1, (now - start) / duration);
+      var lift = Math.sin(Math.PI * p);
+      var x = fromX + dx * p, y = fromY + dy * p - height * lift;
+      var tilt = fromTilt + (toTilt - fromTilt) * p;
+      launch.style.translate = x.toFixed(1) + 'px ' + y.toFixed(1) + 'px';
+      launch.style.rotate = tilt.toFixed(1) + 'deg';
+      setLimbRotate(limbArmL, -maxArm * lift);
+      setLimbRotate(limbArmR, maxArm * lift);
+      setLimbRotate(limbLegL, maxLeg * lift);
+      setLimbRotate(limbLegR, -maxLeg * lift);
+      if(p >= 1){
+        curX = toX; curY = toY; curTilt = toTilt;
+        root.classList.remove('hop');
+        launch.classList.remove('no-glide');
+        clearLimbRotate(limbArmL); clearLimbRotate(limbArmR);
+        clearLimbRotate(limbLegL); clearLimbRotate(limbLegR);
+        launch.classList.remove('bounce');
+        void launch.offsetWidth;
+        launch.classList.add('bounce');
+        hopRAF = null;
+        if(onDone) onDone();
+        return;
+      }
+      hopRAF = requestAnimationFrame(frame);
+    }
+    hopRAF = requestAnimationFrame(frame);
   }
   function goHome(){
     clearTimeout(bobT);
     launch.style.scale = '1';
     if(curX === 0 && curY === 0) return;
-    moveTo(0, 0, 0);
+    hopMove(0, 0, 0);
   }
   function roam(){
     clearTimeout(roamT);
@@ -579,8 +754,10 @@
     }
     var x = -(18 + Math.random() * 70), y = -(14 + Math.random() * 88);
     var tilt = (Math.random() * 22 - 11).toFixed(1);
-    moveTo(x, y, tilt);
-    startBob();
+    /* startBob() waits for landing (the onDone callback) rather than
+       firing immediately - it wants to start its idle scale-pulse once
+       he's actually stood still, not while still mid-jump. */
+    hopMove(x, y, tilt, startBob);
     /* a roughly one-in-three chance of a little aside on landing - reuses
        the same quip bubble the drag/throw play session talks through
        (positioned on him wherever he actually is, no goHome() call), so
@@ -626,10 +803,15 @@
      it past a small threshold hands it off from the roam system to a tiny
      physics sim: release velocity, gravity, and bounces off the edges of
      the viewport with energy lost on each hit, exactly like a dropped
-     ball, until it's slow enough to call settled. The whole play session
-     (grab through settle) commits to one temperament - happy or annoyed,
-     picked once at grab - and talks through it via a little callout that
-     follows the ball around, not just a silent mood animation.
+     ball, until it's slow enough to call settled. Each grab starts happy -
+     but grab him too many times in too short a window (see the throwTimes
+     comment further down) and patience runs out: that session flips to
+     genuinely annoyed and stays that way (mood animation, box-shadow, and
+     every line from grab to settle) for as long as the recent-grab count
+     stays over threshold, rather than a single rough throw ever being
+     what sours the mood. Talks through both temperaments via a little
+     callout that follows the ball around, not just a silent mood
+     animation.
 
      A real drag suppresses the click that pointerup fires afterward (see
      `suppressClick` above `setOpen`), so letting go mid-throw doesn't also
@@ -643,28 +825,41 @@
      stray click. */
   var GRAVITY = 2900, HOME_PULL = 1500, BOUNCE = 0.52, FLOOR_FRICTION = 0.82, AIR_DRAG = 0.999;
   var REST_V = 60; /* below this speed a wall/floor touch is resting, not a fresh impact */
+  /* patience is about how often he's grabbed, not how hard any one throw
+     bounces - a single wild throw that bounces a dozen times stays happy
+     the whole way down, but grabbing him over and over in a short window
+     wears him out. throwTimes holds a timestamp per grab; every new grab
+     prunes anything older than THROW_WINDOW_MS and counts what's left -
+     more than THROW_ANGER_THRESHOLD grabs still within the window flips
+     him angry for that whole play session, with THROW_ANGER_RAMP more
+     grabs past the threshold to reach maximum red. Persists across
+     throws on purpose (never reset in throwFrom/settle) so the history
+     that matters is "the last however-many-seconds", not "this throw". */
+  var THROW_WINDOW_MS = 12000, THROW_ANGER_THRESHOLD = 2, THROW_ANGER_RAMP = 4;
+  var throwTimes = [];
   var dragging = false, thrown = false, dragMoved = false;
   var dragX0 = 0, dragY0 = 0, dragTX0 = 0, dragTY0 = 0, dragSamples = [];
   var physicsRAF = null, bounds = null, homeNat = null;
-  /* the mood for the *current* play session - set once at grab, read by
-     every quip/mood call during that drag or throw, and left behind for
-     setOpen()/boot() to pick up once the visitor actually clicks him */
+  /* the mood for the *current* play session - decided once at grab (see
+     the throwTimes logic above), read by every quip/mood call during
+     that drag or throw, and left behind for setOpen()/boot() to pick up
+     once the visitor actually clicks him */
   var playMood = null, lastPlayQuipAt = 0, moodRevertT = null;
 
   var PLAY_LINES = {
     happy: {
-      grab:   ["Wheee!", "Ooh, hi!", "Yes, let's go!"],
-      during: ["This is fun!", "Again, again!", "Weeeeee!", "Faster!"],
-      throw:  ["Byeee!", "Catch me!", "Wheeeeee!"],
-      bounce: ["Boing!", "Ha!", "Bouncy!"],
-      settle: ["That was fun.", "Let's do that again sometime.", "Whew, fun landing."]
+      grab:   ["Wheee! :D", "Ooh, hi! :D", "Yes, let's go! :D"],
+      during: ["This is fun! :D", "Again, again! :D", "Weeeeee! :D", "Faster! :D"],
+      throw:  ["Byeee! :D", "Catch me! :D", "Wheeeeee! :D"],
+      bounce: ["Boing! :D", "Ha! :D", "Bouncy! :D"],
+      settle: ["That was fun. :)", "Let's do that again sometime. :)", "Whew, fun landing. :)"]
     },
     angry: {
-      grab:   ["Hey!", "Whoa, watch it!", "Excuse me!"],
-      during: ["Put me down!", "This isn't fun!", "Seriously?", "I did not consent to this!"],
-      throw:  ["Bring me back now!", "You'll regret this!", "Not cool!"],
-      bounce: ["Ow!", "Hey!", "Watch it!"],
-      settle: ["Finally.", "Never doing that again.", "I need a minute."]
+      grab:   ["Hey! >:(", "Whoa, watch it! >:(", "Excuse me! >:("],
+      during: ["Put me down! >:(", "This isn't fun! >:(", "Seriously? >:(", "I did not consent to this! >:("],
+      throw:  ["Bring me back now! >:(", "You'll regret this! >:(", "Not cool! >:("],
+      bounce: ["Ow! >:(", "Hey! >:(", "Watch it! >:("],
+      settle: ["Finally. >:(", "Never doing that again. >:(", "I need a minute. :("]
     }
   };
 
@@ -705,11 +900,47 @@
     physicsRAF = null; thrown = false;
     clearTimeout(moodRevertT);
     hideQuip();
+    releaseLimbs();
+  }
+
+  /* ---- limbs react to the throw itself: while airborne they lag behind
+     the ball's own velocity instead of rigidly tumbling with it, like
+     loose weight rather than a rigid body - the same kind of secondary
+     motion a ragdoll's limbs show. armSwing/legSwing are spring-lagged
+     toward a target angle read off vx/vy each frame in runPhysics(), not
+     snapped straight to it, so the motion trails rather than mirrors.
+     Arms trail opposite the direction of travel and droop further the
+     faster he's currently falling; legs get a lighter, same-direction
+     sway, like a pendulum rather than a flail. Left/right take opposite
+     signs of the same target - see the mood keyframes above for why
+     (their geometry mirrors, so a symmetric swing needs opposite rotate
+     signs on each side). */
+  var armSwing = 0, legSwing = 0;
+  function updateLimbSwing(vx, vy, dt){
+    var targetArm = Math.max(-70, Math.min(70, -vx * 0.07 + vy * 0.02));
+    var targetLeg = Math.max(-40, Math.min(40, vx * 0.05));
+    var lag = Math.min(1, dt * 14);
+    armSwing += (targetArm - armSwing) * lag;
+    legSwing += (targetLeg - legSwing) * lag;
+    setLimbRotate(limbArmL, armSwing);
+    setLimbRotate(limbArmR, -armSwing);
+    setLimbRotate(limbLegL, legSwing);
+    setLimbRotate(limbLegR, -legSwing);
+  }
+  /* hands back off to the mood keyframes (see .asst.phys .limb in the CSS)
+     and drops the inline rotate so nothing is left overriding them once
+     .phys is gone. */
+  function releaseLimbs(){
+    root.classList.remove('phys');
+    armSwing = 0; legSwing = 0;
+    clearLimbRotate(limbArmL); clearLimbRotate(limbArmR);
+    clearLimbRotate(limbLegL); clearLimbRotate(limbLegR);
   }
 
   launch.addEventListener('pointerdown', function(e){
     if(REDUCED || e.pointerType !== 'mouse' || e.button !== 0) return;
     cancelThrow();
+    cancelHop();
     clearTimeout(roamT); clearTimeout(bobT);
     measureBounds();
     dragging = true; dragMoved = false;
@@ -729,10 +960,21 @@
       clearTimeout(dragHintT);
       try{ localStorage.setItem('asst-dragged', '1'); }catch(err){}
       try{ launch.setPointerCapture(e.pointerId); }catch(err){}
-      /* the temperament for this whole play session, decided the instant
-         a real drag is confirmed - everything from here to settle() reads
-         this one value rather than rolling fresh each time */
-      playMood = Math.random() < 0.5 ? 'happy' : 'angry';
+      /* how many grabs (this one included) fall inside the trailing
+         THROW_WINDOW_MS window decides the mood for this whole session -
+         see the throwTimes comment above */
+      var nowT = performance.now();
+      throwTimes.push(nowT);
+      while(throwTimes.length && nowT - throwTimes[0] > THROW_WINDOW_MS) throwTimes.shift();
+      var recentThrows = throwTimes.length;
+      if(recentThrows > THROW_ANGER_THRESHOLD){
+        playMood = 'angry';
+        var angerT = Math.min(1, (recentThrows - THROW_ANGER_THRESHOLD) / THROW_ANGER_RAMP);
+        root.style.setProperty('--anger', angerT.toFixed(2));
+      } else {
+        playMood = 'happy';
+        root.style.setProperty('--anger', 0);
+      }
       setMood(playMood === 'happy' ? 'cheeky' : 'angry');
       showQuip(pick(PLAY_LINES[playMood].grab), 1300);
       lastPlayQuipAt = performance.now();
@@ -740,7 +982,8 @@
     if(!dragMoved) return;
     curX = dragTX0 + dx; curY = dragTY0 + dy;
     launch.style.translate = curX.toFixed(0) + 'px ' + curY.toFixed(0) + 'px';
-    launch.style.rotate = Math.max(-24, Math.min(24, dx * 0.12)).toFixed(1) + 'deg';
+    curTilt = Math.max(-24, Math.min(24, dx * 0.12));
+    launch.style.rotate = curTilt.toFixed(1) + 'deg';
     positionQuip();
     /* a fresh line every so often while he's actually being dragged
        around, not just at grab and release */
@@ -773,6 +1016,27 @@
     kickRoam();
   });
 
+  /* startled: a genuinely hard/fast throw gets its own flinch, distinct
+     from the happy/angry session mood the throw is already committed to
+     (see the throwTimes-based flip above) - this doesn't touch playMood
+     or setMood at all, just a one-shot .startle class (the same
+     remove/reflow/add pattern .bounce and .warp-x already use) that jolts
+     the whole mark and pops a quick "!" over his head, layered on top of
+     whichever mood is already playing rather than replacing it. A hard
+     throw stays scary for a split second even in the middle of an
+     otherwise happy play session. */
+  var STARTLE_SPEED = 1500, STARTLE_LINES = ["Whoa—! :O", "Warn a guy next time! :O", "Okay, that was fast! :O"];
+  /* dizzy: comic relief for a throw that just won't settle - a lot of
+     wall/floor impacts in ONE throw (see the bounced-count reset at the
+     top of runPhysics below), not the across-throws frequency the
+     happy->angry flip up in the grab handler tracks. Fires once per
+     throw (dizzyShown guards the repeat) as the same kind of one-shot
+     .dizzy class .startle above uses - a wobble on the mark plus a
+     couple of stars orbiting his head - rather than a real setMood(), so
+     it never fights the angry-redness filter if this happens to be an
+     already-angry session. */
+  var DIZZY_BOUNCE_THRESHOLD = 6;
+  var DIZZY_LINES = ["Everything's... spinning... @_@", "Okay, that's enough bounces. @_@", "Room's doing laps. @_@"];
   function throwFrom(vx, vy){
     /* no warpFor() here on purpose - it drives the same `scale` property as
        the .bounce squash below over an overlapping .85s window, and a real
@@ -781,16 +1045,28 @@
        already sells the impact; the release itself doesn't need its own
        stretch the way a roam hop does. */
     thrown = true;
+    root.classList.add('phys');
+    armSwing = 0; legSwing = 0;
     if(window.sfx) window.sfx.play('big');
-    if(!playMood) playMood = Math.random() < 0.5 ? 'happy' : 'angry'; /* touch/edge-case fallback */
+    if(!playMood){ playMood = 'happy'; root.style.setProperty('--anger', 0); } /* touch/edge-case fallback */
     clearTimeout(moodRevertT);
     setMood(playMood === 'happy' ? 'cheeky' : 'angry');
-    showQuip(pick(PLAY_LINES[playMood].throw), 1300);
+    if(Math.hypot(vx, vy) > STARTLE_SPEED){
+      launch.classList.remove('startle');
+      void launch.offsetWidth;
+      launch.classList.add('startle');
+      clearTimeout(launch._startleT);
+      launch._startleT = setTimeout(function(){ launch.classList.remove('startle'); }, 450);
+      showQuip(pick(STARTLE_LINES), 1300);
+    } else {
+      showQuip(pick(PLAY_LINES[playMood].throw), 1300);
+    }
     runPhysics(vx, vy);
   }
 
   function runPhysics(vx, vy){
     var last = performance.now(), startT = last;
+    var bounceCount = 0, dizzyShown = false; /* local to this throw, not shared with the anger system's throwTimes */
     function frame(t){
       var dt = Math.min((t - last) / 1000, 0.05);
       last = t;
@@ -835,16 +1111,33 @@
         if(Math.abs(vy) > REST_V){ vy = -vy * BOUNCE; vx *= FLOOR_FRICTION; bounced = true; } else vy = 0;
       }
       launch.style.translate = curX.toFixed(0) + 'px ' + curY.toFixed(0) + 'px';
-      launch.style.rotate = Math.max(-70, Math.min(70, curX * 0.3)).toFixed(1) + 'deg';
+      curTilt = Math.max(-70, Math.min(70, curX * 0.3));
+      launch.style.rotate = curTilt.toFixed(1) + 'deg';
+      updateLimbSwing(vx, vy, dt);
       positionQuip();
       if(bounced){
         if(window.sfx) window.sfx.play('land');
         launch.classList.remove('bounce');
         void launch.offsetWidth;
         launch.classList.add('bounce');
+        bounceCount++;
+        if(bounceCount > DIZZY_BOUNCE_THRESHOLD && !dizzyShown){
+          dizzyShown = true;
+          launch.classList.remove('dizzy');
+          void launch.offsetWidth;
+          launch.classList.add('dizzy');
+          clearTimeout(launch._dizzyT);
+          launch._dizzyT = setTimeout(function(){ launch.classList.remove('dizzy'); }, 950);
+          showQuip(pick(DIZZY_LINES), 1300);
+        }
+        /* mood/anger for this whole session was already decided at grab
+           (see throwTimes above) - a bounce just picks a line in
+           whichever temperament that already is, it doesn't change it */
         /* not every single bounce - a ball bouncing rapidly near the end
-           would otherwise spam a line every hundred milliseconds */
-        if(Math.random() < 0.5) showQuip(pick(PLAY_LINES[playMood].bounce), 700);
+           would otherwise spam a line every hundred milliseconds - the
+           dizzy line above already just showed one, so skip this one on
+           the same bounce that triggered it */
+        else if(Math.random() < 0.5) showQuip(pick(PLAY_LINES[playMood].bounce), 700);
       }
       var speed = Math.hypot(vx, vy);
       /* settled means actually home, not just resting somewhere on the
@@ -868,20 +1161,29 @@
 
   function settle(){
     thrown = false;
+    releaseLimbs();
     launch.classList.remove('no-glide');
     /* the roll can end a few px short of true home if it hit the timeout
-       floor above - close it out properly through moveTo() rather than
-       leaving him slightly off-corner, same warp-on-arrival treatment as
-       every other real move */
-    if(curX !== 0 || curY !== 0) moveTo(0, 0, 0);
-    else launch.style.rotate = '0deg';
-    startBob();
+       floor above - close it out properly through hopMove() rather than
+       leaving him slightly off-corner, same little leap every other real
+       move gets. curTilt was never tracked through the physics loop
+       above (that drove launch.style.rotate directly, frame by frame),
+       so it's reset here regardless of which branch runs. */
+    if(curX !== 0 || curY !== 0) hopMove(0, 0, 0, startBob);
+    else { launch.style.rotate = '0deg'; curTilt = 0; startBob(); }
     showQuip(pick(PLAY_LINES[playMood].settle), 1600);
     /* the icon relaxes back to idling shortly after - playMood itself
        stays set, waiting for setOpen()/boot() to read it whenever the
        visitor actually clicks him next */
     clearTimeout(moodRevertT);
-    moodRevertT = setTimeout(function(){ setMood('welcoming'); }, 1800);
+    moodRevertT = setTimeout(function(){
+      setMood('welcoming');
+      /* .mood-angry is gone once this fires, so --anger's value stops
+         mattering visually - reset it anyway so a future angry throw
+         ramps up from scratch instead of picking up wherever last one
+         left off. */
+      root.style.setProperty('--anger', 0);
+    }, 1800);
     /* stays wherever it landed, idling, until the visitor clicks it - or
        until roam() picks him up again on its own, which kickRoam() here
        guarantees rather than hoping the chain survived the whole throw */
@@ -941,26 +1243,35 @@
      always run before ours does on the same click, so reading state here
      is always reading the *new* value. -- */
   var THEME_LINES = {
-    dark:  ["Ooh, dark mode. Very hacker of you.", "Lights off. My favorite look on this site.", "Stealth mode: engaged."],
-    light: ["Back to the light. Can't lurk forever.", "Sunny again, give my eyes a second.", "Light mode. Bold choice."]
+    dark:  ["Ooh, dark mode. Very hacker of you. 8)", "Lights off. My favorite look on this site. 8)", "Stealth mode: engaged. 8)"],
+    light: ["Back to the light. Can't lurk forever. :)", "Sunny again, give my eyes a second. :)", "Light mode. Bold choice. :)"]
   };
   document.querySelectorAll('.thm-btn').forEach(function(b){
     b.addEventListener('click', function(){
       react(function(){
         var t = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
         say(pick(THEME_LINES[t]));
+        /* cold/cozy: dark mode reads as literally cold (shivering, arms
+           hugging himself), light as cozy warmth (a lazy stretch) - the
+           same "layer the mood on top of the existing line" pattern
+           proud/smug use, just tied to the theme instead of a click on
+           something else. */
+        setMood(t === 'dark' ? 'cold' : 'cozy', 2200);
       }, 1200);
     });
   });
 
   var SFX_LINES = {
-    on:  ["Sound's back. I missed my own clicks.", "Turning me back up, nice.", "Sound on. Let's make some noise."],
-    off: ["Muting me? Rude, but fair.", "Sound off. I'll mime my reactions now.", "Quiet mode. Respect."]
+    on:  ["Sound's back. I missed my own clicks. :)", "Turning me back up, nice. :)", "Sound on. Let's make some noise. :D"],
+    off: ["Aw, sound off. I liked being heard. :(", "Quiet now. I'll miss my own clicks. :(", "No sound. That one stings a little. :("]
   };
   document.querySelectorAll('.sfx-btn').forEach(function(b){
     b.addEventListener('click', function(){
       react(function(){
-        say(pick(SFX_LINES[window.sfx && window.sfx.isOn() ? 'on' : 'off']));
+        var on = window.sfx && window.sfx.isOn();
+        say(pick(SFX_LINES[on ? 'on' : 'off']));
+        if(on){ if(currentMood === 'sad') setMood('welcoming'); }
+        else setMood('sad', 2600);
       }, 1200);
     });
   });
@@ -970,27 +1281,47 @@
      clock") - this is JM's own reaction to it, not James's, the same
      first-person "my favorite" voice he already uses for the theme and
      the view flip below, just applied to the soundtrack too */
-  var MUS_ON_PRO = ["I love this track. Moody, atmospheric, keeps me locked in.", "This one's one of my favorites for the security side.", "Great pick, this is my go to for focus."];
-  var MUS_ON_OFF = ["I love this one for downtime. Warm, jazzy, good company.", "This is one of my favorites for off the clock.", "My go to off hours track, honestly."];
-  var MUS_OFF_LINES = ["Music off. Even I need quiet sometimes.", "No music? Fair, but you're missing one of my favorites.", "Tunes off, noted. Your loss, I love that one."];
+  var MUS_ON_PRO = ["I love this track. Moody, atmospheric, keeps me locked in. :)", "This one's one of my favorites for the security side. :)", "Great pick, this is my go to for focus. :)"];
+  var MUS_ON_OFF = ["I love this one for downtime. Warm, jazzy, good company. :)", "This is one of my favorites for off the clock. :)", "My go to off hours track, honestly. :)"];
+  var MUS_OFF_LINES = ["Music off... I really liked that one. :(", "No tunes now. It's a little lonely without them. :(", "Aw, the music stopped. I'll miss it. :("];
   document.querySelectorAll('.mus-btn').forEach(function(b){
     b.addEventListener('click', function(){
       react(function(){
         var on = b.getAttribute('aria-pressed') === 'true';
-        if(!on){ say(pick(MUS_OFF_LINES)); return; }
+        if(!on){ say(pick(MUS_OFF_LINES)); setMood('sad', 2600); return; }
         say(pick(document.body.classList.contains('offline') ? MUS_ON_OFF : MUS_ON_PRO));
+        if(currentMood === 'sad') setMood('welcoming');
       }, 1200);
     });
   });
 
   var FLIP_LINES = {
-    off: ["Welcome to the fun side.", "Ooh, off the clock. My favorite tab.", "Now we're talking hobbies, not headers."],
-    pro: ["Back to business mode.", "Security profile, engaged.", "Professional face: on."]
+    off: ["Welcome to the fun side. :D", "Ooh, off the clock. My favorite tab. :D", "Now we're talking hobbies, not headers. :D"],
+    pro: ["Back to business mode. :)", "Security profile, engaged. :)", "Professional face: on. :)"]
   };
   document.addEventListener('viewflip', function(e){
     react(function(){
       say(pick(FLIP_LINES[e.detail && e.detail.offline ? 'off' : 'pro']));
     }, 1200);
+    /* the flip itself gets its own one-shot visual, independent of
+       react()'s own rate-limit/panel-open gating above - the line is a
+       considered reaction (worth throttling so it doesn't spam), the
+       flip animation is a direct response to an action that just
+       happened and should always play. Same remove/reflow/add + timeout
+       cleanup pattern .bounce/.startle/.dizzy already use. */
+    if(e.detail && e.detail.offline){
+      launch.classList.remove('coffee');
+      void launch.offsetWidth;
+      launch.classList.add('coffee');
+      clearTimeout(launch._coffeeT);
+      launch._coffeeT = setTimeout(function(){ launch.classList.remove('coffee'); }, 1650);
+    } else {
+      launch.classList.remove('scan-trace');
+      void launch.offsetWidth;
+      launch.classList.add('scan-trace');
+      clearTimeout(launch._scanTraceT);
+      launch._scanTraceT = setTimeout(function(){ launch.classList.remove('scan-trace'); }, 750);
+    }
   });
 
   /* fired by 05-contact.js on a failed submit (see 'contactinvalid' there) -
@@ -999,8 +1330,8 @@
      what's wrong). This one's just a quick aside acknowledging the miss,
      singular/plural aware to match the toast's own count. */
   var INCOMPLETE_LINES = {
-    one: ["Looks like one field's still empty.", "Almost. Just one more to fill in.", "One field's holding that up."],
-    many: ["A few fields still need filling in.", "Not quite ready yet. Check the ones in red.", "Couple more fields before that sends."]
+    one: ["Looks like one field's still empty. :/", "Almost. Just one more to fill in. :/", "One field's holding that up. :/"],
+    many: ["A few fields still need filling in. :/", "Not quite ready yet. Check the ones in red. :/", "Couple more fields before that sends. :/"]
   };
   document.addEventListener('contactinvalid', function(e){
     var n = (e.detail && e.detail.count) || 1;
@@ -1054,35 +1385,39 @@
     return null;
   }
 
-  var HOVER_GENERIC = ["Ooh, what's this?", "Go on, I'm curious too.", "That one's worth a look.", "Poking around, nice."];
-  var CLICK_GENERIC = ["Good pick.", "Nice choice.", "Ooh, exploring.", "That's a solid one."];
+  /* hovering Bean himself (not a page element) - the squirm itself is
+     pure CSS (:hover triggers the wiggle keyframe, see .asst-launch:hover
+     .asst-mk), this is just the giggly line to go with it */
+  var GIGGLE_LINES = ["Hehe, stop that! XD", "That tickles! XD", "Okay, okay, I'm ticklish! XD", "Hey, watch the hands! XD", "Pfft- quit it! XD"];
+  var HOVER_GENERIC = ["Ooh, what's this? :)", "Go on, I'm curious too. :)", "That one's worth a look. :)", "Poking around, nice. :)"];
+  var CLICK_GENERIC = ["Good pick. :)", "Nice choice. :)", "Ooh, exploring. :)", "That's a solid one. :)"];
 
   /* the CTA repeats the exact same "Hire the<br>candidate" markup in three
      places, so it gets fixed lines rather than a read-the-label attempt -
      no arrow, no missing space, and copy that actually fits what the
      button does instead of "good taste" applied to a job application link */
-  var CTA_HOVER = ["That's the button that matters most.", "This one's the real ask.", "Every visit should end here eventually."];
-  var CTA_CLICK = ["Hope they're paying attention.", "That's the whole point of this page.", "Go on, make his day."];
+  var CTA_HOVER = ["That's the button that matters most. :)", "This one's the real ask. :)", "Every visit should end here eventually. :)"];
+  var CTA_CLICK = ["Hope they're paying attention. :D", "That's the whole point of this page. :D", "Go on, make his day. :D"];
 
-  var EMAIL_HOVER = ["That's the fastest way to reach him.", "Direct line, right there.", "Good instinct, that's the quick route."];
-  var EMAIL_CLICK = ["Straight to his inbox.", "That'll reach him fast.", "Good move, that one works."];
+  var EMAIL_HOVER = ["That's the fastest way to reach him. :)", "Direct line, right there. :)", "Good instinct, that's the quick route. :)"];
+  var EMAIL_CLICK = ["Straight to his inbox. :)", "That'll reach him fast. :)", "Good move, that one works. :)"];
 
-  var DL_HOVER = ["Good idea, keep that on file.", "That one's worth grabbing.", "Handy to have ready."];
-  var DL_CLICK = ["Smart move.", "Good, that's saved.", "Keep that handy."];
+  var DL_HOVER = ["Good idea, keep that on file. :)", "That one's worth grabbing. :)", "Handy to have ready. :)"];
+  var DL_CLICK = ["Smart move. ;)", "Good, that's saved. ;)", "Keep that handy. ;)"];
 
   /* Group One roster - these are just click-through photo IDs elsewhere in
      REACT_SEL (.ph never carries a real label, so it would fall to
      CLICK_GENERIC below), but James wanted the team's own section to feel
      less like a generic gallery and more like he's actually introducing
      them. Personalized with the figcaption name where there is one. */
-  var TEAMMATE_CLICK = ["Handsome.", "Okay, certified good-looking hacker.", "That's a solid teammate right there.", "10/10, would recruit again.", "Camera ready, that one."];
-  var TEAMMATE_CLICK_NAMED = ["NAME? Handsome.", "Look at NAME, showing off.", "NAME. Certified good looks, certified skills.", "That's NAME. Solid teammate, better face.", "NAME, camera ready as always."];
-  var GROUP_SHOT_CLICK = ["That's the whole crew, mid-hack.", "Group One, caught in the act.", "The team that got 8th out of 600. Not bad.", "Love this one, everyone's actually smiling."];
+  var TEAMMATE_CLICK = ["Handsome. ;)", "Okay, certified good-looking hacker. ;)", "That's a solid teammate right there. :)", "10/10, would recruit again. :)", "Camera ready, that one. ;)"];
+  var TEAMMATE_CLICK_NAMED = ["NAME? Handsome. ;)", "Look at NAME, showing off. ;)", "NAME. Certified good looks, certified skills. :)", "That's NAME. Solid teammate, better face. :)", "NAME, camera ready as always. ;)"];
+  var GROUP_SHOT_CLICK = ["That's the whole crew, mid-hack. :D", "Group One, caught in the act. :D", "The team that got 8th out of 600. Not bad. :)", "Love this one, everyone's actually smiling. :)"];
 
   var CF_LINES = {
-    'cf-name': ["Go on, tell him who you are.", "Nice, starting with your name.", "Good, he likes knowing who's asking."],
-    'cf-from': ["He'll actually reply to that one.", "Good, that's how he gets back to you.", "Make sure that one's right, it's the way back."],
-    'cf-msg': ["This is the part that matters, make it count.", "Go on, tell him what you need.", "The more specific, the faster he replies."]
+    'cf-name': ["Go on, tell him who you are. :)", "Nice, starting with your name. :)", "Good, he likes knowing who's asking. :)"],
+    'cf-from': ["He'll actually reply to that one. :)", "Good, that's how he gets back to you. :)", "Make sure that one's right, it's the way back. :)"],
+    'cf-msg': ["This is the part that matters, make it count. :)", "Go on, tell him what you need. :)", "The more specific, the faster he replies. :)"]
   };
 
   /* a cert badge or ledger row always carries its own status text - a
@@ -1128,8 +1463,8 @@
     if(!label) return pick(kind === 'hover' ? HOVER_GENERIC : CLICK_GENERIC);
     if(el.matches('.bar-nav a, .hero-top nav a, .bar-brand')){
       return kind === 'hover'
-        ? pick([label + "? Good call.", "Curious about " + label + "?", "Thinking of heading to " + label + "?"])
-        : pick(["Taking you to " + label + ".", "On to " + label + ".", label + ", coming right up."]);
+        ? pick([label + "? Good call. :)", "Curious about " + label + "? :)", "Thinking of heading to " + label + "? :)"])
+        : pick(["Taking you to " + label + ". :)", "On to " + label + ". :)", label + ", coming right up. :)"]);
     }
     /* education, experience, and certs are things James earned or lived
        through, not things he picked for style - "good taste" reads oddly
@@ -1137,13 +1472,13 @@
        matter-of-fact phrasing instead of the generic pool below */
     if(el.matches('.edu-card')){
       return kind === 'hover'
-        ? pick([label + ", worth a look.", "Checking his schooling?", "That program's the real deal."])
-        : pick([label + ". Solid program.", label + ". Legit school.", "That's actual coursework, not a cert mill."]);
+        ? pick([label + ", worth a look. :)", "Checking his schooling? :)", "That program's the real deal. :)"])
+        : pick([label + ". Solid program. :)", label + ". Legit school. :)", "That's actual coursework, not a cert mill. :)"]);
     }
     if(el.matches('.xp-row')){
       return kind === 'hover'
-        ? pick([label + "? Real experience, that.", "Checking his work history?", "That one's not padding."])
-        : pick([label + ". Real work.", label + ". The real deal.", "That job actually happened."]);
+        ? pick([label + "? Real experience, that. :)", "Checking his work history? :)", "That one's not padding. :)"])
+        : pick([label + ". Real work. :)", label + ". The real deal. :)", "That job actually happened. :)"]);
     }
     /* .sticker covers both the cert badges (this pool) and, with the .ss
        modifier, the social/contact links in the off-the-clock view (a
@@ -1156,27 +1491,69 @@
       var status = certStatus(el);
       if(status === 'target'){
         return kind === 'hover'
-          ? pick([label + "? That's on the roadmap.", "Eyeing a future goal?", "Not started yet, but it's the plan."])
-          : pick([label + ". Next on his list.", label + ". That's the target.", "He's aiming for that one."]);
+          ? pick([label + "? That's on the roadmap. :)", "Eyeing a future goal? :)", "Not started yet, but it's the plan. :)"])
+          : pick([label + ". Next on his list. :)", label + ". That's the target. :)", "He's aiming for that one. :)"]);
       }
       if(status === 'progress'){
         return kind === 'hover'
-          ? pick([label + "? He's working on that right now.", "Checking his progress?", "Still in the middle of that one."])
-          : pick([label + ". Still in progress.", label + ". He's working toward that.", "Not finished yet, but he's on it."]);
+          ? pick([label + "? He's working on that right now. :)", "Checking his progress? :)", "Still in the middle of that one. :)"])
+          : pick([label + ". Still in progress. :)", label + ". He's working toward that. :)", "Not finished yet, but he's on it. :)"]);
       }
       return kind === 'hover'
-        ? pick([label + "? That took studying.", "Eyeing his credentials?", "Earned, that one."])
-        : pick([label + ". Earned, not bought.", label + ". Hard won.", "That one took actual effort."]);
+        ? pick([label + "? That took studying. :)", "Eyeing his credentials? :)", "Earned, that one. :)"])
+        : pick([label + ". Earned, not bought. :)", label + ". Hard won. :)", "That one took actual effort. :)"]);
     }
     if(el.matches('.proj')){
       return kind === 'hover'
-        ? pick([label + "? He actually built that.", "Checking out his work?", "That one shipped for real."])
-        : pick([label + ". He actually built that.", label + ". Real shipped work.", "That one's live, not a mockup."]);
+        ? pick([label + "? He actually built that. :)", "Checking out his work? :)", "That one shipped for real. :)"])
+        : pick([label + ". He actually built that. :)", label + ". Real shipped work. :)", "That one's live, not a mockup. :)"]);
     }
     return kind === 'hover'
-      ? pick([label + "? Good taste.", "Eyeing " + label + "?", "Solid pick, " + label + "."])
-      : pick([label + ". Good taste.", "Solid pick, " + label + ".", "That one's a keeper."]);
+      ? pick([label + "? Good taste. :)", "Eyeing " + label + "? :)", "Solid pick, " + label + ". :)"])
+      : pick([label + ". Good taste. :)", "Solid pick, " + label + ". :)", "That one's a keeper. :)"]);
   }
+
+  /* the "Hire the candidate" CTA (all three instances - see CTA_HOVER
+     above) gets Bean genuinely excited for as long as the cursor is
+     actually over it, on top of its existing hover comment: instant on
+     pointerenter (no dwell - this one's meant to feel directly tied to
+     the cursor, not a considered reaction) and reverts the moment the
+     cursor leaves, guarded by currentMood==='excited' so it doesn't stomp
+     some other mood (angry from a throw, sad from a toggle) that started
+     after the hover began. */
+  document.querySelectorAll('.hero-cta a, .big a, .sec-cta a').forEach(function(el){
+    el.addEventListener('pointerenter', function(){ setMood('excited'); });
+    el.addEventListener('pointerleave', function(){
+      if(currentMood === 'excited') setMood('welcoming');
+    });
+  });
+
+  /* shy: hovering a teammate's photo (the existing click reaction -
+     TEAMMATE_CLICK[_NAMED] above - stays untouched, this is purely the
+     hover-tied mood layered alongside it) gets him genuinely bashful for
+     as long as the cursor's actually on the photo, same tied-to-hover
+     pattern as the CTA's excited above. */
+  document.querySelectorAll('#groupone .gal-roster .ph').forEach(function(el){
+    el.addEventListener('pointerenter', function(){ setMood('shy'); });
+    el.addEventListener('pointerleave', function(){
+      if(currentMood === 'shy') setMood('welcoming');
+    });
+  });
+
+  /* the tickle reaction: a brief dwell (so a cursor just passing over him
+     on its way elsewhere doesn't fire it) then a giggle line, while
+     hovering Bean's own button - guarded against an actual drag in
+     progress (that already has its own grab/during lines) the same way
+     react() already guards against an open panel on its own. */
+  var tickleHoverT = null;
+  launch.addEventListener('pointerenter', function(){
+    clearTimeout(tickleHoverT);
+    tickleHoverT = setTimeout(function(){
+      if(dragging || thrown) return;
+      react(function(){ say(pick(GIGGLE_LINES)); }, 1200);
+    }, 350);
+  });
+  launch.addEventListener('pointerleave', function(){ clearTimeout(tickleHoverT); });
 
   document.querySelectorAll(REACT_SEL).forEach(function(el){
     var hoverT = null;
@@ -1218,6 +1595,20 @@
          James asked for these to disappear fast rather than lingering the
          full 4500ms every other bubble gets */
       react(function(){ say(reactionText(el, 'click'), 1800); }, 900);
+      /* proud: clicking a cert he's actually earned (not one still "in
+         progress" or just a future target - see certStatus()) gets a
+         genuine puffed-up reaction, on top of the existing click line
+         above rather than replacing it with a second bubble */
+      if(el.matches('.sticker:not(.ss), #certs .ledger .row') && certStatus(el) === 'earned'){
+        setMood('proud', 2200);
+      }
+      /* smug: grabbing the CV/résumé - same "layer the mood on top of the
+         existing click line" approach as proud above, DL_CLICK's own text
+         ("Smart move.", etc) already carries the tone, this just adds the
+         cocky one-arm-akimbo pose to go with it */
+      if(el.matches('.dl a')){
+        setMood('smug', 2200);
+      }
     });
   });
 })();
