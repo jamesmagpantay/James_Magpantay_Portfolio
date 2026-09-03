@@ -160,12 +160,23 @@
     background:var(--card);border:1px solid var(--bar-line);border-radius:99px;
     box-shadow:0 10px 24px rgba(0,0,0,.28);
     opacity:0;pointer-events:none;
-    transition:opacity .16s ease-out,translate .16s ease-out;
+    /* the delay lives here, on the hidden state, not the visible one - a
+       transition takes its timing from whichever rule the property is
+       transitioning TO, so leaving hover (falling back to this rule) waits
+       .4s before the fade even starts, while entering hover below matches
+       its own zero-delay rule instead and appears instantly. pointer-events
+       is carried in the same transition (0s duration, same delay) purely
+       so it flips to none in step with the fade rather than the instant
+       the cursor leaves - without that, the popover would go visually
+       fading-but-unclickable for the whole delay window, and a cursor
+       doubling back onto it mid-fade would land on a dead slider. */
+    transition:opacity .16s ease-out .4s,translate .16s ease-out .4s,pointer-events 0s linear .4s;
   }
   @media (hover:hover) and (pointer:fine){
     .mus-wrap:hover .mus-vol,
     .mus-wrap:focus-within .mus-vol{
       opacity:1;pointer-events:auto;translate:-50% 10px;
+      transition:opacity .16s ease-out,translate .16s ease-out,pointer-events 0s linear;
     }
   }
   /* a small gap between the pill and the popover would otherwise be a dead
