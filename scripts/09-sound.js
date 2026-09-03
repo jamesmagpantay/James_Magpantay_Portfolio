@@ -744,7 +744,22 @@
       userVol = Math.max(0, Math.min(1, s.value / 100));
       syncSliders();
       try{ localStorage.setItem('music-uservol', String(userVol)); }catch(err){}
-      if(on && cur) fade(cur, target(), 60);
+      /* dragging the slider while music is off used to just set a level
+         nobody could hear yet - silent, so it read as broken rather than
+         as "quiet because nothing is playing." Touching it now starts
+         playback at that level directly, the same as pressing the toggle
+         would, so hovering and dragging is a complete action on its own
+         rather than needing the toggle pressed first. A dragged range
+         input still counts as user activation for the autoplay policy,
+         same as a click does. */
+      if(!on){
+        if(dead) return;
+        on = true;
+        paint();
+        start();
+      } else if(cur){
+        fade(cur, target(), 60);
+      }
     });
   });
 
