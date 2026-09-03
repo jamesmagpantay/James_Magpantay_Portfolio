@@ -172,9 +172,18 @@
        doubling back onto it mid-fade would land on a dead slider. */
     transition:opacity .16s ease-out .4s,translate .16s ease-out .4s,pointer-events 0s linear .4s;
   }
+  /* :focus-visible, not :focus-within - clicking into the slider to drag
+     it focuses it same as tabbing to it would, but a plain click focus
+     does not count as focus-visible in any current browser's own
+     heuristic (keyboard focus does). :focus-within kept the popover open
+     forever after a single click, since focus doesn't clear on its own
+     just because the cursor later moved away - only tabbing elsewhere (or
+     clicking a DIFFERENT focusable element) would clear it. This still
+     keeps the popover open for a real keyboard tab into the slider, which
+     is the actual accessibility case :focus-within was for. */
   @media (hover:hover) and (pointer:fine){
     .mus-wrap:hover .mus-vol,
-    .mus-wrap:focus-within .mus-vol{
+    .mus-wrap:has(.mus-vol-slider:focus-visible) .mus-vol{
       opacity:1;pointer-events:auto;translate:-50% 10px;
       transition:opacity .16s ease-out,translate .16s ease-out,pointer-events 0s linear;
     }
@@ -189,7 +198,7 @@
   .hero-top .mus-vol{top:100%;translate:-50% 8px}
   @media (hover:hover) and (pointer:fine){
     .hero-top .mus-wrap:hover .mus-vol,
-    .hero-top .mus-wrap:focus-within .mus-vol{translate:-50% 12px}
+    .hero-top .mus-wrap:has(.mus-vol-slider:focus-visible) .mus-vol{translate:-50% 12px}
   }
   /* theme pill - same shell again; the icon shows the mode you are in */
   .thm-btn{
