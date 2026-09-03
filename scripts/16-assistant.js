@@ -869,10 +869,26 @@
      goHome(), on purpose: the whole point is to keep talking from wherever
      he currently is. */
   var quipT = null;
+  /* clamped to stay fully on-screen, in both directions - it's centered on
+     Bean (translate:-50% in the CSS) with no width cap of its own
+     (white-space:nowrap, grows to fit whatever line is showing), and he
+     docks in the bottom-RIGHT corner, close enough to the true edge that
+     a long enough line used to run straight off it on a narrow phone.
+     offsetWidth/Height read the box's actual current size (already laid
+     out even at opacity:0, so this is safe to call before .on is ever
+     added) rather than assuming one. */
+  var QUIP_EDGE = 8;
   function positionQuip(){
     if(!homeNat) return;
-    quip.style.left = (homeNat.left + curX + homeNat.w / 2) + 'px';
-    quip.style.top = (homeNat.top + curY - 6) + 'px';
+    var w = quip.offsetWidth, h = quip.offsetHeight;
+    var anchorX = homeNat.left + curX + homeNat.w / 2;
+    var anchorY = homeNat.top + curY - 6;
+    var x = Math.min(innerWidth - QUIP_EDGE - w / 2, Math.max(QUIP_EDGE + w / 2, anchorX));
+    /* translateY(-100%) in the CSS puts the whole box above this point, so
+       the top edge is anchorY - h - keep that clear of the top edge too */
+    var y = Math.max(QUIP_EDGE + h, anchorY);
+    quip.style.left = x + 'px';
+    quip.style.top = y + 'px';
   }
   function showQuip(text, ms){
     quip.textContent = text;
