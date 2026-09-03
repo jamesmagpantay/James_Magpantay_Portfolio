@@ -56,10 +56,11 @@
       desc: 'Networking fundamentals: routing, switching, and network security.',
       fact: 'In training via Cisco NetConnect PUP. Certificate pending completion.'
     },
-    isc2candidate: {
-      title: 'ISC2 Candidate', statusLabel: 'Active',
-      desc: 'Standing membership with ISC2 while working toward full certification.',
-      fact: "Active candidate status, a standing rather than an exam result."
+    ciscointro: {
+      title: 'Introduction to Cybersecurity', earned: true, statusLabel: 'Earned',
+      desc: "Cisco Networking Academy's intro course: cybersecurity fundamentals, common threats, and the skills the field runs on.",
+      fact: 'Earned via Cisco Networking Academy, 2026.',
+      img: 'photos/certs/cisco-intro-cybersecurity.png'
     },
     thm: {
       title: 'AI Odyssey CTF', earned: true, statusLabel: 'Completed',
