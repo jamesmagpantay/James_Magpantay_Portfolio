@@ -32,7 +32,7 @@
     transition:scale .4s cubic-bezier(.32,.72,0,1);
   }
   .pre-meta{
-    font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+    font-family:var(--mono);font-size:clamp(15px,1.8vw,18px);letter-spacing:.1em;text-transform:uppercase;
     color:var(--cream-dim);font-variant-numeric:tabular-nums;
   }
   /* the hero has an entrance - it should not spend it behind the curtain */
