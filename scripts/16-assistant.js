@@ -19,6 +19,11 @@
   if(!root || !launch || !panel || !form || !input) return;
 
   var REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* same 640px line the CSS shrinks Bean's own badge at (styles/11-
+     assistant.css) - his idle roam wanders a patrol zone sized for a
+     desktop corner with room to spare, which reads as too much motion on
+     a small phone screen relative to how little of it he actually is now */
+  var MOBILE = window.matchMedia('(max-width:640px)').matches;
 
   /* ---- the topic set. Each one is a bag of keywords a typed question can
      match against, plus a reply. `chip` is the label IF it's one of the
@@ -752,7 +757,10 @@
       roamT = setTimeout(roam, 800 + Math.random() * 1000);
       return;
     }
-    var x = -(18 + Math.random() * 70), y = -(14 + Math.random() * 88);
+    /* roughly half the reach on a phone screen - same shape (still a
+       wander up and left of home), just a smaller patrol zone */
+    var x = MOBILE ? -(9 + Math.random() * 35) : -(18 + Math.random() * 70),
+        y = MOBILE ? -(7 + Math.random() * 44) : -(14 + Math.random() * 88);
     var tilt = (Math.random() * 22 - 11).toFixed(1);
     /* startBob() waits for landing (the onDone callback) rather than
        firing immediately - it wants to start its idle scale-pulse once
