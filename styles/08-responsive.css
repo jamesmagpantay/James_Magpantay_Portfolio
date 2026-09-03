@@ -110,6 +110,16 @@
        line - the toggles stay pinned to the right edge regardless (see
        .bar-right's own margin-left:auto below). */
     .bar{translate:0 0;justify-content:flex-start;gap:0}
+    /* the bar is pinned and on-screen for the entire visit at this width
+       (not just after scrolling past the hero, like desktop), which means
+       its backdrop-filter blur is re-sampling everything scrolling behind
+       a full-width strip on every single scroll frame, for the whole
+       session - one of the more expensive things a mobile GPU can be
+       asked to do continuously, and the standout cost behind general
+       scroll lag on Android in particular (iOS Safari's implementation
+       tends to handle it more cheaply). --bar-bg is already ~90% opaque,
+       so dropping the blur here barely changes how it looks. */
+    .bar{-webkit-backdrop-filter:none;backdrop-filter:none}
     /* Sound, music and theme live here at this width. The bar is pinned, so
        they are one tap away at any scroll depth rather than only at the top
        of the page. The flip pill is the one thing that will not fit beside
