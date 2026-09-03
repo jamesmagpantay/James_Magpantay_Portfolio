@@ -12,8 +12,13 @@
 <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
-<meta name="theme-color" content="#171512" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#EFEDE8" media="(prefers-color-scheme: light)">
+<!-- this page always renders in the one dark palette above (--card),
+     no toggle, no light variant - a media-scoped pair here (following the
+     OS's own prefers-color-scheme) could tint the browser chrome light
+     while the page itself stayed dark, the same mismatch fixed on the
+     main page (see scripts/10-theme.js). One static tag matching the
+     page's actual, permanent color instead. -->
+<meta name="theme-color" content="#171512">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Sans:ital,wght@0,400;0,500;0,700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">

@@ -4,6 +4,15 @@
 (function(){
   var root = document.documentElement;
   var btns = [].slice.call(document.querySelectorAll('.thm-btn'));
+  /* the browser-chrome tint (Android's status/address bar, mainly) used to
+     follow the OS's own prefers-color-scheme via a pair of media-scoped
+     meta tags - a leftover from before the theme became a property of the
+     view rather than the visitor's system setting. That left it free to
+     mismatch whatever the page actually rendered (a light off-the-clock
+     page with the OS in dark mode still tinted the chrome dark, and vice
+     versa - what read as "the page changed color" on its own). Painted
+     from the site's own data-theme now, same as everything else here. */
+  var metaTheme = document.getElementById('theme-color-meta');
 
   function now(){ return root.getAttribute('data-theme') === 'light' ? 'light' : 'dark'; }
   function paint(){
@@ -12,6 +21,7 @@
       b.setAttribute('aria-pressed', t === 'light' ? 'true' : 'false');
       b.querySelector('.thm-lab').textContent = t === 'light' ? 'Light' : 'Dark';
     });
+    if(metaTheme) metaTheme.setAttribute('content', t === 'light' ? '#EFEDE8' : '#171512');
   }
   function set(t){ root.setAttribute('data-theme', t); paint(); }
 

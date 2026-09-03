@@ -11,8 +11,12 @@
 <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
-<meta name="theme-color" content="#171512" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#EFEDE8" media="(prefers-color-scheme: light)">
+<!-- one tag, no media condition - kept in sync with the site's own
+     data-theme (not the OS's prefers-color-scheme, which the theme toggle
+     stopped following once the theme became a property of the view: see
+     scripts/10-theme.js) by that same script on every toggle/view-flip.
+     Starts dark to match the inline data-theme set below, before paint. -->
+<meta name="theme-color" content="#171512" id="theme-color-meta">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Sans:ital,wght@0,400;0,500;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
