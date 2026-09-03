@@ -66,12 +66,23 @@
     if(!AC) return;
     ctx = new AC();
     master = ctx.createGain();
-    master.gain.value = MOBILE.matches ? 0.30 : 0.75;
+    master.gain.value = MOBILE.matches ? 0.30 : 1.15;
     /* one lowpass across everything - this is what makes the set read as
        "creamy" rather than sharp, however each sound is built */
     var warm = ctx.createBiquadFilter();
     warm.type = 'lowpass'; warm.frequency.value = 5400; warm.Q.value = .7;
-    master.connect(warm); warm.connect(ctx.destination);
+    /* a handful of hits (the space-bar key, the view-flip thock, the big
+       landing hit) already synthesize at peak gain 1.0 before master ever
+       multiplies them - past a certain master value that starts clipping
+       on its own rather than reading as louder. This limiter is what
+       actually buys more headroom: fast attack/release so it only grabs
+       the very top of a transient (normal-level hits pass through
+       essentially untouched), letting master sit well above 1.0 for real
+       loudness while it catches anything that would otherwise clip. */
+    var limiter = ctx.createDynamicsCompressor();
+    limiter.threshold.value = -6; limiter.knee.value = 0; limiter.ratio.value = 20;
+    limiter.attack.value = .003; limiter.release.value = .12;
+    master.connect(warm); warm.connect(limiter); limiter.connect(ctx.destination);
     var n = Math.floor(ctx.sampleRate * 0.5);
     noise = ctx.createBuffer(1, n, ctx.sampleRate);
     var d = noise.getChannelData(0);
@@ -82,7 +93,7 @@
      whichever side loaded first - live so it re-levels immediately
      instead of waiting on a reload, same as the music module. */
   function relevelMaster(){
-    if(master) master.gain.value = MOBILE.matches ? 0.30 : 0.75;
+    if(master) master.gain.value = MOBILE.matches ? 0.30 : 1.15;
   }
   if(MOBILE.addEventListener) MOBILE.addEventListener('change', relevelMaster);
   else if(MOBILE.addListener) MOBILE.addListener(relevelMaster);   /* older Safari */
@@ -540,7 +551,7 @@
      value - bumped up for anything past the mobile breakpoint; mobile is
      unaffected. */
   var MOBILE = matchMedia('(max-width:860px)');
-  function vol(){ return MOBILE.matches ? 0.028 : 0.30; }
+  function vol(){ return MOBILE.matches ? 0.028 : 0.45; }
 
   var on = false, cur = null, ducked = 0, dead = false;
 
@@ -549,7 +560,7 @@
      module - rather than HTMLMediaElement.volume, which iOS ignores
      outright. (The silent-mode bypass above already takes care of the
      switch itself, for this and the sfx module both.) */
-  var actx = null, gainNodes = {}, buffers = {}, sources = {}, fadeRAF = {};
+  var actx = null, limiter = null, gainNodes = {}, buffers = {}, sources = {}, fadeRAF = {};
 
   function ensureCtx(){
     /* same recovery as the sfx module: a long spell backgrounded can get
@@ -557,12 +568,21 @@
        - its gain nodes, its decoded buffers - dies with it and has to be
        rebuilt against a fresh one rather than reused. */
     if(actx && actx.state === 'closed'){
-      actx = null; gainNodes = {}; buffers = {}; sources = {};
+      actx = null; limiter = null; gainNodes = {}; buffers = {}; sources = {};
     }
     if(actx) return actx;
     var AC = window.AudioContext || window.webkitAudioContext;
     if(!AC) return null;
     actx = new AC();
+    /* every track's gain node routes through this one shared limiter
+       rather than straight to destination - same reasoning as the sfx
+       module's (a fast, gentle catch on real peaks, not a constant
+       squeeze), so the desktop level above can sit higher without a
+       track transition or the two crossfading tracks summing into a clip. */
+    limiter = actx.createDynamicsCompressor();
+    limiter.threshold.value = -6; limiter.knee.value = 0; limiter.ratio.value = 20;
+    limiter.attack.value = .003; limiter.release.value = .12;
+    limiter.connect(actx.destination);
     return actx;
   }
   function gainFor(k){
@@ -571,7 +591,7 @@
     if(gainNodes[k]) return gainNodes[k];
     var g = ctx.createGain();
     g.gain.value = 0;
-    g.connect(ctx.destination);
+    g.connect(limiter);
     gainNodes[k] = g;
     return g;
   }
