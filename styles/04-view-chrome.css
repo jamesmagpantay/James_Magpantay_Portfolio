@@ -192,8 +192,29 @@
      zone the cursor can lose hover crossing on the way down to the slider -
      this pseudo-element bridges it invisibly so the popover stays open. */
   .mus-vol::before{content:'';position:absolute;top:-6px;left:0;right:0;height:6px}
+  /* hand-styled rather than left to accent-color: that leans on each
+     browser's own native OS-themed thumb, which some browsers render
+     inconsistently mid-drag or under a dark theme - it was reportedly
+     vanishing entirely once actually grabbed. -webkit-appearance:none
+     (and the Firefox track/thumb pseudo-elements below) replace that with
+     one fixed, always-visible circle that cannot depend on OS theming. */
   .mus-vol-slider{
-    width:90px;height:4px;accent-color:var(--orange);cursor:pointer;
+    width:90px;height:4px;margin:0;cursor:pointer;
+    -webkit-appearance:none;appearance:none;
+    background:var(--pill-quiet);border-radius:2px;outline:none;
+  }
+  .mus-vol-slider::-webkit-slider-thumb{
+    -webkit-appearance:none;appearance:none;
+    width:14px;height:14px;border-radius:50%;
+    background:var(--orange);border:none;cursor:pointer;
+    margin-top:-5px;
+  }
+  .mus-vol-slider::-moz-range-track{
+    width:90px;height:4px;background:var(--pill-quiet);border-radius:2px;
+  }
+  .mus-vol-slider::-moz-range-thumb{
+    width:14px;height:14px;border-radius:50%;
+    background:var(--orange);border:none;cursor:pointer;
   }
   .hero-top .mus-vol{top:100%;translate:-50% 8px}
   @media (hover:hover) and (pointer:fine){
