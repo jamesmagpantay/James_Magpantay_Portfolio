@@ -652,7 +652,19 @@
     }).catch(function(){});
   }
 
-  function target(){ return vol() * (ducked > 0 ? .4 : 1); }
+  /* the volume popover (desktop only - see the CSS on .mus-wrap) sits on
+     top of vol()'s own device-based level rather than replacing it: 100%
+     on the slider still means "whatever this device's normal level is",
+     not some separate absolute number, so the mobile/desktop split above
+     keeps working underneath it untouched. Remembered across visits since
+     a volume preference is exactly the kind of thing a reload shouldn't
+     silently reset. */
+  var userVol = 1;
+  try{
+    var savedVol = localStorage.getItem('music-uservol');
+    if(savedVol !== null){ var pv = parseFloat(savedVol); if(!isNaN(pv)) userVol = Math.max(0, Math.min(1, pv)); }
+  }catch(err){}
+  function target(){ return vol() * userVol * (ducked > 0 ? .4 : 1); }
 
   function fade(k, to, ms, done){
     if(fadeRAF[k]){ cancelAnimationFrame(fadeRAF[k]); fadeRAF[k] = null; }
@@ -712,6 +724,27 @@
          interface sound is off, so this never adds a click nobody asked for. */
       if(window.sfx) window.sfx.play('click');
       if(on) start(); else stop();
+    });
+  });
+
+  /* the volume sliders live as siblings of .mus-btn (see the HTML), not
+     nested inside it, specifically so dragging one can never bubble into
+     the button's own click handler above and toggle music off mid-drag -
+     no stopPropagation needed, there is simply no button ancestor for the
+     event to reach. Two sliders (bar + hero) share one userVol, kept in
+     sync with each other on every input rather than each owning its own
+     state. */
+  var volSliders = [].slice.call(document.querySelectorAll('.mus-vol-slider'));
+  function syncSliders(){
+    volSliders.forEach(function(s){ s.value = String(Math.round(userVol * 100)); });
+  }
+  syncSliders();
+  volSliders.forEach(function(s){
+    s.addEventListener('input', function(){
+      userVol = Math.max(0, Math.min(1, s.value / 100));
+      syncSliders();
+      try{ localStorage.setItem('music-uservol', String(userVol)); }catch(err){}
+      if(on && cur) fade(cur, target(), 60);
     });
   });
 

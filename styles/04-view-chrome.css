@@ -146,6 +146,40 @@
   .hero-top .mus-btn[aria-pressed="true"]{background:var(--orange);color:#fff;border-color:var(--orange)}
   @media (max-width:760px){.hero-top .mus-btn{font-size:12px;padding:10px 15px}}
   @media (max-width:600px){.mus-btn .mus-lab{display:none}.mus-btn{padding:9px 11px}}
+  /* volume popover: only on the two desktop music pills (the bar and the
+     hero), not the mobile sheet's copy - that one lives inside a touch
+     menu with no hover to trigger this from anyway, so it was left as a
+     plain button with no wrapper. Gated on (hover:hover) and (pointer:fine)
+     rather than just a width breakpoint, since a touch device pressing and
+     holding can trigger a lingering ":hover" match on some browsers - this
+     keeps it desktop-only regardless of viewport width. */
+  .mus-wrap{position:relative;display:inline-flex}
+  .mus-vol{
+    position:absolute;top:100%;left:50%;translate:-50% 6px;z-index:5;
+    display:flex;align-items:center;padding:10px 12px;
+    background:var(--card);border:1px solid var(--bar-line);border-radius:99px;
+    box-shadow:0 10px 24px rgba(0,0,0,.28);
+    opacity:0;pointer-events:none;
+    transition:opacity .16s ease-out,translate .16s ease-out;
+  }
+  @media (hover:hover) and (pointer:fine){
+    .mus-wrap:hover .mus-vol,
+    .mus-wrap:focus-within .mus-vol{
+      opacity:1;pointer-events:auto;translate:-50% 10px;
+    }
+  }
+  /* a small gap between the pill and the popover would otherwise be a dead
+     zone the cursor can lose hover crossing on the way down to the slider -
+     this pseudo-element bridges it invisibly so the popover stays open. */
+  .mus-vol::before{content:'';position:absolute;top:-6px;left:0;right:0;height:6px}
+  .mus-vol-slider{
+    width:90px;height:4px;accent-color:var(--orange);cursor:pointer;
+  }
+  .hero-top .mus-vol{top:100%;translate:-50% 8px}
+  @media (hover:hover) and (pointer:fine){
+    .hero-top .mus-wrap:hover .mus-vol,
+    .hero-top .mus-wrap:focus-within .mus-vol{translate:-50% 12px}
+  }
   /* theme pill - same shell again; the icon shows the mode you are in */
   .thm-btn{
     display:flex;align-items:center;gap:9px;cursor:pointer;white-space:nowrap;
