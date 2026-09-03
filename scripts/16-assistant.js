@@ -292,7 +292,7 @@
      while still greeting on every fresh page load rather than just once
      ever. Picked in showWelcome() below, not here. */
   var WELCOME_BACK = [
-    "Welcome back! Still Bean, still know this site cold. :)",
+    "Welcome back! Still Bean, I know my way around here. :)",
     "Hey again! Need a hand finding something this time? :)",
     "Oh, you're back. Want the tour, or just poking around? :)"
   ];
