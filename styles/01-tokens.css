@@ -74,7 +74,15 @@
   /* the stage loses its technical grid off the clock */
   body.offline .stage-panel{background-image:none}
 
-  *{margin:0;padding:0;box-sizing:border-box}
+  /* Android Chrome's default tap flash (a blue overlay on anything
+     clickable, Chrome's own equivalent of iOS Safari's tap highlight,
+     which Safari already keeps subtle/invisible by default) - global
+     rather than per-element, so every button/link/toggle is covered
+     without hunting down each one by hand, including anything added
+     later. The custom animations here (bounce, warp, mood swaps, etc.)
+     are the intended feedback on tap; this was landing on top of them,
+     not instead of them. */
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   [hidden]{display:none!important}
   html{scroll-behavior:smooth}
   @media (prefers-reduced-motion:reduce){

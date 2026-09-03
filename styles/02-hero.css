@@ -55,7 +55,7 @@
     .hero-top-right .thm-btn{display:none}
   }
 
-  .h-wrap{position:relative;z-index:0;margin-bottom:clamp(6px,1.4vh,18px);cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;translate:0 clamp(8px,2.2vw,38px)}
+  .h-wrap{position:relative;z-index:0;margin-bottom:clamp(6px,1.4vh,18px);cursor:pointer;user-select:none;translate:0 clamp(8px,2.2vw,38px)}
   @media (max-width:900px){.h-wrap{translate:0 0}}
   .h-wrap:focus-visible{outline:2px solid var(--orange);outline-offset:8px}
   .h-line{
