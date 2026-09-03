@@ -76,6 +76,12 @@
     background:var(--orange);color:#fff;border-radius:99px;padding:17px 20px;
   }
   body.msheet-open{overflow:hidden}
+  /* the sheet is full-screen and its own footer controls (theme/music/sound)
+     land in the same bottom-right corner Bean docks in (.asst, z-index:99,
+     above the sheet's z-index:90) - without this he sits on top of them,
+     overlapping a real control and inviting a mis-tap. He has nothing useful
+     to do while the sheet is up anyway. */
+  body.msheet-open .asst{visibility:hidden;pointer-events:none}
 
   /* ---------- galleries and cards reachable from the keyboard ---------- */
   .ph:focus-visible{outline:2px solid var(--orange);outline-offset:3px}
@@ -138,6 +144,13 @@
        right below it (and the tab's own favicon makes a third). Drop the
        icon and let the wordmark carry the bar instead - same identity,
        no repeated glyph. */
+    /* the quip trails Bean's chathead every rAF frame during a drag/throw
+       (positionQuip() in 16-assistant.js) - a blurred backdrop recomputed
+       at a new position on every single frame is the same continuous-GPU-
+       cost pattern already dropped from the sticky bar above for the same
+       reason. --bar-bg is already ~90% opaque, so this barely changes how
+       it looks. */
+    .asst-quip{-webkit-backdrop-filter:none;backdrop-filter:none}
     .bar-brand{font-size:13px}
     .bar-brand .mark{display:none}
     /* While the hero's own huge wordmark is still on screen, this one is

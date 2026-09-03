@@ -828,9 +828,9 @@
      the panel, which calls goHome() and always wins over wherever he's
      landed, per "once clicked he returns to the corner." That's also
      where the persisted mood pays off - see setOpen() and boot() above.
-     Touch is currently left to its native behavior (no throw) since
-     there's no drag threshold to fall back on the way the mouse has a
-     stray click. */
+     Touch plays too, via the same pointer events and the same dragMoved
+     threshold below - a tap under that threshold still falls through to
+     the plain click/tap path above untouched. */
   var GRAVITY = 2900, HOME_PULL = 1500, BOUNCE = 0.52, FLOOR_FRICTION = 0.82, AIR_DRAG = 0.999;
   var REST_V = 60; /* below this speed a wall/floor touch is resting, not a fresh impact */
   /* patience is about how often he's grabbed, not how hard any one throw

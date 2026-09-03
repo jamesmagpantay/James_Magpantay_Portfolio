@@ -248,9 +248,14 @@
    entirely different section structure. */
 (function(){
   var EDGE = 24;       /* px from either screen edge - the OS's own back-swipe territory */
-  var MIN_DX = 70;      /* px of travel before this counts as a swipe, not a tap */
+  var MIN_DX = 80;      /* px of travel before this counts as a swipe, not a tap */
   var MAX_MS = 700;     /* slower than this reads as a drag, not a flick */
-  var SKEW = 1.5;        /* how much more horizontal than vertical it has to be */
+  /* how much more horizontal than vertical it has to be - raised from 1.5
+     after QA review: a fast vertical scroll with some sideways thumb drift
+     could get close to that ratio and flip the whole view mid-scroll. 2.2
+     keeps a real diagonal flick well clear while still requiring a much
+     straighter line than an ordinary scroll ever produces. */
+  var SKEW = 2.2;
   /* left alone entirely - its own horizontal drag, anything full-screen
      stacked over the page where a page-wide flip would be a surprise, and
      Bean's own launch button, which now has a real touch-drag/throw
