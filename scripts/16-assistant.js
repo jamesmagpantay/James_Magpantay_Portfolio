@@ -938,7 +938,14 @@
   }
 
   launch.addEventListener('pointerdown', function(e){
-    if(REDUCED || e.pointerType !== 'mouse' || e.button !== 0) return;
+    /* touch and pen play too now, not just mouse - the button check only
+       matters for mouse (excludes right/middle click), touch and pen
+       don't carry that distinction. .asst-launch's own touch-action:none
+       (CSS) already keeps the page from trying to scroll/zoom out from
+       under a real drag here, and the global swipe-to-flip-view listener
+       (12-navigation.js) now exempts this element too, so a toss near the
+       screen edge doesn't also read as a view-flip swipe. */
+    if(REDUCED || (e.pointerType === 'mouse' && e.button !== 0)) return;
     cancelThrow();
     cancelHop();
     clearTimeout(roamT); clearTimeout(bobT);

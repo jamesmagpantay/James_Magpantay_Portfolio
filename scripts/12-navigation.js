@@ -251,9 +251,13 @@
   var MIN_DX = 70;      /* px of travel before this counts as a swipe, not a tap */
   var MAX_MS = 700;     /* slower than this reads as a drag, not a flick */
   var SKEW = 1.5;        /* how much more horizontal than vertical it has to be */
-  /* left alone entirely - its own horizontal drag, and anything full-screen
-     stacked over the page where a page-wide flip would be a surprise */
-  var EXEMPT = '.proj-rail, .msheet, .pa, .lb, .pm, [role="dialog"]';
+  /* left alone entirely - its own horizontal drag, anything full-screen
+     stacked over the page where a page-wide flip would be a surprise, and
+     Bean's own launch button, which now has a real touch-drag/throw
+     gesture of its own (see 16-assistant.js) that this would otherwise
+     fight over - he docks right in the corner, close enough to the edge
+     that EDGE's own 24px zone reaches him. */
+  var EXEMPT = '.proj-rail, .msheet, .pa, .lb, .pm, [role="dialog"], .asst-launch';
 
   var x0 = 0, y0 = 0, t0 = 0, live = false;
 

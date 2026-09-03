@@ -62,6 +62,10 @@
   }
   .sfx-btn:hover{border-color:var(--orange);color:var(--cream)}
   .sfx-btn[aria-pressed="true"]{color:var(--cream);border-color:#5A554C}
+  /* in the floating bar specifically, "on" reads as filled orange, same
+     accent .hero-top already uses for its own pressed state below - the
+     bar's own base rule above stays the neutral outline for "off" */
+  .bar .sfx-btn[aria-pressed="true"]{background:var(--orange);color:#fff;border-color:var(--orange)}
   /* one speaker glyph either way - off wears the muted X any OS volume
      control uses, on swaps that for a pair of signal arcs that pulse
      outward, so the icon itself carries the "it's on" state rather than
@@ -95,6 +99,9 @@
   }
   .mus-btn:hover{border-color:var(--orange);color:var(--cream)}
   .mus-btn[aria-pressed="true"]{color:var(--cream);border-color:#5A554C}
+  /* same filled-orange "on" treatment as the sound toggle above, scoped
+     to the floating bar */
+  .bar .mus-btn[aria-pressed="true"]{background:var(--orange);color:#fff;border-color:var(--orange)}
   .mus-btn[disabled]{opacity:.45;cursor:not-allowed}
   /* a beamed pair of quavers - at 15px a single note with a flag turns to
      mush, while two noteheads under a beam stay legible. It matters more
