@@ -306,7 +306,21 @@
     position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
     pointer-events:none;
   }
-  .asst-mk svg{width:46px;height:46px;overflow:visible;display:block}
+  /* percentage, not a fixed 46px - .asst-mk fills .asst-launch exactly
+     (position:absolute;inset:0 above, and .asst-launch always has a
+     definite width/height of its own), so this scales the icon with
+     whatever size the button happens to be at any breakpoint, automatic
+     and permanent, rather than needing a matching manual override added
+     by hand every time .asst-launch's own size changes (which is what
+     silently broke at the 640px mobile shrink below - the button box got
+     smaller but this stayed a fixed 46px, overflowing past the now-
+     smaller box at its old size instead of shrinking with it, which is
+     also why .asst-dot - positioned relative to the actual, correctly
+     shrunk box - started reading as "off-center" against the icon that
+     never got smaller). 60.5% is the same 46/76 ratio the desktop size
+     already used, so this doesn't change how anything currently looks -
+     only what happens the next time .asst-launch's size changes. */
+  .asst-mk svg{width:60.5%;height:60.5%;overflow:visible;display:block}
   /* 20.6px, not an arbitrary shrink - the same viewBox-to-pixel ratio the
      76px launch button uses (46px svg / 100 viewBox units) scaled for the
      header's 34px circle instead (34 / 1.652, where 1.652 is that same
@@ -1278,18 +1292,20 @@
        the full open panel above) both shrink on phones - the 76px badge and
        15px popup text are sized for a mouse-driven desktop corner, and read
        oversized against a small viewport. .asst-mk fills .asst-launch via
-       inset:0, so shrinking the button scales the JM mark with it for free.
+       inset:0 and the svg itself is sized in % now (see .asst-mk svg
+       above), so shrinking the button scales the JM mark with it for
+       free - genuinely, not just in a comment, after the % fix above.
        The bubble sits beside him here, same as desktop - it briefly stacked
        above him instead (thirty-third pass) to dodge .vbadge, which shared
        this corner at the time, but .vbadge is now a small icon-only button
        (see 04-view-chrome.css) rather than a wide text pill, so that
        overlap risk is gone and the beside placement (less visually
        distracting, per James) was restored. */
-    .asst-launch{width:28px;height:28px}
+    .asst-launch{width:48px;height:48px}
     /* the desktop-only JM enlargement above is sized for the 76px button
-       and its generous margin to the header/panel avatar - on the 48px
-       phone badge that same 2x scale would run the letters right past
-       the circle's edge, so it's switched back off here. */
+       and its generous margin to the header/panel avatar - on this much
+       smaller phone badge that same 2x scale would run the letters right
+       past the circle's edge, so it's switched back off here. */
     .asst-mk:not(.sm) .ltr-wrap{scale:1}
     .asst-dot{width:13px;height:13px}
     .asst-badge{min-width:16px;height:16px;font-size:9px;line-height:14px}

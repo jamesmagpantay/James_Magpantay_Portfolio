@@ -323,15 +323,16 @@
   .vbadge-ico{width:28px;height:28px;flex:none}
   .vbadge .dot,.vbadge span[data-view]{display:none}
   @media (min-width:861px){.vbadge{display:none}}
-  /* matches Bean's own phone-width shrink (.asst-launch, 76px -> 28px
+  /* matches Bean's own phone-width shrink (.asst-launch, 76px -> 48px
      under 640px, styles/11-assistant.css) so the two stay the same size
-     at every width, not just above 640px. Deliberately drastic right now
-     (James: "make him significantly small") specifically so the change is
-     unmistakable while troubleshooting whether earlier, more modest
-     resizes were even reaching his phone. */
+     at every width, not just above 640px. (An earlier, more drastic 28px
+     test value confirmed the real bug: .asst-mk svg was a fixed 46px
+     regardless of .asst-launch's own size, so the icon never actually
+     shrank with the button - now fixed with a % size there, so this can
+     go back to a size that just looks like "smaller," not "diagnostic.") */
   @media (max-width:640px){
-    .vbadge{width:28px;height:28px}
-    .vbadge-ico{width:12px;height:12px}
+    .vbadge{width:48px;height:48px}
+    .vbadge-ico{width:18px;height:18px}
   }
 
   /* the flip itself: a short wipe so the change is never missed */
