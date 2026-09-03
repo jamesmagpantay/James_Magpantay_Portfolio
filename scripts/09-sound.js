@@ -45,6 +45,14 @@
   /* on by default, every load - not remembered across reloads */
   var on = true;
 
+  /* Desktop speakers (and the external ones this got tuned against) can
+     take a fair bit more level than a laptop's built-in pair before it
+     reads as loud rather than just audible - a laptop with nothing plugged
+     in was coming through weak at the flat 0.30 every device used to
+     share. Same 860px split the music module already uses below, kept
+     independent (own MOBILE const) since this module is its own IIFE. */
+  var MOBILE = matchMedia('(max-width:860px)');
+
   var ctx = null, master = null, noise = null;
   function boot(){
     /* a tab backgrounded long enough can have the browser close its audio
@@ -58,7 +66,7 @@
     if(!AC) return;
     ctx = new AC();
     master = ctx.createGain();
-    master.gain.value = 0.30;
+    master.gain.value = MOBILE.matches ? 0.30 : 0.42;
     /* one lowpass across everything - this is what makes the set read as
        "creamy" rather than sharp, however each sound is built */
     var warm = ctx.createBiquadFilter();
@@ -69,6 +77,15 @@
     var d = noise.getChannelData(0);
     for(var i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
   }
+  /* boot() only runs once (guarded above), so a resize that crosses the
+     860px line afterward would otherwise leave the level stuck at
+     whichever side loaded first - live so it re-levels immediately
+     instead of waiting on a reload, same as the music module. */
+  function relevelMaster(){
+    if(master) master.gain.value = MOBILE.matches ? 0.30 : 0.42;
+  }
+  if(MOBILE.addEventListener) MOBILE.addEventListener('change', relevelMaster);
+  else if(MOBILE.addListener) MOBILE.addListener(relevelMaster);   /* older Safari */
   /* ±3% detune per hit - identical repeats are what make UI sound irritating */
   function vary(){ return 1 + (Math.random() * .06 - .03); }
   function env(g, t, peak, dur){
@@ -517,9 +534,13 @@
      half of the sound set never fires at all - so the music ends up carrying
      the mix on its own. Halve it where the site is in its mobile layout.
      Matched to the same 860px the layout uses, and live, so rotating the
-     phone or resizing a window re-levels rather than waiting for a reload. */
+     phone or resizing a window re-levels rather than waiting for a reload.
+     The desktop side was tuned against an external speaker that could take
+     more than a laptop's built-in pair reads as comfortable at the same
+     value - bumped up for anything past the mobile breakpoint; mobile is
+     unaffected. */
   var MOBILE = matchMedia('(max-width:860px)');
-  function vol(){ return MOBILE.matches ? 0.028 : 0.11; }
+  function vol(){ return MOBILE.matches ? 0.028 : 0.16; }
 
   var on = false, cur = null, ducked = 0, dead = false;
 
