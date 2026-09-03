@@ -66,7 +66,7 @@
     if(!AC) return;
     ctx = new AC();
     master = ctx.createGain();
-    master.gain.value = MOBILE.matches ? 0.30 : 0.42;
+    master.gain.value = MOBILE.matches ? 0.30 : 0.58;
     /* one lowpass across everything - this is what makes the set read as
        "creamy" rather than sharp, however each sound is built */
     var warm = ctx.createBiquadFilter();
@@ -82,7 +82,7 @@
      whichever side loaded first - live so it re-levels immediately
      instead of waiting on a reload, same as the music module. */
   function relevelMaster(){
-    if(master) master.gain.value = MOBILE.matches ? 0.30 : 0.42;
+    if(master) master.gain.value = MOBILE.matches ? 0.30 : 0.58;
   }
   if(MOBILE.addEventListener) MOBILE.addEventListener('change', relevelMaster);
   else if(MOBILE.addListener) MOBILE.addListener(relevelMaster);   /* older Safari */
@@ -540,7 +540,7 @@
      value - bumped up for anything past the mobile breakpoint; mobile is
      unaffected. */
   var MOBILE = matchMedia('(max-width:860px)');
-  function vol(){ return MOBILE.matches ? 0.028 : 0.16; }
+  function vol(){ return MOBILE.matches ? 0.028 : 0.22; }
 
   var on = false, cur = null, ducked = 0, dead = false;
 
