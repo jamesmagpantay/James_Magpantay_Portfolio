@@ -339,6 +339,23 @@
     .pm-panel{width:94vw;height:auto;max-height:92vh;grid-template-columns:1fr;grid-template-rows:auto 1fr}
     .pm-shot{aspect-ratio:16/9}
   }
+  /* .pm-panel's height is min(64vh,735px) - on a tall monitor 64vh already
+     clears 735px, so the cap is what actually applies and the panel is a
+     fixed, generous size. A standard 1080p laptop screen (same desktop
+     width bracket, less viewport height once browser chrome is
+     subtracted) works out to noticeably less than 735px at 64vh, so a
+     longer project/cert description needs its own .pm-body scroll
+     (already there as a fallback) to be fully read. Two levers, both
+     pure scaling: the panel claims a bit more of the shorter viewport
+     (64vh -> 74vh, same 735px ceiling on tall screens either way), and
+     the text ceilings come down a notch so more of a long description
+     fits in that same space without the scroll ever kicking in. */
+  @media (min-width:901px) and (max-height:1000px){
+    .pm-panel{height:min(74vh,735px)}
+    .pm-body h3{font-size:clamp(22px,2vw,30px)}
+    .pm-body p{font-size:clamp(14px,.9vw,15.5px)}
+    .pm-body .fact{font-size:clamp(15px,1.2vw,19px)}
+  }
 
   /* experience - company | role, expanding to the description on click */
   .xp{display:flex;flex-direction:column;gap:10px}
