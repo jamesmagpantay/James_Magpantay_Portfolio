@@ -324,9 +324,9 @@
   .vbadge .dot,.vbadge span[data-view]{display:none}
   @media (min-width:861px){.vbadge{display:none}}
   /* matches Bean's own phone-width shrink (.asst-launch, 76px -> 58px
-     under 420px, styles/11-assistant.css) so the two stay the same size
-     at every width, not just above 420px */
-  @media (max-width:420px){
+     under 640px, styles/11-assistant.css) so the two stay the same size
+     at every width, not just above 640px */
+  @media (max-width:640px){
     .vbadge{width:58px;height:58px}
     .vbadge-ico{width:22px;height:22px}
   }

@@ -105,14 +105,18 @@
   @media (max-width:860px){
     /* it can no longer wait for the hero to leave - it is the only way out.
        Left-aligned rather than space-between: the brand collapses to
-       nothing near the top, and flex-start is what lets the toggles slide
-       left to fill that space instead of stepping in a straight line. */
+       nothing near the top, and flex-start is what lets the menu button
+       slide left to fill that space instead of stepping in a straight
+       line - the toggles stay pinned to the right edge regardless (see
+       .bar-right's own margin-left:auto below). */
     .bar{translate:0 0;justify-content:flex-start;gap:0}
     /* Sound, music and theme live here at this width. The bar is pinned, so
        they are one tap away at any scroll depth rather than only at the top
        of the page. The flip pill is the one thing that will not fit beside
-       them - the corner badge and the menu sheet both carry that. */
-    .bar-right{display:flex;gap:8px;margin-right:10px}
+       them - the corner badge and the menu sheet both carry that. Pinned to
+       the right edge (menu now sits on the left, beside the brand) rather
+       than the menu button, which is the swap from before. */
+    .bar-right{display:flex;gap:8px;margin-right:10px;margin-left:auto}
     .bar-flip{display:none}
     .bar-right .sfx-btn,
     .bar-right .mus-btn,
@@ -146,9 +150,9 @@
                  margin-right .7s cubic-bezier(.22,.61,.36,1),
                  opacity .55s ease-out .15s;
     }
-    /* pinned to the corner regardless of how much room the brand is taking -
-       the toggles between it and the brand are the ones that get to move */
-    .menu-btn{margin-left:auto}
+    /* sits right after the brand now, not pinned to the far corner - the
+       toggles (.bar-right, margin-left:auto above) are the ones pinned to
+       the right edge instead, so this just flows naturally in place */
     html.js .menu-btn{display:flex}
     /* without JS the menu button does nothing - fall back to the plain links */
     html:not(.js) .bar-nav{display:flex;flex-wrap:wrap;gap:8px 14px}

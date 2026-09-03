@@ -188,6 +188,11 @@ document.documentElement.setAttribute('data-theme', 'dark');
 <header class="bar" id="bar">
   <i class="bar-prog" aria-hidden="true"></i>
   <button class="bar-brand" type="button" id="totop" aria-label="Back to top"><svg class="mark" viewBox="0 0 100 100" aria-hidden="true"><path fill-rule="evenodd" d="M20 0H80A20 20 0 0 1 100 20V80A20 20 0 0 1 80 100H0V20A20 20 0 0 1 20 0ZM41 26V74H12V61H28V26ZM49 74V26H62L68.5 44L75 26H88V74H75V50L68.5 62L62 50V74Z"/></svg>Home</button>
+  <button class="menu-btn" type="button" id="menubtn"
+          aria-expanded="false" aria-controls="msheet" aria-label="Open menu">
+    <span class="menu-ico" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="menu-lab">Menu</span>
+  </button>
   <nav class="bar-nav" data-view="pro" aria-label="Sections">
     <a href="#education">Education</a>
     <a href="#experience">Experience</a>
@@ -229,12 +234,7 @@ document.documentElement.setAttribute('data-theme', 'dark');
     </svg>
     <span class="swap" aria-hidden="true">Switch</span>
   </button>
-</div>
-  <button class="menu-btn" type="button" id="menubtn"
-          aria-expanded="false" aria-controls="msheet" aria-label="Open menu">
-    <span class="menu-ico" aria-hidden="true"><i></i><i></i><i></i></span>
-    <span class="menu-lab">Menu</span>
-  </button>
+  </div>
 </header>
 
 <!-- Mobile menu. The bar's own nav and controls have nowhere to go on a phone,
