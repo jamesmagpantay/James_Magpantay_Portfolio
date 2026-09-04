@@ -729,65 +729,65 @@
 
   /* the volume sliders live as siblings of .mus-btn (see the HTML), not
      nested inside it, specifically so dragging one can never bubble into
-     the button's own click handler above and toggle music off mid-drag -
-     no stopPropagation needed, there is simply no button ancestor for the
-     event to reach. Two sliders (bar + hero) share one userVol, kept in
-     sync with each other on every input rather than each owning its own
-     state. */
+     the button's own click handler above and toggle music off mid-drag.
+     Two sliders (bar + hero) share one userVol, kept in sync with each
+     other on every change rather than each owning its own state.
+
+     This is a plain <div role="slider">, not an <input type=range> -
+     several rounds styling and event-patching a native range input all
+     failed to fix it reliably refusing to drag on a real mouse (its own
+     native drag-tracking kept fighting whatever JS tried to drive
+     alongside it, and that native handling only ever engaged when the
+     pointer landed pixel-for-pixel on the 14px thumb to begin with).
+     A div has none of that: every part of the interaction below is
+     something this code owns outright, nothing native left to fight. */
   var volSliders = [].slice.call(document.querySelectorAll('.mus-vol-slider'));
-  /* skip, optionally, the one currently under the user's own cursor -
-     writing element.value back onto a range input the user has an active
-     pointer-drag on (even to the value it already holds) can fight the
-     browser's own internal drag tracking, reading as the thumb freezing
-     or refusing to move past wherever the first successful move landed.
-     The other slider (kept in sync so both always agree) is never the one
-     mid-drag, so it always gets the write. */
-  function syncSliders(exceptEl){
+  function applyUserVol(){
+    var pct = Math.round(userVol * 100);
     volSliders.forEach(function(s){
-      if(s === exceptEl) return;
-      s.value = String(Math.round(userVol * 100));
+      s.setAttribute('aria-valuenow', String(pct));
+      var fill = s.querySelector('.mus-vol-fill'), thumb = s.querySelector('.mus-vol-thumb');
+      if(fill) fill.style.width = pct + '%';
+      if(thumb) thumb.style.left = pct + '%';
     });
   }
-  syncSliders();
-  /* dragging is handled entirely by hand here, not left to the browser's
-     own native range-drag tracking. A fully custom-styled
-     (-webkit-appearance:none) range input loses Chrome's "click anywhere
-     on the track to jump there" handling - checked directly, only a
-     pointerdown landing pixel-for-pixel on the 14px thumb itself actually
-     engages native dragging; anywhere else on the track does nothing.
-     Since the thumb starts pinned at one end (100%), a click meant to
-     jump it from across the track almost never lands exactly on it, so
-     nothing happens - reads as the slider being stuck at whatever it
-     already was. setPointerCapture is what makes this reliable rather
-     than just a pointerdown fix: it keeps pointermove routed to this
-     element for the rest of the gesture even if the cursor drifts outside
-     the slider's own (small, 14px-tall) box mid-drag, which a real drag
-     toward either edge does often. */
-  volSliders.forEach(function(s){
-    function setFromClientX(clientX){
-      var rect = s.getBoundingClientRect();
-      var pct = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
-      var v = String(Math.round(pct * 100));
-      if(v !== s.value){
-        s.value = v;
-        s.dispatchEvent(new Event('input', {bubbles:true}));
-      }
+  applyUserVol();
+  function setUserVolFromClientX(slider, clientX){
+    var rect = slider.getBoundingClientRect();
+    var pct = rect.width ? Math.max(0, Math.min(1, (clientX - rect.left) / rect.width)) : userVol;
+    setUserVol(pct);
+  }
+  /* shared by pointer drag, a plain click/tap, and keyboard nudges below -
+     one place that updates the level, persists it, paints both sliders,
+     and starts/fades the actual audio, so none of those three input
+     methods can drift out of sync with each other. */
+  function setUserVol(pct){
+    userVol = Math.max(0, Math.min(1, pct));
+    applyUserVol();
+    try{ localStorage.setItem('music-uservol', String(userVol)); }catch(err){}
+    /* touching the slider while music is off used to just set a level
+       nobody could hear yet - silent, so it read as broken rather than as
+       "quiet because nothing is playing." Touching it now starts playback
+       at that level directly, the same as pressing the toggle would, so
+       hovering and dragging is a complete action on its own rather than
+       needing the toggle pressed first. A real pointer/keyboard gesture
+       still counts as user activation for the autoplay policy, same as a
+       click does. */
+    if(!on){
+      if(dead) return;
+      on = true;
+      paint();
+      start();
+    } else if(cur){
+      fade(cur, target(), 60);
     }
+  }
+  volSliders.forEach(function(s){
     s.addEventListener('pointerdown', function(e){
-      /* preventDefault matters here in a way it didn't show up in testing
-         against dispatched PointerEvents: those never engage the browser's
-         own native slider-drag handling at all (that only fires for
-         genuine trusted input), so a test built on dispatched events alone
-         cannot see this. On a real mouse, without this, native dragging
-         and this handler both try to drive the same value on every move -
-         whichever runs second wins the frame, and native's own click-
-         positioning is exactly the broken one (only the thumb itself,
-         pixel-for-pixel, actually engages it - see the comment below).
-         Fighting each other reads as the slider refusing to move. */
       e.preventDefault();
-      setFromClientX(e.clientX);
+      setUserVolFromClientX(s, e.clientX);
       try{ s.setPointerCapture(e.pointerId); }catch(err){}
-      function onMove(ev){ ev.preventDefault(); setFromClientX(ev.clientX); }
+      function onMove(ev){ ev.preventDefault(); setUserVolFromClientX(s, ev.clientX); }
       function onUp(){
         s.removeEventListener('pointermove', onMove);
         s.removeEventListener('pointerup', onUp);
@@ -797,28 +797,15 @@
       s.addEventListener('pointerup', onUp);
       s.addEventListener('pointercancel', onUp);
     });
-  });
-  volSliders.forEach(function(s){
-    s.addEventListener('input', function(){
-      userVol = Math.max(0, Math.min(1, s.value / 100));
-      syncSliders(s);
-      try{ localStorage.setItem('music-uservol', String(userVol)); }catch(err){}
-      /* dragging the slider while music is off used to just set a level
-         nobody could hear yet - silent, so it read as broken rather than
-         as "quiet because nothing is playing." Touching it now starts
-         playback at that level directly, the same as pressing the toggle
-         would, so hovering and dragging is a complete action on its own
-         rather than needing the toggle pressed first. A dragged range
-         input still counts as user activation for the autoplay policy,
-         same as a click does. */
-      if(!on){
-        if(dead) return;
-        on = true;
-        paint();
-        start();
-      } else if(cur){
-        fade(cur, target(), 60);
-      }
+    /* a native <input type=range> gets arrow-key/Home/End handling for
+       free; a plain div with role="slider" does not, so it has to be
+       written out by hand to keep this keyboard-accessible. */
+    s.addEventListener('keydown', function(e){
+      var step = (e.key === 'PageUp' || e.key === 'PageDown') ? .1 : .02;
+      if(e.key === 'ArrowLeft' || e.key === 'ArrowDown' || e.key === 'PageDown'){ setUserVol(userVol - step); e.preventDefault(); }
+      else if(e.key === 'ArrowRight' || e.key === 'ArrowUp' || e.key === 'PageUp'){ setUserVol(userVol + step); e.preventDefault(); }
+      else if(e.key === 'Home'){ setUserVol(0); e.preventDefault(); }
+      else if(e.key === 'End'){ setUserVol(1); e.preventDefault(); }
     });
   });
 

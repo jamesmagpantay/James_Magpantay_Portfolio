@@ -192,42 +192,33 @@
      zone the cursor can lose hover crossing on the way down to the slider -
      this pseudo-element bridges it invisibly so the popover stays open. */
   .mus-vol::before{content:'';position:absolute;top:-6px;left:0;right:0;height:6px}
-  /* hand-styled rather than left to accent-color: that leans on each
-     browser's own native OS-themed thumb, which some browsers render
-     inconsistently mid-drag or under a dark theme - it was reportedly
-     vanishing entirely once actually grabbed. -webkit-appearance:none
-     (and the Firefox track/thumb pseudo-elements below) replace that with
-     one fixed, always-visible circle that cannot depend on OS theming. */
+  /* a plain <input type=range>, custom-styled, kept fighting itself on a
+     real mouse: a fully -webkit-appearance:none range still has its own
+     native drag-tracking underneath, and native's own click-positioning
+     for that element only ever engages when the pointer lands pixel-for-
+     pixel on the 14px thumb - everywhere else on the track did nothing.
+     preventDefault should have been enough to settle that fight and
+     didn't fix it either, so rather than keep patching around one native
+     element's behavior, this is a plain <div role="slider"> instead -
+     two child spans (fill + thumb), positioned by percentage in JS, with
+     no native form-control drag handling underneath to ever fight. */
   .mus-vol-slider{
-    width:90px;height:14px;margin:0;cursor:pointer;
-    -webkit-appearance:none;appearance:none;
-    background:transparent;outline:none;
-    touch-action:none;user-select:none;-webkit-user-select:none;
+    position:relative;width:90px;height:14px;cursor:pointer;
+    touch-action:none;user-select:none;-webkit-user-select:none;outline:none;
   }
-  /* the runnable-track needs its own explicit reset too, not just the
-     input itself - left alone, some Chromium builds keep a default
-     vertical padding on this pseudo-element even once the outer input is
-     -webkit-appearance:none, so the visible 4px bar and the track's real
-     hit-area stop matching (still clickable, just not quite where it
-     looks like it should be, which reads as "stuck"/unresponsive rather
-     than off by a few px). Height matches the input's own box above so
-     the thumb has room to sit centered without a negative margin fighting
-     a mismatched track height. */
-  .mus-vol-slider::-webkit-slider-runnable-track{
-    width:90px;height:4px;background:var(--pill-quiet);border-radius:2px;
+  .mus-vol-slider::before{
+    content:'';position:absolute;left:0;right:0;top:50%;translate:0 -50%;
+    height:4px;border-radius:2px;background:var(--pill-quiet);
   }
-  .mus-vol-slider::-webkit-slider-thumb{
-    -webkit-appearance:none;appearance:none;
-    width:14px;height:14px;border-radius:50%;
-    background:var(--orange);border:none;cursor:pointer;
-    margin-top:-5px;
+  .mus-vol-fill{
+    position:absolute;left:0;top:50%;translate:0 -50%;
+    height:4px;border-radius:2px 0 0 2px;background:var(--orange);
+    width:100%;pointer-events:none;
   }
-  .mus-vol-slider::-moz-range-track{
-    width:90px;height:4px;background:var(--pill-quiet);border-radius:2px;
-  }
-  .mus-vol-slider::-moz-range-thumb{
-    width:14px;height:14px;border-radius:50%;
-    background:var(--orange);border:none;cursor:pointer;
+  .mus-vol-thumb{
+    position:absolute;top:50%;left:100%;
+    width:14px;height:14px;border-radius:50%;background:var(--orange);
+    translate:-50% -50%;pointer-events:none;
   }
   .hero-top .mus-vol{top:100%;translate:-50% 8px}
   @media (hover:hover) and (pointer:fine){

@@ -226,8 +226,8 @@ document.documentElement.setAttribute('data-theme', 'dark');
     <svg class="mus-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
     <span class="mus-lab">Music off</span>
   </button>
-  <div class="mus-vol" aria-hidden="true">
-    <input type="range" class="mus-vol-slider" min="0" max="100" value="100" step="1" aria-label="Music volume">
+  <div class="mus-vol">
+    <div class="mus-vol-slider" role="slider" tabindex="0" aria-label="Music volume" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><span class="mus-vol-fill"></span><span class="mus-vol-thumb"></span></div>
   </div>
   </span>
   <button class="thm-btn" type="button" aria-pressed="false" aria-label="Toggle dark and light theme">
@@ -424,8 +424,8 @@ document.documentElement.setAttribute('data-theme', 'dark');
         <svg class="mus-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
         <span class="mus-lab">Music off</span>
       </button>
-      <div class="mus-vol" aria-hidden="true">
-        <input type="range" class="mus-vol-slider" min="0" max="100" value="100" step="1" aria-label="Music volume">
+      <div class="mus-vol">
+        <div class="mus-vol-slider" role="slider" tabindex="0" aria-label="Music volume" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><span class="mus-vol-fill"></span><span class="mus-vol-thumb"></span></div>
       </div>
       </span>
       <button class="thm-btn" type="button" aria-pressed="false" aria-label="Toggle dark and light theme">
