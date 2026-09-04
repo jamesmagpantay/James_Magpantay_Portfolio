@@ -154,8 +154,18 @@
      holding can trigger a lingering ":hover" match on some browsers - this
      keeps it desktop-only regardless of viewport width. */
   .mus-wrap{position:relative;display:inline-flex}
+  /* position is now fixed and never animates - only opacity/pointer-events
+     toggle. It used to also translate a few px further down on entry
+     (a small "settle into place" polish), but that meant the real gap
+     between the button and the popover moved during the entry transition
+     while the bridge below stayed a fixed size, so the bridge only fully
+     covered it part of the time - reported as the popover not staying
+     open even with the cursor genuinely resting on the slider, confirmed
+     directly (pointer-events/opacity both computed as the closed state
+     while hovering). A static position removes that moving target
+     entirely rather than trying to size the bridge for every state. */
   .mus-vol{
-    position:absolute;top:100%;left:50%;translate:-50% 6px;z-index:5;
+    position:absolute;top:100%;left:50%;translate:-50% 10px;z-index:5;
     display:flex;align-items:center;padding:10px 12px;
     background:var(--card);border:1px solid var(--bar-line);border-radius:99px;
     box-shadow:0 10px 24px rgba(0,0,0,.28);
@@ -170,7 +180,7 @@
        the cursor leaves - without that, the popover would go visually
        fading-but-unclickable for the whole delay window, and a cursor
        doubling back onto it mid-fade would land on a dead slider. */
-    transition:opacity .16s ease-out 1.5s,translate .16s ease-out 1.5s,pointer-events 0s linear 1.5s;
+    transition:opacity .16s ease-out 1.5s,pointer-events 0s linear 1.5s;
   }
   /* :focus-visible, not :focus-within - clicking into the slider to drag
      it focuses it same as tabbing to it would, but a plain click focus
@@ -184,14 +194,20 @@
   @media (hover:hover) and (pointer:fine){
     .mus-wrap:hover .mus-vol,
     .mus-wrap:has(.mus-vol-slider:focus-visible) .mus-vol{
-      opacity:1;pointer-events:auto;translate:-50% 10px;
-      transition:opacity .16s ease-out,translate .16s ease-out,pointer-events 0s linear;
+      opacity:1;pointer-events:auto;
+      transition:opacity .16s ease-out,pointer-events 0s linear;
     }
   }
-  /* a small gap between the pill and the popover would otherwise be a dead
-     zone the cursor can lose hover crossing on the way down to the slider -
-     this pseudo-element bridges it invisibly so the popover stays open. */
-  .mus-vol::before{content:'';position:absolute;top:-6px;left:0;right:0;height:6px}
+  /* the gap between the pill and the popover would otherwise be a dead
+     zone the cursor can lose hover crossing on the way down to the slider
+     - this pseudo-element bridges it invisibly so the popover stays open.
+     Generously oversized (24px against a gap that measures roughly
+     10-12px) on purpose: the position above is fixed now so this no
+     longer needs to track a moving target, but erring wide costs nothing
+     (it sits behind the button itself, which already owns clicks in that
+     area) and guarantees full coverage regardless of small measurement
+     differences between the bar and hero instances. */
+  .mus-vol::before{content:'';position:absolute;top:-24px;left:0;right:0;height:24px}
   /* a plain <input type=range>, custom-styled, kept fighting itself on a
      real mouse: a fully -webkit-appearance:none range still has its own
      native drag-tracking underneath, and native's own click-positioning
@@ -220,11 +236,9 @@
     width:14px;height:14px;border-radius:50%;background:var(--orange);
     translate:-50% -50%;pointer-events:none;
   }
-  .hero-top .mus-vol{top:100%;translate:-50% 8px}
-  @media (hover:hover) and (pointer:fine){
-    .hero-top .mus-wrap:hover .mus-vol,
-    .hero-top .mus-wrap:has(.mus-vol-slider:focus-visible) .mus-vol{translate:-50% 12px}
-  }
+  /* fixed position, same reasoning as the base rule above - no separate
+     hover-state offset to keep the bridge covering a static gap. */
+  .hero-top .mus-vol{top:100%;translate:-50% 12px}
   /* theme pill - same shell again; the icon shows the mode you are in */
   .thm-btn{
     display:flex;align-items:center;gap:9px;cursor:pointer;white-space:nowrap;
