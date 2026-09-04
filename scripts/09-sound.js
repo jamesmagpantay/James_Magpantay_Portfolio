@@ -774,9 +774,20 @@
       }
     }
     s.addEventListener('pointerdown', function(e){
+      /* preventDefault matters here in a way it didn't show up in testing
+         against dispatched PointerEvents: those never engage the browser's
+         own native slider-drag handling at all (that only fires for
+         genuine trusted input), so a test built on dispatched events alone
+         cannot see this. On a real mouse, without this, native dragging
+         and this handler both try to drive the same value on every move -
+         whichever runs second wins the frame, and native's own click-
+         positioning is exactly the broken one (only the thumb itself,
+         pixel-for-pixel, actually engages it - see the comment below).
+         Fighting each other reads as the slider refusing to move. */
+      e.preventDefault();
       setFromClientX(e.clientX);
       try{ s.setPointerCapture(e.pointerId); }catch(err){}
-      function onMove(ev){ setFromClientX(ev.clientX); }
+      function onMove(ev){ ev.preventDefault(); setFromClientX(ev.clientX); }
       function onUp(){
         s.removeEventListener('pointermove', onMove);
         s.removeEventListener('pointerup', onUp);
